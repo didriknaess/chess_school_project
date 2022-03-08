@@ -1,7 +1,6 @@
 package battleship;
 
 public class Map {
-<<<<<<< HEAD
     // 'h' = hit ship, 's' = ship, 'm' = missed shot, null = empty
     private char[][] map = new char[10][10];
     public Map() {
@@ -37,10 +36,3 @@ public class Map {
         return this.map[coords[0]][coords[1]];
     }
 }
-=======
-    private char[][] map;
-    public Map() {
-        
-    }
-}
->>>>>>> refs/remotes/origin/main
