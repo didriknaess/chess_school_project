@@ -9,7 +9,10 @@ public class Piece {
         this.team = team;
     }
     public boolean isWhite() {
-        return this.team.isWhite();
+        return this.isWhite();
+    }
+    public char getType() {
+        return this.type;
     }
     public class Pawn extends Piece {
         public Pawn(Team team) {
