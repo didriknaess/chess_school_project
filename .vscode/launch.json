@@ -2,6 +2,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch GameLogic",
+            "request": "launch",
+            "mainClass": "TDT4100_project/chess.GameLogic",
+            "projectName": "tdt4100_v2022_prosjekt_boilerplate"
+        },
+        {
+            "type": "java",
+            "name": "Launch BoardReader",
+            "request": "launch",
+            "mainClass": "TDT4100_project/chess.BoardReader",
+            "projectName": "tdt4100_v2022_prosjekt_boilerplate"
+        },
+        {
+            "type": "java",
+            "name": "Launch Position",
+            "request": "launch",
+            "mainClass": "TDT4100_project/chess.Position",
+            "projectName": "tdt4100_v2022_prosjekt_boilerplate"
+        },
+        {
+            "type": "java",
             "name": "Launch ExampleProjectApp",
             "request": "launch",
             "mainClass": "TDT4100_project/exampleproject.ExampleProjectApp",
