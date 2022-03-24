@@ -2,17 +2,17 @@ package chess;
 import java.util.*;
 
 public class Map {
-    private ArrayList<ArrayList<Piece>> map;
+    private ArrayList<ArrayList<OldPiece>> map;
     public Map(int dim) {
-        this.map = new ArrayList<ArrayList<Piece>>(dim);
-        for (ArrayList<Piece> l : this.map) {
-            this.map.add(new ArrayList<Piece>(dim));
+        this.map = new ArrayList<ArrayList<OldPiece>>(dim);
+        for (ArrayList<OldPiece> l : this.map) {
+            this.map.add(new ArrayList<OldPiece>(dim));
         }
     }
-    public Piece get(int x, int y) {
+    public OldPiece get(int x, int y) {
         return this.map.get(x).get(y);
     }
-    public Integer[] getCoords(Piece p) {
+    public Integer[] getCoords(OldPiece p) {
         MapIterator iterator = new MapIterator(this);
             while (iterator.hasNext()) {
                 if (iterator.next().equals(p)) {
@@ -21,7 +21,7 @@ public class Map {
             }
             return null;
     }
-    public ArrayList<ArrayList<Piece>> getMap() {
+    public ArrayList<ArrayList<OldPiece>> getMap() {
         return this.map;
     }
     public int getRowCount() {

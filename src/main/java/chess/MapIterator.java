@@ -2,10 +2,10 @@ package chess;
 import java.util.*;
 import java.util.Iterator;
 
-public class MapIterator implements Iterator<Piece> {
+public class MapIterator implements Iterator<OldPiece> {
     int x = 0;
     int y = 0;
-    ArrayList<ArrayList<Piece>> map;
+    ArrayList<ArrayList<OldPiece>> map;
     public MapIterator(Map map) {
         this.map = map.getMap();
     }
@@ -35,7 +35,7 @@ public class MapIterator implements Iterator<Piece> {
         }
     }
     @Override
-    public Piece next() {
+    public OldPiece next() {
         try {
             if (this.y < this.map.get(0).size()-1) {
                 return this.map.get(x).get(y+1);

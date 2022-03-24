@@ -1,50 +1,163 @@
 package chess.Pieces;
 
-public class Piece {
-    boolean isWhite;
-    char type;
-    String coordinates;
+import java.util.ArrayList;
+
+import chess.Move;
+import chess.Position;
+
+public class Piece 
+{
+    public enum Color
+    {
+        WHITE,
+        BLACK
+    } 
     
-    public Piece(boolean isWhite, char type, String startCoordinates){
-        this.isWhite = isWhite;
-        this.type = type;
-        this.coordinates = startCoordinates;
-    }
-    
-    //getter for the color of the piece
-    public boolean isWhite() {
-        return this.isWhite;
-    }
-
-    //getter for the type of the piece
-    public char getType() {
-        return this.type;
+    public enum PieceType
+    {
+        PAWN,
+        ROOK,
+        KNIGHT,
+        BISHOP,
+        QUEEN,
+        KING
     }
 
-    //getter for the coords of the piece
-    public String getCoordinates() {
-        return this.coordinates;
+    protected Color color;
+    protected String pieceChar;
+    protected PieceType pieceType;
+    protected Position position;
+    protected boolean hasMoved;
+
+    public Piece(PieceType pieceType, Color color, Position position)
+    {
+        this.pieceType = pieceType;
+        this.color = color;
+        this.position = position;
+        this.hasMoved = false;
     }
 
-    public class Pawn extends Piece{
-        public Pawn(boolean isWhite, char type, String startCoordinate){
-            super(isWhite, type, startCoordinate);
+    public Piece()
+    {
+
+    }
+
+    public Color getColor()
+    {
+        return this.color;
+    }
+
+    public Position getPosition()
+    {
+        return this.position;
+    }
+
+    public PieceType getType()
+    {
+        return this.pieceType;
+    }
+
+    public Position moveTo(Position pos)
+    {
+        this.position.moveTo(pos);
+        this.hasMoved = true;
+        return this.position;
+    }
+
+    public void setPosition(Position pos)
+    {
+        this.position = pos;
+    }
+
+    public boolean onBoard()
+    {
+        return this.position.isValid();
+    }
+
+    public boolean hasBeenMoved()
+    {
+        return this.hasMoved;
+    }
+
+    public static Piece createNewPiece(String piece) 
+    {
+        String[] splitPiece = piece.split("");
+        Piece returnPiece = new Piece();
+        Position pos = new Position(splitPiece[1] + splitPiece[2]);
+
+        returnPiece.setTypeAndColor(splitPiece[0]);
+        returnPiece.setPosition(pos);
+        return returnPiece;
+    }
+
+    private void setTypeAndColor(String typeStr) 
+    {
+        switch(typeStr.toLowerCase())
+        {
+            case "p":
+                this.pieceType = PieceType.PAWN;
+                break;
+            case "r":
+                this.pieceType = PieceType.ROOK;
+                break;
+            case "b":
+                this.pieceType = PieceType.BISHOP;
+                break;
+            case "n":
+                this.pieceType = PieceType.KNIGHT;
+                break;
+            case "q":
+                this.pieceType = PieceType.QUEEN;
+                break;
+            case "k":
+                this.pieceType = PieceType.KING;
+                break;
         }
 
-        //Could be void, but maybe we need to check if it was moved...
-        public boolean move(String newCoords){
-            if (isValidMove(newCoords)){
-                //do something to make the piece move
-                return true;
-            }
-            return false;
-        }
-
-        private boolean isValidMove(String cord) {
-            //check if this is a valid move
-            return true;
-        }
-
+        if (typeStr == typeStr.toLowerCase()) this.color = Color.BLACK;
+        else this.color = Color.WHITE;
+                    
     }
+
+    @Override
+    public String toString()
+    {
+        String pieceChar = "";
+        switch(this.pieceType)
+        {
+            case PAWN:
+                pieceChar = "p";
+                break;
+            case ROOK:
+                pieceChar = "r";
+                break;
+            case BISHOP:
+                pieceChar = "b";
+                break;
+            case KNIGHT:
+                pieceChar = "n";
+                break;
+            case QUEEN:
+                pieceChar = "q";
+                break;
+            case KING:
+                pieceChar = "k";
+                break;
+        }
+
+        switch(this.color) 
+        {
+            case BLACK: return pieceChar.toLowerCase();
+            case WHITE: return pieceChar.toUpperCase();
+        }
+        return "";
+    }
+
+    // public ArrayList<Move> validMoves(Position from)
+    // {
+    //     //insert logic for finding valid moves here.
+    //     ArrayList<Move> returnList = new ArrayList<>();
+    //     return returnList;
+    // }
+
 }
-

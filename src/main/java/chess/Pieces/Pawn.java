@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import chess.Move;
 import chess.Position;
 
-public class King extends Piece
+public class Pawn extends Piece
 {
-    public King(Color color)
+
+    public Pawn(Color color)
     {
-        super(color, "k");
+        super(color, "p");
     }
 
     public ArrayList<Move> validMoves(Position from)
@@ -18,4 +19,5 @@ public class King extends Piece
         ArrayList<Move> returnList = new ArrayList<>();
         return returnList;
     }
+
 }

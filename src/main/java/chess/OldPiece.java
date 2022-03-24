@@ -1,10 +1,11 @@
 package chess;
 import java.util.*;
 
-public class Piece {
+public class OldPiece {
     protected Team team;
     protected char type;
-    public Piece(Team team, char type) {
+
+    public OldPiece(Team team, char type) {
         this.type = type;
         this.team = team;
     }
@@ -14,7 +15,8 @@ public class Piece {
     public char getType() {
         return this.type;
     }
-    public class Pawn extends Piece {
+
+    public class Pawn extends OldPiece {
         public Pawn(Team team) {
             super(team, 'p');
         }
@@ -46,7 +48,7 @@ public class Piece {
         public boolean validMove(Map map, int x, int y) {
             return true;
         }
-        public boolean prmotionPossible(Map map) {
+        public boolean promotionPossible(Map map) {
             if (team.isWhite()) {
                 if (map.getCoords(this)[0] == 0) return true;
                 return false;
@@ -56,49 +58,60 @@ public class Piece {
             }
         }
     }
-    public class King extends Piece {
+    public class King extends OldPiece {
+        private boolean isMoved;
+
         public King(Team team) {
             super(team, 'K');
         }
+        public boolean isMoved() {
+            return this.isMoved;
+        }
         public boolean validMove(Map map, int x, int y) {
-            // checks for Pawn
+            // checks for King
             return true;
         }
     }
-    public class Queen extends Piece {
+    public class Queen extends OldPiece {
         public Queen(Team team) {
             super(team, 'Q');
         }
         public boolean validMove() {
-            // checks for Pawn
+            // checks for Queen
             return true;
         }
     }
-    public class Rook extends Piece {
+    public class Rook extends OldPiece {
+        private boolean isMoved;
+        
         public Rook(Team team) {
             super(team, 'R');
         }
+        public boolean isMoved() {
+            return this.isMoved;
+        }
         public boolean validMove() {
-            // checks for Pawn
+            // checks for Rook
             return true;
         }
     }
-    public class Bishop extends Piece {
+    public class Bishop extends OldPiece {
         public Bishop(Team team) {
             super(team, 'B');
         }
         public boolean validMove() {
-            // checks for Pawn
+            // checks for Bishop
             return true;
         }
     }
-    public class Knight extends Piece {
+    public class Knight extends OldPiece {
         public Knight(Team team) {
             super(team, 'k');
         }
         public boolean validMove() {
-            // checks for Pawn
+            // checks for Knight
             return true;
         }
     }
+    
 }
