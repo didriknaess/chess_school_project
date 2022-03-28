@@ -1,4 +1,4 @@
-package chess;
+package chess.DataModel;
 
 public class Move implements Comparable<Move> 
 {

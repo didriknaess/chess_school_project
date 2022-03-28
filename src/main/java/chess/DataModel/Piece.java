@@ -1,9 +1,6 @@
-package chess.Pieces;
+package chess.DataModel;
 
 import java.util.ArrayList;
-
-import chess.Move;
-import chess.Position;
 
 public class Piece 
 {

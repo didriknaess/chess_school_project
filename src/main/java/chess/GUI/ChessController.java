@@ -1,4 +1,4 @@
-package chess;
+package chess.GUI;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

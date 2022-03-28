@@ -1,22 +1,28 @@
-package chess;
+package chess.Logic;
 
 import java.util.ArrayList;
 import java.util.List;
-import chess.MoveLogic.*;
 
-import chess.Pieces.Piece;
-import chess.Pieces.Piece.Color;
-import chess.Pieces.Piece.PieceType;
+import chess.DataModel.ChessBoard;
+import chess.DataModel.Move;
+import chess.DataModel.Piece;
+import chess.DataModel.Position;
+import chess.DataModel.Piece.Color;
+import chess.DataModel.Piece.PieceType;
+import chess.IO.BoardReader;
+import chess.Logic.*;
 
 public class GameLogic 
 {
     private ArrayList<Piece> pieces;
     private ChessBoard chessBoard;
+    private PieceLogic pieceLogic;
 
     public GameLogic()
     {
         this.chessBoard = new ChessBoard();
         this.pieces = new ArrayList<Piece>();
+        this.pieceLogic = new PieceLogic(this.chessBoard);
     }
 
     private void readInitialPieces()
@@ -43,6 +49,11 @@ public class GameLogic
         }
     }
 
+    public List<Move> getValidMoves(Piece piece)
+    {
+        return this.pieceLogic.getValidMoves(piece); //delegating the work to the PieceLogic class
+    }
+
     public void newGame()
     {
         setUpBoard();
@@ -55,10 +66,10 @@ public class GameLogic
         System.out.println(gl.chessBoard.toString());
         Position pos1 = new Position("a2");
         Position pos2 = new Position("h5");
-        ValidMovePawn vmp = new ValidMovePawn(gl.chessBoard);
-        ValidMoveRook vmr = new ValidMoveRook(gl.chessBoard);
-        System.out.println(vmp.getValidMoves(gl.chessBoard.getPiece(pos1)));
-        System.out.println(vmr.getValidMoves(gl.chessBoard.getPiece(pos2)));
+        Position pos3 = new Position("b1");
+        System.out.println(gl.pieceLogic.getValidMoves(gl.chessBoard.getPiece(pos1)));
+        System.out.println(gl.pieceLogic.getValidMoves(gl.chessBoard.getPiece(pos2)));
+        System.out.println(gl.pieceLogic.getValidMoves(gl.chessBoard.getPiece(pos3)));
     }
 
 

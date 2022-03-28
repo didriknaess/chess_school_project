@@ -1,4 +1,4 @@
-package chess;
+package chess.Unused;
 import java.util.*;
 
 public class Map {

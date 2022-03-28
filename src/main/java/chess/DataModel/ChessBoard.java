@@ -1,8 +1,6 @@
-package chess;
+package chess.DataModel;
 
 import java.util.ArrayList;
-
-import chess.Pieces.Piece;
 
 public class ChessBoard 
 {

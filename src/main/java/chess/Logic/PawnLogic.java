@@ -1,20 +1,20 @@
-package chess.MoveLogic;
+package chess.Logic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import chess.ChessBoard;
-import chess.Move;
-import chess.Position;
-import chess.Pieces.*;
-import chess.Pieces.Piece.Color;
-import chess.Pieces.Piece.PieceType;
+import chess.DataModel.ChessBoard;
+import chess.DataModel.Move;
+import chess.DataModel.Piece;
+import chess.DataModel.Position;
+import chess.DataModel.Piece.Color;
+import chess.DataModel.Piece.PieceType;
 
-public class ValidMovePawn implements IValidMove
+public class PawnLogic
 {
     ChessBoard chessBoard;
     
-    public ValidMovePawn(ChessBoard chessBoard)
+    public PawnLogic(ChessBoard chessBoard)
     {
         this.chessBoard = chessBoard;
     }
@@ -64,9 +64,7 @@ public class ValidMovePawn implements IValidMove
             {
                 returnList.add(new Move(piece.getPosition(), newPosition));
             }
-
         }
-        
         return returnList;
     }
 
