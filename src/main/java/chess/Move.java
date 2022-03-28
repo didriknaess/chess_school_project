@@ -24,6 +24,13 @@ public class Move implements Comparable<Move>
         if (this.from == other.from && this.to == other.to) return 0;
         return -1;
     }
+
+    @Override
+    public String toString() {
+        return "Move [to=" + to + "]";
+    }
+
+    
     
     
 }

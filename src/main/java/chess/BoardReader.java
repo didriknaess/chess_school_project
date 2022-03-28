@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.util.Pair;
 
 public class BoardReader 
 {
@@ -29,7 +28,6 @@ public class BoardReader
         {
             System.out.println(e.getStackTrace());
         }
-    
     }
 
     private String toString(String...lines)
@@ -42,6 +40,5 @@ public class BoardReader
         br.readFile("NormalChess.txt");
         System.out.println(br.pieces);
     }
-
 
 }

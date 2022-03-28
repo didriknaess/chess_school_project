@@ -2,8 +2,11 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.List;
+import chess.MoveLogic.*;
 
 import chess.Pieces.Piece;
+import chess.Pieces.Piece.Color;
+import chess.Pieces.Piece.PieceType;
 
 public class GameLogic 
 {
@@ -19,7 +22,8 @@ public class GameLogic
     private void readInitialPieces()
     {
         BoardReader br = new BoardReader();
-        br.readFile("NormalChess.txt");
+        //br.readFile("NormalChess.txt");
+        br.readFile("TestChess1.txt");
         List<String> pieceLines = br.getPieces();
         for (String pieceStr : pieceLines) 
         {
@@ -49,6 +53,12 @@ public class GameLogic
         GameLogic gl = new GameLogic();
         gl.newGame();
         System.out.println(gl.chessBoard.toString());
+        Position pos1 = new Position("a2");
+        Position pos2 = new Position("h5");
+        ValidMovePawn vmp = new ValidMovePawn(gl.chessBoard);
+        ValidMoveRook vmr = new ValidMoveRook(gl.chessBoard);
+        System.out.println(vmp.getValidMoves(gl.chessBoard.getPiece(pos1)));
+        System.out.println(vmr.getValidMoves(gl.chessBoard.getPiece(pos2)));
     }
 
 

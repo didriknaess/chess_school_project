@@ -153,11 +153,4 @@ public class Piece
         return "";
     }
 
-    // public ArrayList<Move> validMoves(Position from)
-    // {
-    //     //insert logic for finding valid moves here.
-    //     ArrayList<Move> returnList = new ArrayList<>();
-    //     return returnList;
-    // }
-
 }
