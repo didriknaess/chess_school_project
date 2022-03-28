@@ -10,7 +10,7 @@ import chess.Pieces.*;
 import chess.Pieces.Piece.Color;
 import chess.Pieces.Piece.PieceType;
 
-public class ValidMovePawn 
+public class ValidMovePawn implements IValidMove
 {
     ChessBoard chessBoard;
     
@@ -22,10 +22,10 @@ public class ValidMovePawn
     public List<Move> getValidMoves(Piece piece)
     {
         List<Move> returnList = new ArrayList<>();
-        if (piece.getType() != PieceType.PAWN) throw new IllegalArgumentException("Only pawns!");
+        if (!piece.getType().equals(PieceType.PAWN)) throw new IllegalArgumentException("Only pawns!");
         
         int direction = 1;
-        if (piece.getColor() == Color.BLACK) direction = -1;
+        if (piece.getColor().equals(Color.BLACK)) direction = -1;
         
         //check square above
         Position newPosition = piece.getPosition().getNewPosition(direction, 0);
@@ -50,7 +50,7 @@ public class ValidMovePawn
         if (newPosition.isValid())
         {
             Piece opponent = chessBoard.getPiece(newPosition);
-            if (opponent != null && opponent.getColor() != piece.getColor()) 
+            if (!opponent.equals(null) & !opponent.getColor().equals(piece.getColor())) 
             {
                 returnList.add(new Move(piece.getPosition(), newPosition));
             }

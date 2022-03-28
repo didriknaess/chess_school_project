@@ -97,6 +97,13 @@ public class Position implements Comparable<Position>
         return 1;
     }
 
+    
+
+    @Override
+    public String toString() {
+        return this.getPosString();
+    }
+
     public static void main(String[] args)
     {
         Position position = new Position("h3");
