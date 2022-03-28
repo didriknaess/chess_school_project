@@ -1,4 +1,4 @@
-package chess;
+package chess.DataModel;
 
 import java.util.regex.Pattern;
 
@@ -96,8 +96,6 @@ public class Position implements Comparable<Position>
         }
         return 1;
     }
-
-    
 
     @Override
     public String toString() {

@@ -1,4 +1,4 @@
-package chess;
+package chess.Unused;
 
 public class Team {
 
