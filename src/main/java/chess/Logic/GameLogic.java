@@ -57,7 +57,6 @@ public class GameLogic
     public void newGame()
     {
         setUpBoard();
-
     }
 
     public static void main(String[] args) {
