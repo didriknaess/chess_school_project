@@ -1,4 +1,4 @@
-package chess.DataModel;
+package chess.datamodel;
 
 import java.util.ArrayList;
 

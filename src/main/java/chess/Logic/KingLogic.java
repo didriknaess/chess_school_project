@@ -1,9 +1,9 @@
-package chess.Logic;
+package chess.logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import chess.DataModel.ChessBoard;
+import chess.datamodel.ChessBoard;
 
 public class KingLogic extends OfficerLogic
 {

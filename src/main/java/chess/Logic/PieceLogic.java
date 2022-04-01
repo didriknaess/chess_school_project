@@ -1,10 +1,10 @@
-package chess.Logic;
+package chess.logic;
 
 import java.util.List;
 
-import chess.DataModel.ChessBoard;
-import chess.DataModel.Move;
-import chess.DataModel.Piece;
+import chess.datamodel.ChessBoard;
+import chess.datamodel.Move;
+import chess.datamodel.Piece;
 
 public class PieceLogic //This class is to help prevent having to make new instances of ...logic in GameLogic
 //Want to delegate most of GameLogics tasks to other helping functions.
