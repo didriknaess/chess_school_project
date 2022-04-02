@@ -11,7 +11,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chess.gui.ChessController">
    <children>
-      <GridPane prefHeight="400.0" prefWidth="355.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="245.0" AnchorPane.topAnchor="0.0">
+      <GridPane prefHeight="400.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="245.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -99,11 +99,11 @@
             <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: wheat;" GridPane.columnIndex="7" GridPane.rowIndex="7" />
          </children>
       </GridPane>
-      <Button layoutX="375.0" layoutY="200.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Pause" />
-      <Button layoutX="522.0" layoutY="202.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Forfeit" />
-      <Button layoutX="448.0" layoutY="202.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Undo" />
-      <Button layoutX="402.0" layoutY="242.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Save" />
-      <Button layoutX="495.0" layoutY="243.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Load" />
+      <Button layoutX="390.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#handlePause" prefHeight="26.0" prefWidth="53.0" text="Pause" />
+      <Button layoutX="450.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#handleUndo" prefHeight="26.0" prefWidth="53.0" text="Undo" />
+      <Button layoutX="510.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#handleForfeit" prefHeight="26.0" prefWidth="53.0" text="Forfeit" />
+      <Button layoutX="420.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#handleSave" prefHeight="26.0" prefWidth="53.0" text="Save" />
+      <Button layoutX="480.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#handleLoad" prefHeight="26.0" prefWidth="53.0" text="Load" />
       <Text layoutX="398.0" layoutY="171.0" strokeType="OUTSIDE" strokeWidth="0.0" text="It's color's turn!" wrappingWidth="153.92578125">
          <font>
             <Font size="24.0" />
