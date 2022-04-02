@@ -1,4 +1,4 @@
-package chess.gui;
+package chess;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,11 +19,33 @@ public class ChessController
     public GridPane chessBoard;
 
     @FXML
-    public void handlePressMe() {
+    public Text asdf;
+
+    @FXML
+    public void handlePause() {
+        Alert alert = new Alert(AlertType.INFORMATION);    
+    }
+    @FXML
+    public void handleUndo() {
+        Alert alert = new Alert(AlertType.INFORMATION);    
+    }
+    @FXML
+    public void handleForfeit() {
+        Alert alert = new Alert(AlertType.INFORMATION);    
+    }
+    @FXML
+    public void handleSave() {
+        Alert alert = new Alert(AlertType.INFORMATION);    
+    }
+    @FXML
+    public void handleLoad() {
         Alert alert = new Alert(AlertType.INFORMATION);    
     }
     @FXML
     public void handleButtonPress(ActionEvent event) {
 
+    }
+    public static void main(String[] args) {
+        
     }
 }
