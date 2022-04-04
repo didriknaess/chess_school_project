@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BoardReader 
+public class BoardIO implements IBoardIO; 
 {
     private List<String> pieces = new ArrayList<>();
 
@@ -15,6 +15,7 @@ public class BoardReader
         return this.pieces;
     }
 
+    @Override
     public void readFile(String filename)
     {
         try 
@@ -30,15 +31,23 @@ public class BoardReader
         }
     }
 
+    @Override
+    public void saveFile(String filename, GameSave gameSave) {
+        //Logic to save the state of the game
+        
+    }
+
     private String toString(String...lines)
     {
         return lines[0] + lines[1];
     }
 
     public static void main(String[] args) {
-        BoardReader br = new BoardReader();
+        BoardIO br = new BoardIO();
         br.readFile("NormalChess.txt");
         System.out.println(br.pieces);
     }
+
+    
 
 }
