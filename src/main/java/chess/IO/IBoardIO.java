@@ -1,4 +1,4 @@
-package chess.IO;
+package chess.io;
 
 public interface IBoardIO 
 {

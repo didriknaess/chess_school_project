@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BoardIO implements IBoardIO; 
-{
-    private List<String> pieces = new ArrayList<>();
+public class BoardIO implements IBoardIO {
 
+    private List<String> pieces = new ArrayList<>();
+    
     public List<String> getPieces()
     {
         return this.pieces;
     }
-
+    
     @Override
     public void readFile(String filename)
     {
@@ -32,22 +32,21 @@ public class BoardIO implements IBoardIO;
     }
 
     @Override
-    public void saveFile(String filename, GameSave gameSave) {
+    public void saveFile(String filename) 
+    {
         //Logic to save the state of the game
         
     }
-
+    
     private String toString(String...lines)
     {
         return lines[0] + lines[1];
     }
-
-    public static void main(String[] args) {
+    
+    public static void main(String[] args) 
+    {
         BoardIO br = new BoardIO();
         br.readFile("NormalChess.txt");
         System.out.println(br.pieces);
     }
-
-    
-
 }
