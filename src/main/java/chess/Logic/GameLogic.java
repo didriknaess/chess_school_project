@@ -3,14 +3,14 @@ package chess.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import chess.io.BoardReader;
-import chess.logic.*;
-import chess.datamodel.ChessBoard;
-import chess.datamodel.Move;
-import chess.datamodel.Piece;
-import chess.datamodel.Position;
-import chess.datamodel.Piece.Color;
-import chess.datamodel.Piece.PieceType;
+import chess.DataModel.ChessBoard;
+import chess.DataModel.Move;
+import chess.DataModel.Piece;
+import chess.DataModel.Position;
+import chess.DataModel.Piece.Color;
+import chess.DataModel.Piece.PieceType;
+import chess.IO.BoardIO;
+import chess.Logic.*;
 
 public class GameLogic 
 {
@@ -27,7 +27,7 @@ public class GameLogic
 
     private void readInitialPieces()
     {
-        BoardReader br = new BoardReader();
+        BoardIO br = new BoardIO();
         //br.readFile("NormalChess.txt");
         br.readFile("TestChess1.txt");
         List<String> pieceLines = br.getPieces();
