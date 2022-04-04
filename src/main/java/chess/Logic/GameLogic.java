@@ -9,7 +9,7 @@ import chess.DataModel.Piece;
 import chess.DataModel.Position;
 import chess.DataModel.Piece.Color;
 import chess.DataModel.Piece.PieceType;
-import chess.IO.BoardReader;
+import chess.IO.BoardIO;
 import chess.Logic.*;
 
 public class GameLogic 
@@ -27,7 +27,7 @@ public class GameLogic
 
     private void readInitialPieces()
     {
-        BoardReader br = new BoardReader();
+        BoardIO br = new BoardIO();
         //br.readFile("NormalChess.txt");
         br.readFile("TestChess1.txt");
         List<String> pieceLines = br.getPieces();
