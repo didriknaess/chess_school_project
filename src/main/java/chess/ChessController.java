@@ -1,6 +1,5 @@
 package chess;
 
-import chess.io.BoardReader;
 import chess.datamodel.*;
 import chess.logic.GameLogic;
 
@@ -27,7 +26,6 @@ public class ChessController {
     private Pane[][] board = new Pane[8][8];
     private Player currentPlayer;
     private GameLogic logic = new GameLogic();
-    private BoardReader reader = new BoardReader();
     private Piece currentPiece;
 
     public ChessController() {
