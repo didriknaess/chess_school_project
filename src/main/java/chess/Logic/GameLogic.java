@@ -49,6 +49,10 @@ public class GameLogic
         }
     }
 
+    public Piece getPiece(Position pos) {
+        return chessBoard.getPiece(pos);
+    }
+
     public List<Move> getValidMoves(Piece piece)
     {
         return this.pieceLogic.getValidMoves(piece); //delegating the work to the PieceLogic class

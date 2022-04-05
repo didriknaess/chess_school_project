@@ -7,4 +7,7 @@ public class Player
     private Piece.Color color;  
     private int score;
 
+    public Piece.Color getColor() {
+        return this.color;
+    }
 }
