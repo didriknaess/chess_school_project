@@ -1,61 +1,113 @@
 package chess;
 
+import java.util.*;
 import chess.datamodel.*;
 import chess.logic.GameLogic;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 
 public class ChessController {
-    @FXML private GridPane chessBoardGraphic;
-    @FXML public Button pressMe;
-    @FXML public GridPane paneBoard;
+    @FXML public GridPane chessBoardGraphic;
+    @FXML public Button pause;
+    @FXML public Button undo;
+    @FXML public Button forfeit;
+    @FXML public Button save;
+    @FXML public Button load;
 
     private Pane[][] board = new Pane[8][8];
     private Player currentPlayer;
     private GameLogic logic = new GameLogic();
     private Piece currentPiece;
+    private boolean hasSelected = false;
 
     public ChessController() {
     }
 
     public void initialize() {
+        logic.newGame();
+        if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
         for (Node node : chessBoardGraphic.getChildren()) {
             if (node instanceof Pane) {
                 Pane pane = (Pane)node;
-                board[(int)pane.getId().charAt(4)][(int)pane.getId().charAt(5)] = pane;
+                int x = (int)pane.getId().charAt(4) - '0';
+                int y = (int)pane.getId().charAt(5) - '0';
+                board[x][y] = pane;
             }
         }
-        logic.newGame();
-        
+        for (int i = 0; i<8; i++) {
+            for (int j = 0; j<8; j++) {
+                Piece p = logic.getPiece(new Position(i, j));
+                if (p != null) {
+                    Image img = logic.getImage(p);
+                    ImageView view = new ImageView(img);
+                    board[i][j].getChildren().add(view);
+                }
+            }
+        }
     }
     public void handleMouseClick(MouseEvent e) {
         double width = chessBoardGraphic.getWidth();
         double height = chessBoardGraphic.getHeight();
         Position pos = new Position((int)(e.getX()/width*8), (int)(e.getY()/height*8));
-        currentPiece = logic.getPiece(pos);
-        if (logic.getPiece(pos) != null) {
-            if (logic.getPiece(pos).getColor() == currentPlayer.getColor()) {
-                Pane selectedPane = board[pos.getRow()][pos.getColumn()];
-                if (logic.getValidMoves(currentPiece).contains(new Move(currentPiece.getPosition(), pos))) {
-                    Pane oldPane = board[currentPiece.getPosition().getRow()][currentPiece.getPosition().getColumn()];
-                    Image image = null;
-                    Rectangle rect = null;
-                }
+        if (!hasSelected) {
+            currentPiece = logic.getPiece(pos);
+            if (currentPiece.getColor() == currentPlayer.getColor() || currentPiece == null) return;
+            Pane pane = board[pos.getRow()][pos.getColumn()];
+            Rectangle rect = new Rectangle(0, 0, pane.getWidth(), pane.getHeight());
+            rect.setFill(Color.TRANSPARENT);
+            rect.setStroke(Color.GREEN);
+            pane.getChildren().add(rect);
+
+            List<Move> moves = logic.getValidMoves(currentPiece);
+            if (moves.isEmpty() || moves == null) {
+                System.out.println("No valid moves");
             } else {
-                return;
+                for (Move move : moves) {
+                    pane = board[move.getTo().getRow()][move.getTo().getColumn()];
+                    rect = new Rectangle(0, 0, pane.getWidth(), pane.getHeight());
+                    rect.setFill(Color.TRANSPARENT);
+                    rect.setStroke(Color.RED);
+                    pane.getChildren().add(rect);
+                }
+            }
+            hasSelected = true;
+        } else {
+            if (logic.getPiece(pos) != null && logic.getPiece(pos).getColor() == currentPlayer.getColor()) return;
+            
+            Pane selectedPane = board[pos.getRow()][pos.getColumn()];
+            if (logic.getValidMoves(currentPiece).contains(new Move(currentPiece.getPosition(), pos))) {
+                Pane oldPane = board[currentPiece.getPosition().getRow()][currentPiece.getPosition().getColumn()];
+                Image img = null;
+                Rectangle rect = null;
+                for (Node node : oldPane.getChildren()) {
+                    if (node instanceof ImageView) {
+                        img = ((ImageView)node).getImage();
+                        ((ImageView)node).setImage(null);
+                    }
+                    if (node instanceof Rectangle) {
+                        rect = (Rectangle)node;
+                    }
+                }
+                oldPane.getChildren().removeAll(rect);
+                for (Node node : selectedPane.getChildren()) {
+                    if (node instanceof ImageView) {
+                        ((ImageView)node).setImage(img);
+                    }
+                }
+                // actually move the piece in the logic/game class
+                hasSelected = false;
+                // switch whose turn it is
             }
         }
     }
