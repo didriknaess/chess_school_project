@@ -2,7 +2,6 @@ package chess;
 
 import java.util.*;
 import chess.datamodel.*;
-import chess.datamodel.Piece.PieceType;
 import chess.io.ImageIO;
 import chess.logic.GameLogic;
 
@@ -16,8 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class ChessController {
@@ -34,6 +31,7 @@ public class ChessController {
     private Pane[][] board = new Pane[8][8];
     private GameLogic logic = new GameLogic();
     private Piece currentPiece;
+    private List<Move> validMoves;
     private boolean hasSelected = false;
     private ImageIO imageLoader = new ImageIO();
 
@@ -43,7 +41,6 @@ public class ChessController {
     public void initialize() {
         updateText();
         logic.newGame();
-        System.out.println(logic);
         if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
         for (Node node : chessBoardGraphic.getChildren()) {
             if (node instanceof Pane) {
@@ -86,10 +83,8 @@ public class ChessController {
         Position pos = new Position((int)(e.getY()/width*8), (int)(e.getX()/height*8));
         System.out.println("Clicked at: ("+pos.getRow()+", "+pos.getColumn()+")");
         if (!hasSelected) {
-            System.out.println("Accessed select");
             this.currentPiece = logic.getPiece(pos);
             if (currentPiece == null) return;
-            System.out.println(currentPiece);
             if (currentPiece.getColor() != logic.whoseTurn()) return;
             Pane pane = board[pos.getRow()][pos.getColumn()];
             if ((pos.getRow()+pos.getColumn())%2==0) {
@@ -98,17 +93,13 @@ public class ChessController {
                 pane.setStyle("-fx-background-color:lime;");
             }
 
-            List<Move> moves = logic.getValidMoves(currentPiece);
+            this.validMoves = logic.getValidMoves(currentPiece);
 
-            for (Move move : moves) {
-                System.out.println(move);
-            }
-
-            if (moves.isEmpty() || moves == null) {
+            if (validMoves == null || validMoves.isEmpty()) {
                 System.out.println("No valid moves");
                 return;
             } else {
-                for (Move move : moves) {
+                for (Move move : validMoves) {
                     pane = board[move.getTo().getRow()][move.getTo().getColumn()];
                     if ((move.getTo().getRow()+move.getTo().getColumn())%2==0) {
                         pane.setStyle("-fx-background-color:lightcoral;");
@@ -119,7 +110,6 @@ public class ChessController {
                 hasSelected = true;
             }
         } else {
-            System.out.println("Accessed hasSelected");
             // deselect current piece
             if (pos.getRow() == this.currentPiece.getPosition().getRow() && pos.getColumn() == this.currentPiece.getPosition().getColumn()) {
                 unselectBoard();
@@ -128,10 +118,12 @@ public class ChessController {
             }
             if (logic.getPiece(pos) != null && logic.getPiece(pos).getColor() == currentPiece.getColor()) {
                 System.out.println("Invalid move");
+                return;
             }
 
             Pane selectedPane = board[pos.getRow()][pos.getColumn()];
-            if (logic.getValidMoves(currentPiece).contains(new Move(currentPiece.getPosition(), pos))) {
+            Move move = new Move(currentPiece.getPosition(), pos);
+            if (logic.isValidMove(move)) {
                 Pane oldPane = board[currentPiece.getPosition().getRow()][currentPiece.getPosition().getColumn()];
                 Image img = null;
                 for (Node node : oldPane.getChildren()) {
@@ -140,25 +132,28 @@ public class ChessController {
                         ((ImageView)node).setImage(null);
                     }
                 }
+                boolean isOccupied = false;
                 for (Node node : selectedPane.getChildren()) {
                     if (node instanceof ImageView) {
+                        isOccupied = true;
                         ((ImageView)node).setImage(img);
                     }
                 }
-                // actually move the piece in the logic/game class
+                if (!isOccupied) selectedPane.getChildren().add(new ImageView(img));
+                logic.move(move);
                 logic.endTurn();
                 updateText();
-            // deselection of currentPiece
+                hasSelected = false;
+                unselectBoard();
             } else {
                 System.out.println("Invalid move");
             }
-            hasSelected = false;
         }
     }
     //Changing Text corresponding to Score and which players Turn it is
     public void updateText() {
-        blackScore.setText("Score: "+0);
-        whiteScore.setText("Score: "+0);
+        blackScore.setText("Score: "+logic.getScore(Piece.Color.BLACK));
+        whiteScore.setText("Score: "+logic.getScore(Piece.Color.WHITE));
         whoseTurn.setText("Placeholder text!");
         if(logic.isWhitePlaying()) whoseTurn.setText("Turn: WHITE");
         else whoseTurn.setText("Turn: BLACK");

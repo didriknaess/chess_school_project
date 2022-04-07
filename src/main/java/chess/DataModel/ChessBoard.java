@@ -6,56 +6,47 @@ public class ChessBoard
 {
     private ArrayList<ArrayList<Piece>> chessBoard;
 
-    public ChessBoard()
-    {
+    public ChessBoard() {
         this.chessBoard = new ArrayList<ArrayList<Piece>>();
         
-        for (int i = 0; i < 8; i++) 
-        {
+        for (int i = 0; i < 8; i++) {
             ArrayList<Piece> foo = new ArrayList<>();
-            for (int j = 0; j < 8; j++) 
-            {
+            for (int j = 0; j < 8; j++) {
                 foo.add(null);
             }
             chessBoard.add(foo);
         }
     }
 
-    public void clearBoard()
-    {
-        for (int i = 0; i < 8; i++) 
-        {
-            for (int j = 0; j < 8; j++) 
-            {
+    public void clearBoard() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 chessBoard.get(i).set(j, null);
             }
         }   
     }
 
-    public Piece getPiece(Position pos)
-    {
+    public Piece getPiece(Position pos) {
         return this.chessBoard.get(pos.getRow()).get(pos.getColumn());
     }
 
-    public void addPiece(Piece piece)
-    {
+    public void addPiece(Piece piece) {
         Position position = piece.getPosition();
         chessBoard.get(position.getRow()).set(position.getColumn(), piece);
     }
 
-    public boolean isSquareEmpty(Position pos)
-    {
+    public boolean isSquareEmpty(Position pos) {
         return (this.getPiece(pos) == null);
     }
 
-    public void doMove(Move move)
-    {
-
+    public void doMove(Move move) {
+        Piece toMove = chessBoard.get(move.getFrom().getRow()).get(move.getFrom().getColumn());
+        chessBoard.get(move.getTo().getRow()).set(move.getTo().getColumn(), toMove);
+        chessBoard.get(move.getFrom().getRow()).set(move.getFrom().getColumn(), null);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         String returnString = "";
         for (int r = 7; r >= 0; r--) 
         {
