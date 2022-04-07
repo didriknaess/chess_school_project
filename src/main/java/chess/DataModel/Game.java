@@ -1,8 +1,8 @@
 package chess.datamodel;
 
+import chess.logic.*;
+import chess.io.*;
+
 public class Game {
-    
-    //All the information about the game
-    //Work in progress
 
 }

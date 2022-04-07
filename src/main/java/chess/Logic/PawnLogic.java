@@ -24,8 +24,8 @@ public class PawnLogic
         List<Move> returnList = new ArrayList<>();
         if (!piece.getType().equals(PieceType.PAWN)) throw new IllegalArgumentException("Only pawns!");
         
-        int direction = 1;
-        if (piece.getColor().equals(Color.BLACK)) direction = -1;
+        int direction = -1;
+        if (piece.getColor().equals(Piece.Color.BLACK)) direction = 1;
         
         //check square above
         Position newPosition = piece.getPosition().getNewPosition(direction, 0);
@@ -40,9 +40,10 @@ public class PawnLogic
         if (newPosition.isValid())
         {
             Piece opponent = chessBoard.getPiece(newPosition);
-            if (opponent != null && opponent.getColor() != piece.getColor()) 
-            {
-                returnList.add(new Move(piece.getPosition(), newPosition));
+            if (opponent != null) {
+                if (opponent.getColor() != piece.getColor()) {
+                    returnList.add(new Move(piece.getPosition(), newPosition));
+                }
             }
         }
         //Check diagonally left
@@ -50,9 +51,10 @@ public class PawnLogic
         if (newPosition.isValid())
         {
             Piece opponent = chessBoard.getPiece(newPosition);
-            if (!opponent.equals(null) & !opponent.getColor().equals(piece.getColor())) 
-            {
-                returnList.add(new Move(piece.getPosition(), newPosition));
+            if (opponent != null) {
+                if (!opponent.getColor().equals(piece.getColor())) {
+                    returnList.add(new Move(piece.getPosition(), newPosition));
+                }
             }
         }
         //Check two steps forward
