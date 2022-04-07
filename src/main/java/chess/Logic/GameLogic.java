@@ -69,7 +69,6 @@ public class GameLogic
         }
         chessBoard.doMove(move);
         piece.moveTo(move.getTo());
-        System.out.println(chessBoard);
     }
     // Calulate the score of the specified team
     public int getScore(Piece.Color color) {

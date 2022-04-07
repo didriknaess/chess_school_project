@@ -118,6 +118,7 @@ public class ChessController {
             }
             if (logic.getPiece(pos) != null && logic.getPiece(pos).getColor() == currentPiece.getColor()) {
                 System.out.println("Invalid move");
+                return;
             }
 
             Pane selectedPane = board[pos.getRow()][pos.getColumn()];
