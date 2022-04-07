@@ -74,7 +74,7 @@ public class ChessController {
                 if ((i+j)%2==0) {
                     board[i][j].setStyle("-fx-background-color:wheat;");
                 } else {
-                    board[i][j].setStyle("-fx-background-color:golderod;");
+                    board[i][j].setStyle("-fx-background-color:goldenrod;");
                 }
             }
         }
@@ -83,12 +83,14 @@ public class ChessController {
     public void handleMouseClick(MouseEvent e) {
         double width = chessBoardGraphic.getWidth();
         double height = chessBoardGraphic.getHeight();
-        Position pos = new Position((int)(e.getX()/width*8), (int)(e.getY()/height*8));
+        Position pos = new Position((int)(e.getY()/width*8), (int)(e.getX()/height*8));
         System.out.println("Clicked at: ("+pos.getRow()+", "+pos.getColumn()+")");
         if (!hasSelected) {
             System.out.println("Accessed select");
-            currentPiece = logic.getPiece(pos);
-            if (currentPiece == null || currentPiece.getColor() == logic.whoseTurn()) return;
+            this.currentPiece = logic.getPiece(pos);
+            if (currentPiece == null) return;
+            System.out.println(currentPiece);
+            if (currentPiece.getColor() != logic.whoseTurn()) return;
             Pane pane = board[pos.getRow()][pos.getColumn()];
             if ((pos.getRow()+pos.getColumn())%2==0) {
                 pane.setStyle("-fx-background-color:chartreuse;");
@@ -97,6 +99,11 @@ public class ChessController {
             }
 
             List<Move> moves = logic.getValidMoves(currentPiece);
+
+            for (Move move : moves) {
+                System.out.println(move);
+            }
+
             if (moves.isEmpty() || moves == null) {
                 System.out.println("No valid moves");
                 return;
@@ -113,13 +120,16 @@ public class ChessController {
             }
         } else {
             System.out.println("Accessed hasSelected");
-            if (currentPiece.getPosition().equals(pos)) {
+            // deselect current piece
+            if (pos.getRow() == this.currentPiece.getPosition().getRow() && pos.getColumn() == this.currentPiece.getPosition().getColumn()) {
                 unselectBoard();
                 hasSelected = false;
                 return;
             }
-            if (logic.getPiece(pos) != null && logic.getPiece(pos).getColor() == currentPiece.getColor()) return;
-            
+            if (logic.getPiece(pos) != null && logic.getPiece(pos).getColor() == currentPiece.getColor()) {
+                System.out.println("Invalid move");
+            }
+
             Pane selectedPane = board[pos.getRow()][pos.getColumn()];
             if (logic.getValidMoves(currentPiece).contains(new Move(currentPiece.getPosition(), pos))) {
                 Pane oldPane = board[currentPiece.getPosition().getRow()][currentPiece.getPosition().getColumn()];

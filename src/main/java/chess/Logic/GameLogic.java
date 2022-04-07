@@ -11,8 +11,8 @@ public class GameLogic
     private ArrayList<Piece> pieces;
     private ChessBoard chessBoard;
     private PieceLogic pieceLogic;
-    private ArrayList<Piece> takenBlack;
-    private ArrayList<Piece> takenWhite;
+    private ArrayList<Piece> takenByBlack = new ArrayList<Piece>();
+    private ArrayList<Piece> takenByWhite = new ArrayList<Piece>();
     private boolean whitesTurn = true;
 
     public GameLogic() {
@@ -50,13 +50,25 @@ public class GameLogic
     public List<Move> getValidMoves(Piece piece) {
         return this.pieceLogic.getValidMoves(piece); //delegating the work to the PieceLogic class
     }
+    public void move(Piece piece, Move move) {
+        if (!getValidMoves(piece).contains(move)) return;
+        if (chessBoard.getPiece(move.getTo()) != null) {
+            if (whitesTurn) {
+                takenByWhite.add(chessBoard.getPiece(move.getTo()));
+            } else {
+                takenByBlack.add(chessBoard.getPiece(move.getTo()));
+            }
+        }
+        piece.moveTo(move.getTo());
+        chessBoard.doMove(move);
+    }
     // Calulate the score of the specified team
     public int getScore(Piece.Color color) {
         switch(color) {
             case BLACK:
-                return calculateScore(takenBlack);
+                return calculateScore(takenByBlack);
             case WHITE:
-                return calculateScore(takenWhite);
+                return calculateScore(takenByWhite);
             default:
                 return 0;
         }
