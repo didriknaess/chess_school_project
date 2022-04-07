@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chess.io.BoardIO;
-import chess.logic.*;
 import javafx.scene.image.Image;
 import chess.datamodel.ChessBoard;
 import chess.datamodel.Move;
@@ -54,54 +53,20 @@ public class GameLogic
         return chessBoard.getPiece(pos);
     }
 
-    public Image getImage(Piece p) {
-        String path = "main/resources/chess/piece_icons/";
-        switch(p.getColor()) {
-            case BLACK:
-                path += "B_";
-                switch(p.getType()) {
-                    case PAWN:
-                        path += "Pawn";
-                    case ROOK:
-                        path += "Rook";
-                    case BISHOP:
-                        path += "Bishop";
-                    case KING:
-                        path += "King";
-                    case KNIGHT:
-                        path += "Knight";
-                    case QUEEN:
-                        path += "Queen";
-                    default:
-                        return null;
-                        //throw new IllegalArgumentException("Unknown piece!");
-                }
-            case WHITE:
-                path += "W_";
-                switch(p.getType()) {
-                    case PAWN:
-                        path += "Pawn";
-                    case ROOK:
-                        path += "Rook";
-                    case BISHOP:
-                        path += "Bishop";
-                    case KING:
-                        path += "King";
-                    case KNIGHT:
-                        path += "Knight";
-                    case QUEEN:
-                        path += "Queen";
-                    default:
-                        return null;
-                        //throw new IllegalArgumentException("Unknown piece!");
-                }
-        }
-        return new Image(path);
-    }
-
     public List<Move> getValidMoves(Piece piece)
     {
         return this.pieceLogic.getValidMoves(piece); //delegating the work to the PieceLogic class
+    }
+    // Calulate the score of the specified team
+    public int getScore(Color c) {
+        switch (c) {
+            case BLACK:
+                return 0;
+            case WHITE:
+                return 0;
+            default:
+                throw new IllegalArgumentException("Invalid color");
+        }
     }
 
     public void newGame()

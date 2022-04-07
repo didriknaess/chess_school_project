@@ -2,6 +2,8 @@ package chess;
 
 import java.util.*;
 import chess.datamodel.*;
+import chess.datamodel.Piece.PieceType;
+import chess.io.ImageIO;
 import chess.logic.GameLogic;
 
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 public class ChessController {
     @FXML public GridPane chessBoardGraphic;
@@ -24,17 +27,22 @@ public class ChessController {
     @FXML public Button forfeit;
     @FXML public Button save;
     @FXML public Button load;
+    @FXML public Text whoseTurn;
+    @FXML public Text blackScore;
+    @FXML public Text whiteScore;
 
     private Pane[][] board = new Pane[8][8];
     private Player currentPlayer;
     private GameLogic logic = new GameLogic();
     private Piece currentPiece;
     private boolean hasSelected = false;
+    private ImageIO imageLoader = new ImageIO();
 
     public ChessController() {
     }
-
+    @FXML
     public void initialize() {
+        updateText();
         logic.newGame();
         if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
         for (Node node : chessBoardGraphic.getChildren()) {
@@ -45,17 +53,21 @@ public class ChessController {
                 board[x][y] = pane;
             }
         }
+
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = logic.getPiece(new Position(i, j));
                 if (p != null) {
-                    Image img = logic.getImage(p);
+                    Image img = imageLoader.getImage(p);
                     ImageView view = new ImageView(img);
                     board[i][j].getChildren().add(view);
+                    view.fitHeightProperty();
+                    view.fitWidthProperty();
                 }
             }
         }
     }
+    @FXML
     public void handleMouseClick(MouseEvent e) {
         double width = chessBoardGraphic.getWidth();
         double height = chessBoardGraphic.getHeight();
@@ -108,8 +120,23 @@ public class ChessController {
                 // actually move the piece in the logic/game class
                 hasSelected = false;
                 // switch whose turn it is
+                updateText();
             }
         }
+    }
+    //Changing Text corresponding to Score and which players Turn it is
+    public void updateText() {
+        blackScore.setText("Score: "+10);
+        whiteScore.setText("Score: "+99);
+        whoseTurn.setText("Placeholder text!");
+        // switch (currentPlayer.getColor()) {
+        //     case BLACK:
+        //         whoseTurn.setText("Black's turn to move!");
+        //     case WHITE:
+        //         whoseTurn.setText("White's turn to move!");
+        //     default:
+        //         whoseTurn.setText("Undefined case!");
+        // }
     }
     //Handling of buttons in the JavaFX Application:
     @FXML
