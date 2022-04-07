@@ -47,4 +47,22 @@ public class PieceLogic //This class is to help prevent having to make new insta
                 throw new IllegalArgumentException("What is this piece? Never seen before.");
         }
     }
+    public int getScore(Piece p) {
+        switch (p.getType()) {
+            case PAWN:
+                return 1;
+            case ROOK:
+                return 3;
+            case BISHOP:
+                return 3;
+            case KING:
+                return 0;
+            case KNIGHT:
+                return 5;
+            case QUEEN:
+                return 9;
+            default:
+                return 0;
+        }
+    }
 }

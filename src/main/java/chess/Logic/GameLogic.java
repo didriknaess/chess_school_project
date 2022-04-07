@@ -46,12 +46,20 @@ public class GameLogic
     public Piece getPiece(Position pos) {
         return chessBoard.getPiece(pos);
     }
-
+    public boolean isValidMove(Move move) {
+        Piece piece = chessBoard.getPiece(move.getFrom());
+        List<Move> moves = getValidMoves(piece);
+        for (Move m : moves) {
+            if (m.isEqual(move)) return true;
+        }
+        return false;
+    }
     public List<Move> getValidMoves(Piece piece) {
         return this.pieceLogic.getValidMoves(piece); //delegating the work to the PieceLogic class
     }
-    public void move(Piece piece, Move move) {
-        if (!getValidMoves(piece).contains(move)) return;
+    public void move(Move move) {
+        if (!isValidMove(move)) return;
+        Piece piece = chessBoard.getPiece(move.getFrom());
         if (chessBoard.getPiece(move.getTo()) != null) {
             if (whitesTurn) {
                 takenByWhite.add(chessBoard.getPiece(move.getTo()));
@@ -59,8 +67,9 @@ public class GameLogic
                 takenByBlack.add(chessBoard.getPiece(move.getTo()));
             }
         }
-        piece.moveTo(move.getTo());
         chessBoard.doMove(move);
+        piece.moveTo(move.getTo());
+        System.out.println(chessBoard);
     }
     // Calulate the score of the specified team
     public int getScore(Piece.Color color) {
@@ -73,24 +82,11 @@ public class GameLogic
                 return 0;
         }
     }
-    public static int calculateScore(ArrayList<Piece> pieces) {
+    public int calculateScore(ArrayList<Piece> pieces) {
         int score = 0;
         if (pieces.isEmpty()) return score;
         for (Piece p : pieces) {
-            switch (p.getType()) {
-                case PAWN:
-                    score++;
-                case ROOK:
-                    score += 5;
-                case BISHOP:
-                    score += 3;
-                case KING:
-                    score += 0;
-                case KNIGHT:
-                    score += 5;
-                case QUEEN:
-                    score += 9;
-            }
+            score += pieceLogic.getScore(p);
         }
         return score;
     }
