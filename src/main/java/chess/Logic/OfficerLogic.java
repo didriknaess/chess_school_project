@@ -7,7 +7,6 @@ import chess.datamodel.ChessBoard;
 import chess.datamodel.Move;
 import chess.datamodel.Piece;
 import chess.datamodel.Position;
-import chess.datamodel.Piece.PieceType;
 
 public class OfficerLogic 
 {

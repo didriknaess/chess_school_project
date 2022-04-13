@@ -1,7 +1,5 @@
 package chess.datamodel;
 
-import java.util.ArrayList;
-
 public class Piece 
 {
     public enum Color

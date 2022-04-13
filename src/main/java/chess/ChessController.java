@@ -39,7 +39,6 @@ public class ChessController {
     }
     @FXML
     public void initialize() {
-        updateText();
         logic.newGame();
         if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
         for (Node node : chessBoardGraphic.getChildren()) {
@@ -63,6 +62,7 @@ public class ChessController {
                 }
             }
         }
+        updateText();
     }
     @FXML
     public void unselectBoard() {
@@ -87,28 +87,29 @@ public class ChessController {
             if (currentPiece == null) return;
             if (currentPiece.getColor() != logic.whoseTurn()) return;
             Pane pane = board[pos.getRow()][pos.getColumn()];
-            if ((pos.getRow()+pos.getColumn())%2==0) {
-                pane.setStyle("-fx-background-color:chartreuse;");
-            } else { //else if (pane.getStyle().equals("wheat"))
-                pane.setStyle("-fx-background-color:lime;");
-            }
 
             this.validMoves = logic.getValidMoves(currentPiece);
 
             if (validMoves == null || validMoves.isEmpty()) {
                 System.out.println("No valid moves");
                 return;
-            } else {
-                for (Move move : validMoves) {
-                    pane = board[move.getTo().getRow()][move.getTo().getColumn()];
-                    if ((move.getTo().getRow()+move.getTo().getColumn())%2==0) {
-                        pane.setStyle("-fx-background-color:lightcoral;");
-                    } else { 
-                        pane.setStyle("-fx-background-color:firebrick;");
-                    }
-                }
-                hasSelected = true;
             }
+
+            if ((pos.getRow()+pos.getColumn())%2==0) {
+                pane.setStyle("-fx-background-color:chartreuse;");
+            } else { //else if (pane.getStyle().equals("wheat"))
+                pane.setStyle("-fx-background-color:lime;");
+            }
+
+            for (Move move : validMoves) {
+                pane = board[move.getTo().getRow()][move.getTo().getColumn()];
+                if ((move.getTo().getRow()+move.getTo().getColumn())%2==0) {
+                    pane.setStyle("-fx-background-color:lightcoral;");
+                } else { 
+                    pane.setStyle("-fx-background-color:firebrick;");
+                }
+            }
+            hasSelected = true;
         } else {
             // deselect current piece
             if (pos.getRow() == this.currentPiece.getPosition().getRow() && pos.getColumn() == this.currentPiece.getPosition().getColumn()) {
@@ -155,8 +156,8 @@ public class ChessController {
         blackScore.setText("Score: "+logic.getScore(Piece.Color.BLACK));
         whiteScore.setText("Score: "+logic.getScore(Piece.Color.WHITE));
         whoseTurn.setText("Placeholder text!");
-        if(logic.isWhitePlaying()) whoseTurn.setText("Turn: WHITE");
-        else whoseTurn.setText("Turn: BLACK");
+        if(logic.isWhitePlaying()) whoseTurn.setText("Turn " + logic.getTurnCount() + ": WHITE");
+        else whoseTurn.setText("Turn " + logic.getTurnCount() + ": BLACK");
     }
     //Handling of buttons in the JavaFX Application:
     @FXML
@@ -170,6 +171,25 @@ public class ChessController {
     @FXML
     public void handleForfeit() {
         Alert alert = new Alert(AlertType.INFORMATION);    
+    }
+    @FXML
+    public void handleRestart() {
+        // removes any ImageView children of panes from the previous game
+        for (int i = 0; i<8; i++) {
+            for (int j = 0; j<8; j++) {
+                board[i][j].getChildren().clear();
+            }
+        }
+        // ensures the turn is white (if not changes it), then re-initializes the game
+        switch(logic.whoseTurn()) {
+            case BLACK:
+                logic.endTurn();
+                this.initialize();
+            case WHITE:
+                this.initialize();
+        }
+        // corrects scores and taken pieces, then updates the display
+        updateText();
     }
     @FXML
     public void handleSave() {

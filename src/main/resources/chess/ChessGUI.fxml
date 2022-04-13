@@ -99,11 +99,12 @@
             <Pane fx:id="Pane77" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: wheat;" GridPane.columnIndex="7" GridPane.rowIndex="7" />
          </children>
       </GridPane>
-      <Button fx:id="pause" layoutX="512.0" layoutY="231.0" mnemonicParsing="false" onMouseClicked="#handlePause" prefHeight="26.0" prefWidth="53.0" text="Pause" />
-      <Button fx:id="undo" layoutX="572.0" layoutY="231.0" mnemonicParsing="false" onMouseClicked="#handleUndo" prefHeight="26.0" prefWidth="53.0" text="Undo" />
-      <Button fx:id="forfeit" layoutX="632.0" layoutY="231.0" mnemonicParsing="false" onMouseClicked="#handleForfeit" prefHeight="26.0" prefWidth="53.0" text="Forfeit" />
-      <Button fx:id="save" layoutX="542.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#handleSave" prefHeight="26.0" prefWidth="53.0" text="Save" />
-      <Button fx:id="load" layoutX="602.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#handleLoad" prefHeight="26.0" prefWidth="53.0" text="Load" />
+      <Button fx:id="pause" layoutX="500.0" layoutY="231.0" mnemonicParsing="false" onMouseClicked="#handlePause" prefHeight="26.0" prefWidth="60" text="Pause" />
+      <Button fx:id="undo" layoutX="570.0" layoutY="231.0" mnemonicParsing="false" onMouseClicked="#handleUndo" prefHeight="26.0" prefWidth="60" text="Undo" />
+      <Button fx:id="forfeit" layoutX="640.0" layoutY="231.0" mnemonicParsing="false" onMouseClicked="#handleForfeit" prefHeight="26.0" prefWidth="60.0" text="Forfeit" />
+      <Button fx:id="restart" layoutX="500.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#handleRestart" prefHeight="26.0" prefWidth="60.0" text="Restart" />
+      <Button fx:id="save" layoutX="570.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#handleSave" prefHeight="26.0" prefWidth="60.0" text="Save" />
+      <Button fx:id="load" layoutX="640.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#handleLoad" prefHeight="26.0" prefWidth="60.0" text="Load" />
       <Text fx:id="whoseTurn" layoutX="489.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="It's color's turn!" textAlignment="CENTER" wrappingWidth="220.0">
          <font>
             <Font size="24.0" />
