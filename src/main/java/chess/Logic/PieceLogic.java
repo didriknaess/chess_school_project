@@ -27,10 +27,8 @@ public class PieceLogic //This class is to help prevent having to make new insta
         this.kingLogic = new KingLogic(chessBoard);
     }
 
-    public List<Move> getValidMoves(Piece piece)
-    {
-        switch (piece.getType())
-        {
+    public List<Move> getValidMoves(Piece piece) {
+        switch (piece.getType()) {
             case PAWN:
                 return this.pawnLogic.getValidMoves(piece);
             case ROOK:
@@ -52,13 +50,13 @@ public class PieceLogic //This class is to help prevent having to make new insta
             case PAWN:
                 return 1;
             case ROOK:
+                return 5;
+            case KNIGHT:
                 return 3;
             case BISHOP:
                 return 3;
             case KING:
                 return 0;
-            case KNIGHT:
-                return 5;
             case QUEEN:
                 return 9;
             default:
