@@ -72,7 +72,7 @@ public class GameLogic {
         Position kPos = new Position(-1, -1);
         // finds and saves the kings position
         for (Piece p : pieces) {
-                if (p.getType() == Piece.PieceType.KING) kPos = p.getPosition();
+                if (p.getType() == Piece.PieceType.KING && p.getColor() == color) kPos = p.getPosition();
         }
         return isThreatened(color, kPos);
     }
@@ -102,6 +102,7 @@ public class GameLogic {
         Piece p = chessBoard.getPiece(move.getTo());
         if (p.getFirstTurnMoved() == -1) p.setFirstTurnMoved(turn);
         if (remember == true) this.moveHistory.add(move);
+        System.out.println(chessBoard);
     }
     public void undo() {
         Move lastMove = moveHistory.pop();
@@ -117,7 +118,6 @@ public class GameLogic {
                 takenPieces.remove(i);
             }
         }
-        System.out.println(chessBoard);
     }
     public void addHistory(Move move) {
         moveHistory.add(move);

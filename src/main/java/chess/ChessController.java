@@ -103,7 +103,6 @@ public class ChessController {
             } else { //else if (pane.getStyle().equals("wheat"))
                 pane.setStyle("-fx-background-color:lime;");
             }
-            System.out.println(validMoves);
             for (Move move : validMoves) {
                 pane = board[move.getTo().getRow()][move.getTo().getColumn()];
                 if ((move.getTo().getRow()+move.getTo().getColumn())%2==0) {
