@@ -18,7 +18,7 @@ public class PawnLogic
         this.chessBoard = chessBoard;
     }
 
-    public List<Move> getValidMoves(Piece piece)
+    public List<Move> getLegalMoves(Piece piece)
     {
         List<Move> returnList = new ArrayList<>();
         if (!piece.getType().equals(PieceType.PAWN)) throw new IllegalArgumentException("Only pawns!");
@@ -57,8 +57,7 @@ public class PawnLogic
             }
         }
         //Check two steps forward
-        if (!piece.hasBeenMoved() && oneStepPossible)
-        {
+        if (oneStepPossible && piece.getFirstTurnMoved() != -1) {
             newPosition = piece.getPosition().getNewPosition(2*direction, 0);
             if (!newPosition.isValid()) throw new IllegalArgumentException("I think the board is broken");
             if (chessBoard.isSquareEmpty(newPosition))

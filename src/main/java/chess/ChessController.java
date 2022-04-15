@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,6 +42,7 @@ public class ChessController {
     public void initialize() {
         logic.newGame();
         if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
+        // adds all panes to an array to make access and modification easier
         for (Node node : chessBoardGraphic.getChildren()) {
             if (node instanceof Pane) {
                 Pane pane = (Pane)node;
@@ -49,19 +51,20 @@ public class ChessController {
                 board[x][y] = pane;
             }
         }
-
+        // gets images corresponding to the pieces and loads them in the designated places
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = logic.getPiece(new Position(i, j));
                 if (p != null) {
                     Image img = imageLoader.getImage(p);
                     ImageView view = new ImageView(img);
+                    view.fitWidthProperty().bind(board[i][j].widthProperty()); 
+                    view.fitHeightProperty().bind(board[i][j].heightProperty()); 
                     board[i][j].getChildren().add(view);
-                    view.fitHeightProperty();
-                    view.fitWidthProperty();
                 }
             }
         }
+        // assigns images to the 
         updateText();
     }
     @FXML
@@ -131,6 +134,7 @@ public class ChessController {
                     if (node instanceof ImageView) {
                         img = ((ImageView)node).getImage();
                         ((ImageView)node).setImage(null);
+                        
                     }
                 }
                 boolean isOccupied = false;
@@ -140,8 +144,13 @@ public class ChessController {
                         ((ImageView)node).setImage(img);
                     }
                 }
-                if (!isOccupied) selectedPane.getChildren().add(new ImageView(img));
-                logic.move(move);
+                if (!isOccupied) {
+                    ImageView view = new ImageView(img);
+                    view.fitWidthProperty().bind(selectedPane.widthProperty()); 
+                    view.fitHeightProperty().bind(selectedPane.heightProperty()); 
+                    selectedPane.getChildren().add(view);
+                }
+                logic.move(move, true);
                 logic.endTurn();
                 updateText();
                 hasSelected = false;
@@ -155,9 +164,15 @@ public class ChessController {
     public void updateText() {
         blackScore.setText("Score: "+logic.getScore(Piece.Color.BLACK));
         whiteScore.setText("Score: "+logic.getScore(Piece.Color.WHITE));
-        whoseTurn.setText("Placeholder text!");
-        if(logic.isWhitePlaying()) whoseTurn.setText("Turn " + logic.getTurnCount() + ": WHITE");
-        else whoseTurn.setText("Turn " + logic.getTurnCount() + ": BLACK");
+        String foo = "";
+        if (logic.isWhitePlaying()) {
+            foo = "Turn " + logic.getTurnCount() + ": White";
+            if (logic.inCheck(Piece.Color.WHITE)) foo += "(in check)";
+        } else {
+            foo = "Turn " + logic.getTurnCount() + ": Black";
+            if (logic.inCheck(Piece.Color.BLACK)) foo += "(in check)";
+        }
+        whoseTurn.setText(foo);
     }
     //Handling of buttons in the JavaFX Application:
     @FXML
@@ -166,7 +181,25 @@ public class ChessController {
     }
     @FXML
     public void handleUndo() {
-        Alert alert = new Alert(AlertType.INFORMATION);    
+        logic.undoTurn();
+        for (int i = 0; i<8; i++) {
+            for (int j = 0; j<8; j++) {
+                Piece p = logic.getPiece(new Position(i, j));
+                if (p != null) {
+                    Image img = imageLoader.getImage(p);
+                    ImageView view = new ImageView(img);
+                    view.fitWidthProperty().bind(board[i][j].widthProperty()); 
+                    view.fitHeightProperty().bind(board[i][j].heightProperty()); 
+                    board[i][j].getChildren().add(view);
+                } else {
+                    for (Node node : board[i][j].getChildren()) {
+                        if (node instanceof ImageView) ((ImageView)node).setImage(null);
+                    }
+                }
+            }
+        }
+        unselectBoard();
+        updateText();
     }
     @FXML
     public void handleForfeit() {
@@ -174,6 +207,12 @@ public class ChessController {
     }
     @FXML
     public void handleRestart() {
+        // asks for confimation to restart the game
+        Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to restart the game?", ButtonType.OK, ButtonType.CANCEL);
+        alert.setTitle("Confirmation");
+        alert.showAndWait();
+        if (!(alert.getResult() == ButtonType.OK)) return;
+        
         // removes any ImageView children of panes from the previous game
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {

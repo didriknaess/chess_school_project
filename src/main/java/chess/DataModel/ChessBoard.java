@@ -17,7 +17,6 @@ public class ChessBoard
             chessBoard.add(foo);
         }
     }
-
     public void clearBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -43,6 +42,7 @@ public class ChessBoard
         Piece toMove = chessBoard.get(move.getFrom().getRow()).get(move.getFrom().getColumn());
         chessBoard.get(move.getTo().getRow()).set(move.getTo().getColumn(), toMove);
         chessBoard.get(move.getFrom().getRow()).set(move.getFrom().getColumn(), null);
+        toMove.moveTo(move.getTo());
     }
 
     @Override
