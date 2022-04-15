@@ -58,7 +58,9 @@ public class GameLogic {
             for (int j = 0; j<8; j++) {
                 Piece p = this.getPiece(new Position(i, j));
                 if (p != null) {
-                    if (p.getColor() != color && pieceLogic.getLegalMoves(p).contains(new Move(p.getPosition(), pos))) return true;
+                    for (Move m : getLegalMoves(p)) {
+                        if (m.getTo().equals(pos)) return true;
+                    }
                 }
             }
         }
@@ -83,11 +85,11 @@ public class GameLogic {
         List<Move> moves = getLegalMoves(piece);
         // investigates if the move will put you in check, and removes the move if it will
         for (Move move : moves) {
-            // boolean dangerous = false;
-            // move(move, true);
-            // if (inCheck(piece.getColor())) dangerous = true;
-            // undo();
-            // if (dangerous) moves.remove(move);
+            boolean dangerous = false;
+            move(move, true);
+            if (inCheck(piece.getColor())) dangerous = true;
+            undo();
+            if (dangerous) moves.remove(move);
         }
         return moves;
     }
@@ -105,11 +107,12 @@ public class GameLogic {
         Move lastMove = moveHistory.pop();
         Piece moved = chessBoard.getPiece(lastMove.getTo());
         chessBoard.doMove(new Move(lastMove.getTo(), lastMove.getFrom()));
+        //         for the undoTurn Function              for trying moves and testing for check
         if (moved.getFirstTurnMoved() == this.turn - 1 || moved.getFirstTurnMoved() == this.turn) moved.setFirstTurnMoved(-1);
 
         // check if a piece was taken this turn, and potentially restore it to the board
         for (Integer i : takenPieces.keySet()) {
-            if (i == this.turn) {
+            if (i == this.turn-1 || i == this.turn) {
                 chessBoard.addPiece(takenPieces.get(i));
                 takenPieces.remove(i);
             }
