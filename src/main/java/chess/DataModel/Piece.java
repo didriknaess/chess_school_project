@@ -22,19 +22,32 @@ public class Piece
     protected String pieceChar;
     protected PieceType pieceType;
     protected Position position;
-    protected boolean hasMoved;
+    protected int firstTurnMoved;
 
     public Piece(PieceType pieceType, Color color, Position position)
     {
         this.pieceType = pieceType;
         this.color = color;
         this.position = position;
-        this.hasMoved = false;
+        this.firstTurnMoved = -1;
     }
 
     public Piece()
     {
 
+    }
+
+    public static Piece createNewPiece(String piece) 
+    {
+        String[] splitPiece = piece.split("");
+        Piece returnPiece = new Piece();
+        Position pos = new Position(splitPiece[1] + splitPiece[2]);
+
+        returnPiece.setTypeAndColor(splitPiece[0]);
+        returnPiece.setPosition(pos);
+        // This has to be implemented better: works as of now for just reading the base board!
+        returnPiece.setFirstTurnMoved(-1);
+        return returnPiece;
     }
 
     public Color getColor()
@@ -52,10 +65,19 @@ public class Piece
         return this.pieceType;
     }
 
+    public int getFirstTurnMoved()
+    {
+        return this.firstTurnMoved;
+    }
+
+    public void setFirstTurnMoved(int n)
+    {
+        this.firstTurnMoved = n;
+    }
+
     public Position moveTo(Position pos)
     {
-        this.position.moveTo(pos);
-        this.hasMoved = true;
+        this.position = pos;
         return this.position;
     }
 
@@ -67,22 +89,6 @@ public class Piece
     public boolean onBoard()
     {
         return this.position.isValid();
-    }
-
-    public boolean hasBeenMoved()
-    {
-        return this.hasMoved;
-    }
-
-    public static Piece createNewPiece(String piece) 
-    {
-        String[] splitPiece = piece.split("");
-        Piece returnPiece = new Piece();
-        Position pos = new Position(splitPiece[1] + splitPiece[2]);
-
-        returnPiece.setTypeAndColor(splitPiece[0]);
-        returnPiece.setPosition(pos);
-        return returnPiece;
     }
 
     private void setTypeAndColor(String typeStr) 

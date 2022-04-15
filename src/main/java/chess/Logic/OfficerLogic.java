@@ -24,7 +24,7 @@ public class OfficerLogic
         this.repeatMoves = repeatMoves;
     }
     
-    public List<Move> getValidMoves(Piece piece) 
+    public List<Move> getLegalMoves(Piece piece) 
     {
         List<Move> returnList = new ArrayList<>();  
 

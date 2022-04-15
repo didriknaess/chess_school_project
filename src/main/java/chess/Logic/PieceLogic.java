@@ -27,20 +27,20 @@ public class PieceLogic //This class is to help prevent having to make new insta
         this.kingLogic = new KingLogic(chessBoard);
     }
 
-    public List<Move> getValidMoves(Piece piece) {
+    public List<Move> getLegalMoves(Piece piece) {
         switch (piece.getType()) {
             case PAWN:
-                return this.pawnLogic.getValidMoves(piece);
+                return this.pawnLogic.getLegalMoves(piece);
             case ROOK:
-                return this.rookLogic.getValidMoves(piece);
+                return this.rookLogic.getLegalMoves(piece);
             case BISHOP:
-                return this.bishopLogic.getValidMoves(piece);
+                return this.bishopLogic.getLegalMoves(piece);
             case KING:
-                return this.kingLogic.getValidMoves(piece);
+                return this.kingLogic.getLegalMoves(piece);
             case KNIGHT:
-                return this.knightLogic.getValidMoves(piece);
+                return this.knightLogic.getLegalMoves(piece);
             case QUEEN:
-                return this.queenLogic.getValidMoves(piece);
+                return this.queenLogic.getLegalMoves(piece);
             default:
                 throw new IllegalArgumentException("What is this piece? Never seen before.");
         }
