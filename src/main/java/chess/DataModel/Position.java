@@ -98,6 +98,16 @@ public class Position implements Comparable<Position>
     }
 
     @Override
+    public boolean equals(Object o) {
+        boolean equal = true;
+        if (!(o instanceof Position)) equal = false;
+        Position pos = (Position)o; 
+        if (pos.getRow() != this.getRow()) equal = false;
+        if (pos.getColumn() != this.getColumn()) equal = false;
+        return equal;
+    }
+
+    @Override
     public String toString() {
         return this.getPosString();
     }
