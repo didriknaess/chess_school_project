@@ -1,5 +1,6 @@
 package chess;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 import chess.datamodel.*;
 import chess.io.BoardIO;
@@ -45,7 +46,7 @@ public class ChessController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws FileNotFoundException {
         logic.newGame();
 
         // sets up the multithreading for the class visually maintaining the player's remaining time
@@ -62,19 +63,19 @@ public class ChessController {
                 Pane pane = (Pane)node;
                 int x = (int)pane.getId().charAt(4) - '0';
                 int y = (int)pane.getId().charAt(5) - '0';
-                board[x][y] = pane;
+                board[7-x][y] = pane;
             }
         }
         // gets images corresponding to the pieces and loads them in the designated places
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
-                Piece p = logic.getPiece(new Position(i, j));
+                Piece p = logic.getPiece(new Position(7-i, j));
                 if (p != null) {
                     Image img = imageLoader.getImage(p);
                     ImageView view = new ImageView(img);
-                    view.fitWidthProperty().bind(board[i][j].widthProperty()); 
-                    view.fitHeightProperty().bind(board[i][j].heightProperty()); 
-                    board[i][j].getChildren().add(view);
+                    view.fitWidthProperty().bind(board[7-i][j].widthProperty()); 
+                    view.fitHeightProperty().bind(board[7-i][j].heightProperty()); 
+                    board[7-i][j].getChildren().add(view);
                 }
             }
         }
@@ -87,9 +88,9 @@ public class ChessController {
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 if ((i+j)%2==0) {
-                    board[i][j].setStyle("-fx-background-color:wheat;");
+                    board[7-i][j].setStyle("-fx-background-color:wheat;");
                 } else {
-                    board[i][j].setStyle("-fx-background-color:goldenrod;");
+                    board[7-i][j].setStyle("-fx-background-color:goldenrod;");
                 }
             }
         }
@@ -98,7 +99,7 @@ public class ChessController {
     public void handleMouseClick(MouseEvent e) {
         double width = chessBoardGraphic.getWidth();
         double height = chessBoardGraphic.getHeight();
-        Position pos = new Position((int)(e.getY()/width*8), (int)(e.getX()/height*8));
+        Position pos = new Position((int)(8-e.getY()/width*8), (int)(e.getX()/height*8));
         System.out.println("Clicked at: ("+pos.getRow()+", "+pos.getColumn()+")");
         if (!hasSelected) {
             if (logic.getTurnCount() == 1 || paused) {
@@ -202,24 +203,10 @@ public class ChessController {
                 int blackTime = logic.getRemainingTime(Piece.Color.BLACK);
                 int whiteTime = logic.getRemainingTime(Piece.Color.WHITE);
                 if (blackTime <= 0 || whiteTime <= 0) break;
-                String txt = "Remaining time: ";
-                if (blackTime / 600 < 10) txt += "0";
-                txt += (int)(blackTime / 600) + ":";
-                blackTime = blackTime % 600;
-                if (blackTime / 10 < 10) txt += "0";
-                txt += (int)(blackTime / 10);
-                blackTime = blackTime % 10;
-                txt += "." + blackTime;
-                blackRemainingTime.setText(txt);
-                txt = "Remaining time: ";
-                if (whiteTime / 600 < 10) txt += "0";
-                txt += (int)(whiteTime / 600) + ":";
-                whiteTime = whiteTime % 600;
-                if (whiteTime / 10 < 10) txt += "0";
-                txt += (int)(whiteTime / 10);
-                whiteTime = whiteTime % 10;
-                txt += "." + whiteTime;
-                whiteRemainingTime.setText(txt);
+                
+                blackRemainingTime.setText(formatTimerText(blackTime));
+                whiteRemainingTime.setText(formatTimerText(whiteTime));
+
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -228,11 +215,28 @@ public class ChessController {
             // cannot do this on a different thread, must find a way to transfer to main thread
             boolean whiteWon = true;
             if (logic.getRemainingTime(Piece.Color.WHITE) <= 0) whiteWon = false;
-            displayWinnerAndRestart(whiteWon, "won by opponent running out of time.");
+            try {
+                displayWinnerAndRestart(whiteWon, "won by opponent running out of time.");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private String formatTimerText(int time)
+        {
+            String txt = "Remaining time: ";
+            if (time / 600 < 10) txt += "0";
+            txt += (int)(time / 600) + ":";
+            time = time % 600;
+            if (time / 10 < 10) txt += "0";
+            txt += (int)(time / 10);
+            time = time % 10;
+            txt += "." + time;
+            return txt;
         }
 
     }
-    public void restart() {
+    public void restart() throws FileNotFoundException {
         // removes any ImageView children of panes from the previous game
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
@@ -250,7 +254,7 @@ public class ChessController {
         // corrects scores and taken pieces, then updates the display
         updateText();
     }
-    public void displayWinnerAndRestart(boolean whiteWon, String context) {
+    public void displayWinnerAndRestart(boolean whiteWon, String context) throws FileNotFoundException {
         restart();
         String toDisplay = "Congratulations! ";
         if (whiteWon) {
@@ -283,7 +287,7 @@ public class ChessController {
 
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
-                Piece p = logic.getPiece(new Position(i, j));
+                Piece p = logic.getPiece(new Position(7-i, j));
                 if (!board[i][j].getChildren().isEmpty()) {
                     board[i][j].getChildren().clear();
                 }
@@ -300,13 +304,13 @@ public class ChessController {
         updateText();
     }
     @FXML
-    public void handleForfeit() {
+    public void handleForfeit() throws FileNotFoundException {
         boolean whiteWon = true;
         if (logic.getTurnCount() % 2 != 0) whiteWon = false;
         displayWinnerAndRestart(whiteWon, "won by opponent forfeiting.");
     }
     @FXML
-    public void handleRestart() {
+    public void handleRestart() throws FileNotFoundException {
         // asks for confimation to restart the game
         Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to restart the game?", ButtonType.OK, ButtonType.CANCEL);
         alert.setTitle("Confirmation");
@@ -333,3 +337,4 @@ public class ChessController {
         // load the saved game
     }
 }
+

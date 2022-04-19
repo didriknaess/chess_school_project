@@ -28,7 +28,7 @@ public class OfficerLogic
     {
         List<Move> returnList = new ArrayList<>();  
 
-        Position startPos = piece.getPosition(); //Save the startposition
+        Position startPos = piece.getPosition(); //Save the start position
 
         for (int i = 0; i < this.rowDirections.size(); i++) 
         {
