@@ -39,7 +39,4 @@ public class Move implements Comparable<Move>
         return "Move=[From:" + from + ", To:" + to + "]";
     }
 
-    
-    
-    
 }
