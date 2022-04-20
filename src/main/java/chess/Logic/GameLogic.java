@@ -24,7 +24,8 @@ public class GameLogic {
     private void readInitialPieces() throws FileNotFoundException {
         BoardIO br = new BoardIO();
         //br.readFile("NormalChess.txt");
-        br.readFile("NormalChess.txt");
+        br.readFileOld("TestChess1.txt");
+        //br.readFile("NormalChess.txt");
         List<String> pieceLines = br.getPieces();
         for (String pieceStr : pieceLines) 
         {
@@ -51,7 +52,7 @@ public class GameLogic {
     // checks if a spesific move is valid
     public boolean isValidMove(Move move) {
         Piece piece = chessBoard.getPiece(move.getFrom());
-        List<Move> moves = getLegalMoves(piece);
+        List<Move> moves = getValidMoves(piece);
         for (Move m : moves) {
             if (m.isEqual(move)) return true;
         }
@@ -60,25 +61,17 @@ public class GameLogic {
     // checks if a spesific square is threatened by the opposing color
     private boolean isThreatened(Piece.Color color, Position pos) {
         boolean toReturn = false;
-        System.out.println(pieces);
-        for (Piece p : pieces) {
-            if (p != null && !p.getColor().equals(color)) {
-                for (Move m : getLegalMoves(p)) {
-                    if (m.getTo().equals(pos)) toReturn = true;
-                    System.out.println(p + ": Comparing " + m + " to " + pos + ": " + toReturn);
-                }  
+        for (int i = 0; i<8; i++) {
+            for (int j = 0; j<8; j++) {
+                Piece p = getPiece(new Position(i, j));
+                if (p != null && p.getColor() != color) {
+                    for (Move m : getLegalMoves(p)) {
+                        if (m.getTo().equals(pos)) toReturn = true;
+                        System.out.println(p + ": Comparing " + m + " to " + pos + ": " + toReturn);
+                    }
+                }
             }
         }
-        // for (int i = 0; i<8; i++) {
-        //     for (int j = 0; j<8; j++) {
-        //         Piece p = getPiece(new Position(i, j));
-        //         if (p == null || p.getColor() == color) break;
-        //         for (Move m : getLegalMoves(p)) {
-        //             if (m.getTo().equals(pos)) toReturn = true;
-        //             System.out.println("Comparing " + m.getTo() + " to " + pos + ": " + toReturn);
-        //         }
-        //     }
-        // }
         return toReturn;
     }
 
@@ -100,9 +93,9 @@ public class GameLogic {
     }
     // adjust the 'legal moves'-method to avoid ending a turn in check
     public List<Move> getValidMoves(Piece piece) {
-        List<Move> moves = getLegalMoves(piece);
+        List<Move> moves = new ArrayList<Move>(getLegalMoves(piece));
         // investigates if the move will put you in check, and removes the move if it will
-        for (Move move : moves) {
+        for (Move move : getLegalMoves(piece)) {
             boolean dangerous = false;
             // does the move in logic to test if it puts you in check
             move(move);

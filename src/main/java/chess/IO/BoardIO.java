@@ -24,9 +24,9 @@ public class BoardIO implements IBoardIO {
     private List<String> pieces = new ArrayList<>();
     private Piece.Color color = Color.WHITE;
     private String p1Name;
-    private String p2Name;
+    private String p2Name; // names of players are not neccesary!
     private int secondsRemainingP1;
-    private int secondsRemainingP2;
+    private int secondsRemainingP2; // use white/black instead of p1/p2? would be clearer
     
     public List<String> getPieces()
     {

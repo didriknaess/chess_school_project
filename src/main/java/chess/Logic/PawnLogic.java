@@ -65,6 +65,9 @@ public class PawnLogic
                 }
             }
         }
+        // check en passant?
+
+        // check for promotion?
         return returnList;
     }
 

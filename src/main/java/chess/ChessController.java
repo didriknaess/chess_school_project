@@ -50,7 +50,7 @@ public class ChessController {
         logic.newGame();
 
         // sets up the multithreading for the class visually maintaining the player's remaining time
-        logic.setTimers(600);
+        logic.setTimers(180);
         TimeUpdater timeUpdater = new TimeUpdater();
         Thread timeThread = new Thread(timeUpdater);
         timeThread.setDaemon(true);
@@ -133,7 +133,7 @@ public class ChessController {
             }
             hasSelected = true;
         } else {
-            // deselect current piece
+            // deselect current piece upon clicking the same pane
             if (pos.getRow() == this.currentPiece.getPosition().getRow() && pos.getColumn() == this.currentPiece.getPosition().getColumn()) {
                 unselectBoard();
                 hasSelected = false;
@@ -186,10 +186,10 @@ public class ChessController {
         String foo = "";
         if (logic.isWhitePlaying()) {
             foo = "Turn " + logic.getTurnCount() + ": White";
-            if (logic.inCheck(Piece.Color.WHITE)) foo += "(in check)";
+            if (logic.inCheck(Piece.Color.WHITE)) foo += " (check)";
         } else {
             foo = "Turn " + logic.getTurnCount() + ": Black";
-            if (logic.inCheck(Piece.Color.BLACK)) foo += "(in check)";
+            if (logic.inCheck(Piece.Color.BLACK)) foo += " (check)";
         }
         whoseTurn.setText(foo);
     }
@@ -202,10 +202,11 @@ public class ChessController {
             while (true) {
                 int blackTime = logic.getRemainingTime(Piece.Color.BLACK);
                 int whiteTime = logic.getRemainingTime(Piece.Color.WHITE);
-                if (blackTime <= 0 || whiteTime <= 0) break;
                 
                 blackRemainingTime.setText(formatTimerText(blackTime));
                 whiteRemainingTime.setText(formatTimerText(whiteTime));
+
+                if (blackTime <= 0 || whiteTime <= 0) break;
 
                 try {
                     Thread.sleep(100);
@@ -213,6 +214,7 @@ public class ChessController {
                 }
             }
             // cannot do this on a different thread, must find a way to transfer to main thread
+            // bruh read comments
             boolean whiteWon = true;
             if (logic.getRemainingTime(Piece.Color.WHITE) <= 0) whiteWon = false;
             try {
@@ -221,9 +223,7 @@ public class ChessController {
                 e.printStackTrace();
             }
         }
-
-        private String formatTimerText(int time)
-        {
+        private String formatTimerText(int time) {
             String txt = "Remaining time: ";
             if (time / 600 < 10) txt += "0";
             txt += (int)(time / 600) + ":";
@@ -286,7 +286,7 @@ public class ChessController {
 
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
-                Piece p = logic.getPiece(new Position(7-i, j));
+                Piece p = logic.getPiece(new Position(i, j));
                 if (!board[i][j].getChildren().isEmpty()) {
                     board[i][j].getChildren().clear();
                 }
