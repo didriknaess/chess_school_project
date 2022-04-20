@@ -3,6 +3,7 @@ Player1
 Player2
 600
 600
+0
 p,a7
 p,b7
 p,c7
