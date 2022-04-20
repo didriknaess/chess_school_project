@@ -23,8 +23,8 @@ public class PawnLogic
         List<Move> returnList = new ArrayList<>();
         if (!piece.getType().equals(PieceType.PAWN)) throw new IllegalArgumentException("Only pawns!");
         
-        int direction = -1;
-        if (piece.getColor().equals(Piece.Color.BLACK)) direction = 1;
+        int direction = 1;
+        if (piece.getColor().equals(Piece.Color.BLACK)) direction = -1;
         
         //Check one step forward
         Position newPosition = piece.getPosition().getNewPosition(direction, 0);
