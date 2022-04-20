@@ -279,7 +279,6 @@ public class ChessController {
             this.pause.setText("Resume");
             this.paused = true;
         }
-        
     }
     @FXML
     public void handleUndo() {
@@ -305,6 +304,11 @@ public class ChessController {
     }
     @FXML
     public void handleForfeit() throws FileNotFoundException {
+        Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to forfeit?", ButtonType.OK, ButtonType.CANCEL);
+        alert.setTitle("Confirmation");
+        alert.showAndWait();
+        if (alert.getResult() != ButtonType.OK) return;
+        
         boolean whiteWon = true;
         if (logic.getTurnCount() % 2 != 0) whiteWon = false;
         displayWinnerAndRestart(whiteWon, "won by opponent forfeiting.");
@@ -337,4 +341,3 @@ public class ChessController {
         // load the saved game
     }
 }
-
