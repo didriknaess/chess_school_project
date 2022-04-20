@@ -59,16 +59,27 @@ public class GameLogic {
     }
     // checks if a spesific square is threatened by the opposing color
     private boolean isThreatened(Piece.Color color, Position pos) {
-        for (int i = 0; i<8; i++) {
-            for (int j = 0; j<8; j++) {
-                Piece p = this.getPiece(new Position(i, j));
-                if (p == null || p.getColor() == color) break;
+        boolean toReturn = false;
+        System.out.println(pieces);
+        for (Piece p : pieces) {
+            if (p != null && !p.getColor().equals(color)) {
                 for (Move m : getLegalMoves(p)) {
-                    if (m.getTo().equals(pos)) return true;
-                }
+                    if (m.getTo().equals(pos)) toReturn = true;
+                    System.out.println(p + ": Comparing " + m + " to " + pos + ": " + toReturn);
+                }  
             }
         }
-        return false;
+        // for (int i = 0; i<8; i++) {
+        //     for (int j = 0; j<8; j++) {
+        //         Piece p = getPiece(new Position(i, j));
+        //         if (p == null || p.getColor() == color) break;
+        //         for (Move m : getLegalMoves(p)) {
+        //             if (m.getTo().equals(pos)) toReturn = true;
+        //             System.out.println("Comparing " + m.getTo() + " to " + pos + ": " + toReturn);
+        //         }
+        //     }
+        // }
+        return toReturn;
     }
 
     // checks if the designated color is in check
@@ -81,8 +92,6 @@ public class GameLogic {
                 if (p != null && p.getColor() == color && p.getType() == Piece.PieceType.KING) kPos = new Position(i, j);
             }
         }
-        System.out.println(kPos);
-        System.out.println(isThreatened(color, kPos));
         return isThreatened(color, kPos);
     }
     // gets all legal (but not neccesarily valid) moves
