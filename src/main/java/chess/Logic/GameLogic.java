@@ -23,13 +23,9 @@ public class GameLogic {
     }
     private void readInitialPieces() throws FileNotFoundException {
         BoardIO br = new BoardIO();
-        //br.readFile("NormalChess.txt");
-        br.readFile("NormalChess.txt");
-        List<String> pieceLines = br.getPieces();
-        for (String pieceStr : pieceLines) 
-        {
-            gameState.addPiece(Piece.createNewPiece(pieceStr));
-        }
+        this.gameState = br.loadFile("NormalChess.txt");
+        if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
+        //Maybe different exception
     }
     private void setUpBoard() throws FileNotFoundException {
         this.chessBoard.clearBoard();
