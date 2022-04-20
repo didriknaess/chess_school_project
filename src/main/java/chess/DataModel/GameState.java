@@ -6,9 +6,9 @@ public class GameState {
 
     private Piece.Color whoseTurn;
     private String p1Name;
-    private String p2Name;
+    private String p2Name; // names of players are not necessary!
     private int secondsLeftP1;
-    private int secondsLeftP2;
+    private int secondsLeftP2; // use white/black instead of p1/p2, easier to understand + im using that in the controller
     private int turn;
     private ArrayList<Piece> pieces = new ArrayList<>();
 
