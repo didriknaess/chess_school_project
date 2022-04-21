@@ -3,6 +3,10 @@ package chess.io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import chess.datamodel.GameState;
@@ -10,6 +14,28 @@ import chess.datamodel.Piece;
 import chess.datamodel.Piece.Color;
 
 public class BoardIO implements IBoardIO {
+
+    public GameState readFileOld(String filename)
+    {
+        GameState game = new GameState();
+        List<String> list = new ArrayList<>();
+        try 
+        {
+             list = Files.lines(Paths.get(getClass().getResource(filename).toURI()))
+            .skip(6)
+            .map(l -> l.split(",")) //split on "," as is done in the .txt file
+            .map(n -> toString(n))  // use the private help method to make a string
+            .toList(); //make list
+        } 
+        catch (Exception e)
+        {
+            System.out.println(e.getStackTrace());
+        }
+        for (String string : list) {
+            game.addPiece(Piece.createNewPiece(string));
+        }
+        return game;
+    }
 
 
     @Override

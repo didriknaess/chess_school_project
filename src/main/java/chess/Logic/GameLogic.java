@@ -23,7 +23,7 @@ public class GameLogic {
     }
     private void readInitialPieces() throws FileNotFoundException {
         BoardIO br = new BoardIO();
-        this.gameState = br.loadFile("NormalChess.txt");
+        this.gameState = br.readFileOld("NormalChess.txt");
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
         //Maybe different exception
     }
