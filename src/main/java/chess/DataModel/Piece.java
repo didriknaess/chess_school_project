@@ -18,11 +18,11 @@ public class Piece
         KING
     }
 
-    protected Color color;
-    protected String pieceChar;
-    protected PieceType pieceType;
-    protected Position position;
-    protected int firstTurnMoved;
+    private Color color;
+    //private String pieceChar;
+    private PieceType pieceType;
+    private Position position;
+    private int firstTurnMoved;
 
     public Piece(PieceType pieceType, Color color, Position position)
     {
@@ -45,7 +45,6 @@ public class Piece
 
         returnPiece.setTypeAndColor(splitPiece[0]);
         returnPiece.setPosition(pos);
-        // This has to be implemented better: works as of now for just reading the base board!
         returnPiece.setFirstTurnMoved(-1);
         return returnPiece;
     }
