@@ -368,6 +368,7 @@ public class ChessController {
         if (!(alert.getResult() == ButtonType.OK)) return; 
 
         // save the game, overwriting the previous saved game
+
     }
     @FXML
     public void handleLoad() {
