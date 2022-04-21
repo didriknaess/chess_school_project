@@ -25,8 +25,8 @@ public class KingLogic extends OfficerLogic
                 Position toEvaluate = new Position(p.getPosition().getRow(), p.getPosition().getColumn() - i);
                 if (!toEvaluate.isValid()) break;
                 if (!this.chessBoard.isSquareEmpty(toEvaluate)) {
-                    if (this.chessBoard.getPiece(toEvaluate).getType() != Piece.PieceType.ROOK) break;
-                    if (this.chessBoard.getPiece(toEvaluate).getColor() == p.getColor() && this.chessBoard.getPiece(toEvaluate).getFirstTurnMoved() == -1) {
+                    if (this.chessBoard.getPiece(toEvaluate).getType() != Piece.PieceType.ROOK || this.chessBoard.getPiece(toEvaluate).getColor() != p.getColor()) break;
+                    if (this.chessBoard.getPiece(toEvaluate).getFirstTurnMoved() == -1) {
                         toReturn.add(new Move(p.getPosition(), new Position(p.getPosition().getRow(), toEvaluate.getColumn()+2)));
                         break;
                     }

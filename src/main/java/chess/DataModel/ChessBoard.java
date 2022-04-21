@@ -45,6 +45,18 @@ public class ChessBoard
         toMove.moveTo(move.getTo());
     }
 
+    public void doCastle(Move move, boolean left) {
+        doMove(move);
+        Piece toMove = chessBoard.get(move.getFrom().getRow()).get(move.getFrom().getColumn());
+        if (left) {
+            Piece rook = chessBoard.get(toMove.getPosition().getRow()).get(0);
+            doMove(new Move(rook.getPosition(), new Position(rook.getPosition().getRow(), rook.getPosition().getColumn()+2)));
+        } else {
+            Piece rook = chessBoard.get(toMove.getPosition().getRow()).get(7);
+            doMove(new Move(rook.getPosition(), new Position(rook.getPosition().getRow(), rook.getPosition().getColumn()-2)));
+        }
+    }
+
     @Override
     public String toString() {
         String returnString = "";
