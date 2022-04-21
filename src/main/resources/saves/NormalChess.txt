@@ -1,6 +1,4 @@
 white
-Player1
-Player2
 600
 600
 0

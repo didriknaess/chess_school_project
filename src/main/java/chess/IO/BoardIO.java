@@ -22,7 +22,7 @@ public class BoardIO implements IBoardIO {
         try 
         {
              list = Files.lines(Paths.get(getClass().getResource(filename).toURI()))
-            .skip(6)
+            .skip(4)
             .map(l -> l.split(",")) //split on "," as is done in the .txt file
             .map(n -> toString(n))  // use the private help method to make a string
             .toList(); //make list
@@ -45,8 +45,6 @@ public class BoardIO implements IBoardIO {
         {
             Piece.Color color = Color.WHITE;
             if (scanner.nextLine().equals("black")) color = Color.BLACK;
-            String p1Name = scanner.nextLine();
-            String p2Name = scanner.nextLine();
             int secondsRemainingP1 = Integer.parseInt(scanner.nextLine());
             int secondsRemainingP2 = Integer.parseInt(scanner.nextLine());
             int turns = Integer.parseInt(scanner.nextLine());
@@ -55,8 +53,6 @@ public class BoardIO implements IBoardIO {
                 game.addPiece(Piece.createNewPiece(toString(scanner.nextLine().split(","))));
             }
             game.setWhoseTurn(color);
-            game.setP1Name(p1Name);
-            game.setP2Name(p2Name);
             game.setSecondsRemainingP1(secondsRemainingP1);
             game.setSecondsRemainingP2(secondsRemainingP2);
             game.setTurns(turns);   
@@ -76,8 +72,6 @@ public class BoardIO implements IBoardIO {
         try (PrintWriter writer = new PrintWriter(new File(getFilePath(filename))))
         {
             writer.println(game.getWhoseTurn());
-            writer.println(game.getP1Name());
-            writer.println(game.getP2Name());
             writer.println(game.getP1Seconds());
             writer.println(game.getP2Seconds());
             writer.println(game.getNumberOfTurns());
