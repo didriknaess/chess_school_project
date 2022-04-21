@@ -32,6 +32,7 @@ public class GameLogic {
         this.gameState.clearPieces();
         this.takenPieces = new HashMap<Integer, Piece>();
         this.gameState.startTurn();
+        this.moveHistory = new Stack<Move>();
         readInitialPieces();
         for (Piece piece : this.gameState.getPieces()) {
             this.chessBoard.addPiece(piece);
