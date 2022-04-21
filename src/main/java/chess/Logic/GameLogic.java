@@ -10,8 +10,6 @@ public class GameLogic {
     private GameState gameState;
     private ChessBoard chessBoard;
     private PieceLogic pieceLogic;
-    private Stack<Move> moveHistory = new Stack<Move>();
-    private HashMap<Integer, Piece> takenPieces = new HashMap<Integer, Piece>();
     private boolean whitesTurn = true;
     private ChessTimer whiteTimer;
     private ChessTimer blackTimer;
@@ -25,14 +23,12 @@ public class GameLogic {
         BoardIO br = new BoardIO();
         this.gameState = br.readFileOld("NormalChess.txt");
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
-        //Maybe different exception
+        //Maybe different exception^^
     }
     private void setUpBoard() throws FileNotFoundException {
         this.chessBoard.clearBoard();
         this.gameState.clearPieces();
-        this.takenPieces = new HashMap<Integer, Piece>();
         this.gameState.startTurn();
-        this.moveHistory = new Stack<Move>();
         readInitialPieces();
         for (Piece piece : this.gameState.getPieces()) {
             this.chessBoard.addPiece(piece);
@@ -104,15 +100,15 @@ public class GameLogic {
     // executes the move on the board (without checks)
     public void move(Move move) {
         if (chessBoard.getPiece(move.getTo()) != null) {
-            takenPieces.put(this.gameState.getNumberOfTurns(), chessBoard.getPiece(move.getTo()));
+            this.gameState.addTakenPiece(chessBoard.getPiece(move.getTo()));
         }
         chessBoard.doMove(move);
         Piece p = chessBoard.getPiece(move.getTo());
         if (p.getFirstTurnMoved() == -1) p.setFirstTurnMoved(this.gameState.getNumberOfTurns());
-        this.moveHistory.add(move);
+        this.gameState.addMove(move);
     }
     public void undo(boolean internal) {
-        Move lastMove = moveHistory.pop();
+        Move lastMove = this.gameState.popMove();
         Piece moved = chessBoard.getPiece(lastMove.getTo());
         chessBoard.doMove(new Move(lastMove.getTo(), lastMove.getFrom()));
         // for regular undo on at turn to turn basis
@@ -121,20 +117,21 @@ public class GameLogic {
         if (internal && moved.getFirstTurnMoved() == this.gameState.getNumberOfTurns()) moved.setFirstTurnMoved(-1);
 
         // check if a piece was taken this turn, and potentially restore it to the board
-        for (Integer i : takenPieces.keySet()) {
+        for (Integer i : gameState.getTakenPieces().keySet()) {
             if ((!internal && i == this.gameState.getNumberOfTurns()-1) || (internal && i == this.gameState.getNumberOfTurns())) {
-                chessBoard.addPiece(takenPieces.get(i));
-                takenPieces.remove(i);
+                chessBoard.addPiece(gameState.getTakenPieces().get(i));
+                gameState.getTakenPieces().remove(i);
             }
         }
     }
+    
     // Calulate the score of the specified team
     public int getScore(Piece.Color color) {
         int whiteScore = 0;
         int blackScore = 0;
-        if (takenPieces.keySet().isEmpty()) return 0;
-        for (Integer i : takenPieces.keySet()) {
-            Piece p = takenPieces.get(i);
+        if (this.gameState.getTakenPieces().keySet().isEmpty()) return 0;
+        for (Integer i : this.gameState.getTakenPieces().keySet()) {
+            Piece p = this.gameState.getTakenPieces().get(i);
             if (p.getColor() == Piece.Color.WHITE) {
                     blackScore += pieceLogic.getScore(p);
             } else if (p.getColor() == Piece.Color.BLACK) {
@@ -173,7 +170,7 @@ public class GameLogic {
         this.gameState.addTurn();
     }
     public void undoTurn() {
-        if (moveHistory.isEmpty()) return;
+        if (this.gameState.getMoveHistory().isEmpty()) return;
         undo(false);
         if (isWhitePlaying()) {
             pauseTimer(Piece.Color.WHITE);
