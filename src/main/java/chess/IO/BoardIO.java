@@ -37,7 +37,6 @@ public class BoardIO implements IBoardIO {
         return game;
     }
 
-
     @Override
     public GameState loadFile(String filename) throws FileNotFoundException
     {
