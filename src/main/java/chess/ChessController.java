@@ -158,42 +158,42 @@ public class ChessController {
             Pane selectedPane = board[pos.getRow()][pos.getColumn()];
             Move move = new Move(currentPiece.getPosition(), pos);
             if (logic.isValidMove(move)) {
-                Pane oldPane = board[currentPiece.getPosition().getRow()][currentPiece.getPosition().getColumn()];
-                Image img = null;
-                for (Node node : oldPane.getChildren()) {
-                    if (node instanceof ImageView) {
-                        img = ((ImageView)node).getImage();
-                        ((ImageView)node).setImage(null);
+                // Pane oldPane = board[currentPiece.getPosition().getRow()][currentPiece.getPosition().getColumn()];
+                // Image img = null;
+                // for (Node node : oldPane.getChildren()) {
+                //     if (node instanceof ImageView) {
+                //         img = ((ImageView)node).getImage();
+                //         ((ImageView)node).setImage(null);
                         
-                    }
-                }
-                boolean isOccupied = false;
-                for (Node node : selectedPane.getChildren()) {
-                    if (node instanceof ImageView) {
-                        isOccupied = true;
-                        ((ImageView)node).setImage(img);
-                    }
-                }
-                if (!isOccupied) {
-                    ImageView view = new ImageView(img);
-                    view.fitWidthProperty().bind(selectedPane.widthProperty()); 
-                    view.fitHeightProperty().bind(selectedPane.heightProperty()); 
-                    selectedPane.getChildren().add(view);
-                }
+                //     }
+                // }
+                // boolean isOccupied = false;
+                // for (Node node : selectedPane.getChildren()) {
+                //     if (node instanceof ImageView) {
+                //         isOccupied = true;
+                //         ((ImageView)node).setImage(img);
+                //     }
+                // }
+                // if (!isOccupied) {
+                //     ImageView view = new ImageView(img);
+                //     view.fitWidthProperty().bind(selectedPane.widthProperty()); 
+                //     view.fitHeightProperty().bind(selectedPane.heightProperty()); 
+                //     selectedPane.getChildren().add(view);
+                // }
                 logic.move(move);
+                unselectBoard();
                 if (logic.getPiece(pos).getType() == Piece.PieceType.PAWN) {
-                    if ((logic.getPiece(pos).getColor() == Piece.Color.WHITE && pos.getColumn() == 7) 
-                    && (logic.getPiece(pos).getColor() == Piece.Color.BLACK && pos.getColumn() == 0)) {
+                    if ((logic.getPiece(pos).getColor() == Piece.Color.WHITE && pos.getRow() == 7) 
+                    || (logic.getPiece(pos).getColor() == Piece.Color.BLACK && pos.getRow() == 0)) {
                         Piece.PieceType type = promotionAlert(pos);
                         logic.promote(pos, type);
                     }
                 }
-
-
                 logic.endTurn();
+                updateBoard();
                 updateText();
                 hasSelected = false;
-                unselectBoard();
+                
             } else {
                 System.out.println("Invalid move");
             }
@@ -236,6 +236,23 @@ public class ChessController {
             if (logic.inCheck(Piece.Color.BLACK)) foo += " (check)";
         }
         whoseTurn.setText(foo);
+    }
+    public void updateBoard() {
+        for (int i = 0; i<8; i++) {
+            for (int j = 0; j<8; j++) {
+                Piece p = logic.getPiece(new Position(i, j));
+                if (!board[i][j].getChildren().isEmpty()) {
+                    board[i][j].getChildren().clear();
+                }
+                if (p != null) {
+                    Image img = imageLoader.getImage(p);
+                    ImageView view = new ImageView(img);
+                    view.fitWidthProperty().bind(board[i][j].widthProperty()); 
+                    view.fitHeightProperty().bind(board[i][j].heightProperty()); 
+                    board[i][j].getChildren().add(view);
+                }
+            }
+        }
     }
     // implements runnable for multithreading so we can update the players respective timers every 1/10th of a second
     private class TimeUpdater implements Runnable {
@@ -321,23 +338,8 @@ public class ChessController {
     @FXML
     public void handleUndo() {
         logic.undoTurn();
-
-        for (int i = 0; i<8; i++) {
-            for (int j = 0; j<8; j++) {
-                Piece p = logic.getPiece(new Position(i, j));
-                if (!board[i][j].getChildren().isEmpty()) {
-                    board[i][j].getChildren().clear();
-                }
-                if (p != null) {
-                    Image img = imageLoader.getImage(p);
-                    ImageView view = new ImageView(img);
-                    view.fitWidthProperty().bind(board[i][j].widthProperty()); 
-                    view.fitHeightProperty().bind(board[i][j].heightProperty()); 
-                    board[i][j].getChildren().add(view);
-                }
-            }
-        }
         unselectBoard();
+        updateBoard();
         updateText();
     }
     @FXML
