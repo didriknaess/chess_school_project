@@ -329,6 +329,7 @@ public class ChessController {
             this.paused = false;
         } else {
             logic.pauseTimer(logic.whoseTurn());
+            this.paused = true;
             this.pause.setText("Resume");
         }
         updateText();
