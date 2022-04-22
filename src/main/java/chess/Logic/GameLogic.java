@@ -1,5 +1,6 @@
 package chess.logic;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 import chess.io.BoardIO;
@@ -21,13 +22,13 @@ public class GameLogic {
         this.gameState = new GameState();
         this.pieceLogic = new PieceLogic(this.chessBoard);
     }
-    private void readInitialPieces() {
+    private void readInitialPieces() throws FileNotFoundException {
         BoardIO br = new BoardIO();
-        this.gameState = br.readFileOld("NormalChess.txt");
+        this.gameState = br.loadFile("NormalChess.txt");
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
         //Maybe different exception^^
     }
-    private void setUpBoard() {
+    private void setUpBoard() throws FileNotFoundException {
         this.chessBoard.clearBoard();
         this.gameState.clearPieces();
         //this.gameState.startTurn();
@@ -175,7 +176,7 @@ public class GameLogic {
         if (isWhitePlaying()) return Piece.Color.WHITE;
         return Piece.Color.BLACK;
     }
-    public void newGame() {
+    public void newGame() throws FileNotFoundException {
         setUpBoard();
         //setTimers();
     }

@@ -47,7 +47,7 @@ public class ChessController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws FileNotFoundException {
         logic.newGame();
 
         // sets up the multithreading for the class visually maintaining the player's remaining time
@@ -97,7 +97,7 @@ public class ChessController {
         }
     }
     @FXML
-    public void handleMouseClick(MouseEvent e) {
+    public void handleMouseClick(MouseEvent e) throws FileNotFoundException {
         double width = chessBoardGraphic.getWidth();
         double height = chessBoardGraphic.getHeight();
         Position pos = new Position((int)(8-e.getY()/width*8), (int)(e.getX()/height*8));
@@ -290,7 +290,7 @@ public class ChessController {
         }
 
     }
-    public void restart() {
+    public void restart() throws FileNotFoundException {
         // removes any ImageView children of panes from the previous game
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
@@ -310,7 +310,7 @@ public class ChessController {
         unselectBoard();
         this.hasSelected = false;
     }
-    public void displayWinnerAndRestart(boolean whiteWon, String context) {
+    public void displayWinnerAndRestart(boolean whiteWon, String context) throws FileNotFoundException {
         restart();
         String toDisplay = "Congratulations! ";
         if (whiteWon) {
