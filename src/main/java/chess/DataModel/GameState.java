@@ -8,10 +8,10 @@ import chess.datamodel.Piece.Color;
 
 public class GameState {
 
-    private Piece.Color whoseTurn;
-    private int secondsLeftP1;
-    private int secondsLeftP2; // use white/black instead of p1/p2, easier to understand + im using that in the controller
-    private int turn;
+    private Piece.Color whoseTurn = Color.WHITE;
+    private int secondsLeftWhite;
+    private int secondsLeftBlack; // use white/black instead of p1/p2, easier to understand + im using that in the controller
+    private int turn = 1;
     private ArrayList<Piece> pieces = new ArrayList<>();
     private Stack<Move> moveHistory = new Stack<Move>();
     private HashMap<Integer, Piece> takenPieces = new HashMap<Integer, Piece>();
@@ -19,6 +19,11 @@ public class GameState {
     public GameState()
     {
 
+    }
+
+    public boolean whitesTurn()
+    {
+        return this.whoseTurn.equals(Color.WHITE);
     }
 
     public void addMove(Move move)
@@ -50,12 +55,12 @@ public class GameState {
         this.turn = turns;
     }
 
-    public void setSecondsRemainingP2(int secondsRemainingP2) {
-        this.secondsLeftP2 = secondsRemainingP2;
+    public void setSecondsRemainingBlack(int secondsRemainingBlack) {
+        this.secondsLeftBlack = secondsRemainingBlack;
     }
 
-    public void setSecondsRemainingP1(int secondsRemainingP1) {
-        this.secondsLeftP1 = secondsRemainingP1;
+    public void setSecondsRemainingWhite(int secondsRemainingWhite) {
+        this.secondsLeftWhite = secondsRemainingWhite;
     }
 
     public void setWhoseTurn(Color color) {
@@ -70,11 +75,6 @@ public class GameState {
     public void removeTurn()
     {
         this.turn --;
-    }
-    
-    public void startTurn()
-    {
-        this.turn = 1;
     }
 
     public ArrayList<Piece> getPieces()
@@ -97,12 +97,12 @@ public class GameState {
         return this.turn;
     }
 
-    public int getP2Seconds() {
-        return this.secondsLeftP2;
+    public int getBlackSeconds() {
+        return this.secondsLeftBlack;
     }
 
-    public int getP1Seconds() {
-        return this.secondsLeftP1;
+    public int getWhiteSeconds() {
+        return this.secondsLeftWhite;
     }
 
     public Piece.Color getWhoseTurn() {
