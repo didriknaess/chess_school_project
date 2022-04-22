@@ -117,12 +117,13 @@ public class GameLogic {
         Piece p = chessBoard.getPiece(move.getFrom());
         if (chessBoard.getPiece(move.getTo()) != null) {
             this.gameState.addTakenPiece(chessBoard.getPiece(move.getTo()));
+            System.out.println(move.getTo());
         }
-        if (p.getType() == Piece.PieceType.KING && p.getPosition().getColumn() - move.getTo().getColumn() == java.lang.Math.abs(2)) {
+        if (p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
             if (p.getPosition().getColumn() - move.getTo().getColumn() < 0) {
-                chessBoard.doCastle(move, true);
-            } else {
                 chessBoard.doCastle(move, false);
+            } else {
+                chessBoard.doCastle(move, true);
             }
         } else {
             chessBoard.doMove(move);
@@ -133,18 +134,29 @@ public class GameLogic {
     public void undo(boolean internal) {
         Move lastMove = this.gameState.popMove();
         Piece moved = chessBoard.getPiece(lastMove.getTo());
-        if (promotedPawns.containsKey(getTurnCount())) {
-            chessBoard.addPiece(promotedPawns.get(getTurnCount()));
-            gameState.getTakenPieces().remove(getTurnCount());
+        // in case of promotion, replaces the promoted piece with the corresponding pawn
+        if (promotedPawns.containsKey(getTurnCount()-1)) {
+            chessBoard.addPiece(promotedPawns.get(getTurnCount()-1));
+            promotedPawns.remove(getTurnCount()-1);
         }
-
+        if (moved.getType() == Piece.PieceType.KING && java.lang.Math.abs(lastMove.getFrom().getColumn() - lastMove.getTo().getColumn()) == 2) {
+            if (lastMove.getFrom().getColumn() - lastMove.getTo().getColumn() > 0) { // castling to the left
+                Piece rook = chessBoard.getPiece(new Position(lastMove.getTo().getRow(), lastMove.getTo().getColumn()+1));
+                chessBoard.doMove(new Move(rook.getPosition(), new Position(lastMove.getTo().getRow(), 0)));
+                rook.moveTo(new Position(lastMove.getTo().getRow(), 0));
+            } else { // castling to the right
+                Piece rook = chessBoard.getPiece(new Position(lastMove.getTo().getRow(), lastMove.getTo().getColumn()-1));
+                chessBoard.doMove(new Move(rook.getPosition(), new Position(lastMove.getTo().getRow(), 7)));
+                rook.moveTo(new Position(lastMove.getTo().getRow(), 7));
+            }
+        }
         chessBoard.doMove(new Move(lastMove.getTo(), lastMove.getFrom()));
-        // for regular undo on at turn to turn basis
+        // for regular undo on a turn to turn basis
         if (!internal && moved.getFirstTurnMoved() == this.gameState.getNumberOfTurns() - 1) moved.setFirstTurnMoved(-1);
         // for undoing a move to test for check
         if (internal && moved.getFirstTurnMoved() == this.gameState.getNumberOfTurns()) moved.setFirstTurnMoved(-1);
 
-        // check if a piece was taken this turn, and potentially restore it to the board
+        // check if a piece was taken this turn, and potentially restores it to the board
         for (Integer i : gameState.getTakenPieces().keySet()) {
             if ((!internal && i == this.gameState.getNumberOfTurns()-1) || (internal && i == this.gameState.getNumberOfTurns())) {
                 chessBoard.addPiece(gameState.getTakenPieces().get(i));
