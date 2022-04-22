@@ -1,5 +1,6 @@
 package chess.logic;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 import chess.io.BoardIO;
@@ -21,13 +22,13 @@ public class GameLogic {
         this.gameState = new GameState();
         this.pieceLogic = new PieceLogic(this.chessBoard);
     }
-    private void readInitialPieces() {
+    private void readInitialPieces() throws FileNotFoundException {
         BoardIO br = new BoardIO();
-        this.gameState = br.readFileOld("NormalChess.txt");
+        this.gameState = br.loadFile("NormalChess.txt");
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
         //Maybe different exception^^
     }
-    private void setUpBoard() {
+    private void setUpBoard() throws FileNotFoundException {
         this.chessBoard.clearBoard();
         this.gameState.clearPieces();
         //this.gameState.startTurn();
@@ -42,15 +43,6 @@ public class GameLogic {
     }
     public Piece getPiece(Position pos) {
         return chessBoard.getPiece(pos);
-    }
-    // checks if a spesific move is valid
-    public boolean isValidMove(Move move) {
-        Piece piece = chessBoard.getPiece(move.getFrom());
-        List<Move> moves = getValidMoves(piece);
-        for (Move m : moves) {
-            if (m.isEqual(move)) return true;
-        }
-        return false;
     }
     // checks if a spesific square is threatened by the opposing color
     private boolean isThreatened(Piece.Color color, Position pos) {
@@ -98,6 +90,27 @@ public class GameLogic {
             if (!dangerous) moves.add(move);
         }
         return moves;
+    }
+    // checks if a spesific move is valid
+    public boolean isValidMove(Move move) {
+        Piece piece = chessBoard.getPiece(move.getFrom());
+        List<Move> moves = getValidMoves(piece);
+        for (Move m : moves) {
+            if (m.isEqual(move)) return true;
+        }
+        return false;
+    }
+    // used to check for checkmate and starmate
+    public boolean noValidMoves(Color color) {
+        for (int i = 0; i<8; i++) {
+            for (int j = 0; j<8; j++) {
+                Piece p = getPiece(new Position(i, j));
+                if (p != null && p.getColor() != color) {
+                    if (!getValidMoves(p).isEmpty()) return false;
+                }
+            }
+        }
+        return true;
     }
     // executes the move on the board (without checks)
     public void move(Move move) {
@@ -175,7 +188,7 @@ public class GameLogic {
         if (isWhitePlaying()) return Piece.Color.WHITE;
         return Piece.Color.BLACK;
     }
-    public void newGame() {
+    public void newGame() throws FileNotFoundException {
         setUpBoard();
         //setTimers();
     }

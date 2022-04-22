@@ -42,21 +42,37 @@ public class ChessController {
     private BoardIO boardLoader = new BoardIO();
     private boolean paused = true;
     private boolean outOfTime = false;
+    private boolean timersEnabled = true;
 
     public ChessController() {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws FileNotFoundException {
         logic.newGame();
-
+        ButtonType three = new ButtonType("03:00");
+        ButtonType ten = new ButtonType("10:00");
+        ButtonType thirty = new ButtonType("30:00");
+        // ButtonType none = new ButtonType("None");
+        Alert alert = new Alert(AlertType.NONE, "Choose the amount of time each player should have at their disposal. Worth to note is that executing moves do not increace your remaining time. This has to be chosen for the game to initalize. ", three, ten, thirty);
+        alert.setTitle("Promotion");
+        alert.showAndWait();
+        if (alert.getResult() == three) {
+            logic.setTimers(180);
+        } else if (alert.getResult() == ten) {
+            logic.setTimers(600);
+        } else if (alert.getResult() == thirty) {
+            logic.setTimers(1800);
+        } else {
+            initialize();
+        }
         // sets up the multithreading for the class visually maintaining the player's remaining time
-        logic.setTimers(180);
-        TimeUpdater timeUpdater = new TimeUpdater();
-        Thread timeThread = new Thread(timeUpdater);
-        timeThread.setDaemon(true);
-        timeThread.start();
-
+        if (timersEnabled) {
+            TimeUpdater timeUpdater = new TimeUpdater();
+            Thread timeThread = new Thread(timeUpdater);
+            timeThread.setDaemon(true);
+            timeThread.start();
+        }
         if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
         // adds all panes to an array to make access and modification easier
         for (Node node : chessBoardGraphic.getChildren()) {
@@ -67,20 +83,8 @@ public class ChessController {
                 board[7-x][y] = pane;
             }
         }
-        // gets images corresponding to the pieces and loads them in the designated places
-        for (int i = 0; i<8; i++) {
-            for (int j = 0; j<8; j++) {
-                Piece p = logic.getPiece(new Position(7-i, j));
-                if (p != null) {
-                    Image img = imageLoader.getImage(p);
-                    ImageView view = new ImageView(img);
-                    view.fitWidthProperty().bind(board[7-i][j].widthProperty()); 
-                    view.fitHeightProperty().bind(board[7-i][j].heightProperty()); 
-                    board[7-i][j].getChildren().add(view);
-                }
-            }
-        }
-        // updates
+        // updates the visuals, meaning the display of icons corresponding to pieces and the text such as score and remaining time.
+        updateBoard();
         updateText();
         pause.setWrapText(true);
     }
@@ -97,7 +101,7 @@ public class ChessController {
         }
     }
     @FXML
-    public void handleMouseClick(MouseEvent e) {
+    public void handleMouseClick(MouseEvent e) throws FileNotFoundException {
         double width = chessBoardGraphic.getWidth();
         double height = chessBoardGraphic.getHeight();
         Position pos = new Position((int)(8-e.getY()/width*8), (int)(e.getX()/height*8));
@@ -154,32 +158,8 @@ public class ChessController {
                 System.out.println("Invalid move");
                 return;
             }
-
-            Pane selectedPane = board[pos.getRow()][pos.getColumn()];
             Move move = new Move(currentPiece.getPosition(), pos);
             if (logic.isValidMove(move)) {
-                // Pane oldPane = board[currentPiece.getPosition().getRow()][currentPiece.getPosition().getColumn()];
-                // Image img = null;
-                // for (Node node : oldPane.getChildren()) {
-                //     if (node instanceof ImageView) {
-                //         img = ((ImageView)node).getImage();
-                //         ((ImageView)node).setImage(null);
-                        
-                //     }
-                // }
-                // boolean isOccupied = false;
-                // for (Node node : selectedPane.getChildren()) {
-                //     if (node instanceof ImageView) {
-                //         isOccupied = true;
-                //         ((ImageView)node).setImage(img);
-                //     }
-                // }
-                // if (!isOccupied) {
-                //     ImageView view = new ImageView(img);
-                //     view.fitWidthProperty().bind(selectedPane.widthProperty()); 
-                //     view.fitHeightProperty().bind(selectedPane.heightProperty()); 
-                //     selectedPane.getChildren().add(view);
-                // }
                 logic.move(move);
                 unselectBoard();
                 if (logic.getPiece(pos).getType() == Piece.PieceType.PAWN) {
@@ -196,6 +176,24 @@ public class ChessController {
                 
             } else {
                 System.out.println("Invalid move");
+            }
+            if (logic.noValidMoves(logic.whoseTurn())) {
+                if (logic.inCheck(logic.whoseTurn())) {
+                    boolean whiteWon = logic.getTurnCount() % 2 != 0;
+                    displayWinnerAndRestart(whiteWon, "by putting the opponent in checkmate. ");
+                } else {
+                    restart();
+                    String context = "The game ended in a starmate. ";
+                    if (logic.isWhitePlaying()) {
+                        context += "White ";
+                    } else {
+                        context += "Black ";
+                    }
+                    context += "has no more valid moves, while not being in check. ";
+                    Alert alert = new Alert(AlertType.INFORMATION, context, ButtonType.OK);
+                    alert.setTitle("Game over");
+                    alert.showAndWait();
+                }
             }
         }
     }
@@ -290,7 +288,7 @@ public class ChessController {
         }
 
     }
-    public void restart() {
+    public void restart() throws FileNotFoundException {
         // removes any ImageView children of panes from the previous game
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
@@ -310,7 +308,7 @@ public class ChessController {
         unselectBoard();
         this.hasSelected = false;
     }
-    public void displayWinnerAndRestart(boolean whiteWon, String context) {
+    public void displayWinnerAndRestart(boolean whiteWon, String context) throws FileNotFoundException {
         restart();
         String toDisplay = "Congratulations! ";
         if (whiteWon) {
@@ -367,7 +365,7 @@ public class ChessController {
         Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to save the game? This will overwrite your previous save.", ButtonType.OK, ButtonType.CANCEL);
         alert.setTitle("Confirmation");
         alert.showAndWait();
-        if (!(alert.getResult() == ButtonType.OK)) return; 
+        if (alert.getResult() != ButtonType.OK) return; 
 
         // save the game, overwriting the previous saved game
 
@@ -377,7 +375,7 @@ public class ChessController {
         Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to load a previous file? Your current game will be lost.", ButtonType.OK, ButtonType.CANCEL);
         alert.setTitle("Confirmation");
         alert.showAndWait();
-        if (!(alert.getResult() == ButtonType.OK)) return;
+        if (alert.getResult() != ButtonType.OK) return;
 
         // load the saved game
     }

@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch BoardIO",
+            "request": "launch",
+            "mainClass": "TDT4100_project/chess.io.BoardIO",
+            "projectName": "tdt4100_v2022_prosjekt_boilerplate"
+        },
+        {
+            "type": "java",
             "name": "Launch GameLogic",
             "request": "launch",
             "mainClass": "TDT4100_project/chess.logic.GameLogic",
