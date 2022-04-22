@@ -53,8 +53,8 @@ public class BoardIO implements IBoardIO {
                 game.addPiece(Piece.createNewPiece(toString(scanner.nextLine().split(","))));
             }
             game.setWhoseTurn(color);
-            game.setSecondsRemainingP1(secondsRemainingP1);
-            game.setSecondsRemainingP2(secondsRemainingP2);
+            game.setSecondsRemainingWhite(secondsRemainingP1);
+            game.setSecondsRemainingBlack(secondsRemainingP2);
             game.setTurns(turns);   
         }
         catch (Exception e)
@@ -72,8 +72,8 @@ public class BoardIO implements IBoardIO {
         try (PrintWriter writer = new PrintWriter(new File(getFilePath(filename))))
         {
             writer.println(game.getWhoseTurn());
-            writer.println(game.getP1Seconds());
-            writer.println(game.getP2Seconds());
+            writer.println(game.getWhiteSeconds());
+            writer.println(game.getBlackSeconds());
             writer.println(game.getNumberOfTurns());
             for (Piece piece : game.getPieces()) 
             {

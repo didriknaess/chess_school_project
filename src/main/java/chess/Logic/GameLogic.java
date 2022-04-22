@@ -4,13 +4,14 @@ import java.util.*;
 
 import chess.io.BoardIO;
 import chess.datamodel.*;
+import chess.datamodel.Piece.Color;
 import chess.datamodel.Piece.PieceType;
 
 public class GameLogic {
     private GameState gameState;
     private ChessBoard chessBoard;
     private PieceLogic pieceLogic;
-    private boolean whitesTurn = true;
+    //private boolean whitesTurn = true;
     private ChessTimer whiteTimer;
     private ChessTimer blackTimer;
     private HashMap<Integer, Piece> promotedPawns = new HashMap<Integer, Piece>();
@@ -29,7 +30,7 @@ public class GameLogic {
     private void setUpBoard() {
         this.chessBoard.clearBoard();
         this.gameState.clearPieces();
-        this.gameState.startTurn();
+        //this.gameState.startTurn();
         readInitialPieces();
         for (Piece piece : this.gameState.getPieces()) {
             this.chessBoard.addPiece(piece);
@@ -168,10 +169,10 @@ public class GameLogic {
         } 
     }
     public boolean isWhitePlaying() {
-        return this.whitesTurn;
+        return this.gameState.whitesTurn();
     }
     public Piece.Color whoseTurn() {
-        if (whitesTurn) return Piece.Color.WHITE;
+        if (isWhitePlaying()) return Piece.Color.WHITE;
         return Piece.Color.BLACK;
     }
     public void newGame() {
@@ -186,9 +187,23 @@ public class GameLogic {
             pauseTimer(Piece.Color.BLACK);
             startTimer(Piece.Color.WHITE);
         }
-        this.whitesTurn = !whitesTurn;
+        setWhoseTurn();
+        
         this.gameState.addTurn();
     }
+
+    private void setWhoseTurn()
+    {
+        switch (this.gameState.getWhoseTurn()) 
+        {
+            case BLACK:
+                this.gameState.setWhoseTurn(Color.WHITE);
+                break;
+            default:
+                this.gameState.setWhoseTurn(Color.BLACK);
+        }
+    }
+    
     public void undoTurn() {
         if (this.gameState.getMoveHistory().isEmpty()) return;
         undo(false);
@@ -199,7 +214,7 @@ public class GameLogic {
             pauseTimer(Piece.Color.BLACK);
             startTimer(Piece.Color.WHITE);
         }
-        this.whitesTurn = !whitesTurn;
+        setWhoseTurn();
         this.gameState.removeTurn();
     }
     public int getTurnCount() {
@@ -228,4 +243,5 @@ public class GameLogic {
             throw new IllegalArgumentException("Invalid timer!");
         }
     }
+
 }
