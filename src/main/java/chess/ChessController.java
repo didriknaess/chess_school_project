@@ -41,12 +41,13 @@ public class ChessController {
     private ImageIO imageLoader = new ImageIO();
     private BoardIO boardLoader = new BoardIO();
     private boolean paused = true;
+    private boolean outOfTime = false;
 
     public ChessController() {
     }
 
     @FXML
-    public void initialize() throws FileNotFoundException {
+    public void initialize() {
         logic.newGame();
 
         // sets up the multithreading for the class visually maintaining the player's remaining time
@@ -101,6 +102,16 @@ public class ChessController {
         double height = chessBoardGraphic.getHeight();
         Position pos = new Position((int)(8-e.getY()/width*8), (int)(e.getX()/height*8));
         System.out.println("Clicked at: ("+pos.getRow()+", "+pos.getColumn()+")");
+        // checks if the time has run out, and terminates the game if true
+        if (outOfTime) {
+            if (logic.getRemainingTime(Piece.Color.BLACK) <= 0) {
+                displayWinnerAndRestart(false, "won by the opponent running out of time."); 
+            } else {
+                displayWinnerAndRestart(true, "won by the opponent running out of time."); 
+            }
+            return;
+        }
+
         if (!hasSelected) {
             if (logic.getTurnCount() == 1 || paused) {
                 logic.startTimer(logic.whoseTurn());
@@ -170,6 +181,15 @@ public class ChessController {
                     selectedPane.getChildren().add(view);
                 }
                 logic.move(move);
+                if (logic.getPiece(pos).getType() == Piece.PieceType.PAWN) {
+                    if ((logic.getPiece(pos).getColor() == Piece.Color.WHITE && pos.getColumn() == 7) 
+                    && (logic.getPiece(pos).getColor() == Piece.Color.BLACK && pos.getColumn() == 0)) {
+                        Piece.PieceType type = promotionAlert(pos);
+                        logic.promote(pos, type);
+                    }
+                }
+
+
                 logic.endTurn();
                 updateText();
                 hasSelected = false;
@@ -179,10 +199,34 @@ public class ChessController {
             }
         }
     }
+    private Piece.PieceType promotionAlert(Position pos) {
+        ButtonType queen = new ButtonType("Queen");
+        ButtonType rook = new ButtonType("Rook");
+        ButtonType bishop = new ButtonType("Bishop");
+        ButtonType knight = new ButtonType("Knight");
+        Alert alert = new Alert(AlertType.NONE, "Choose which piece you would like to promote your pawn to:", queen, rook, bishop, knight);
+        alert.setTitle("Promotion");
+        alert.showAndWait();
+        if (alert.getResult() == queen) {
+            return Piece.PieceType.QUEEN;
+        } else if (alert.getResult() == rook) {
+            return Piece.PieceType.ROOK;
+        } else if (alert.getResult() == bishop) {
+            return Piece.PieceType.BISHOP;
+        } else if (alert.getResult() == knight) {
+            return Piece.PieceType.KNIGHT;
+        } else {
+            // either undo or just redisplay the dialog window
+            return promotionAlert(pos);
+        }
+    }
+    
     //Changing Text corresponding to Score and which players Turn it is
     public void updateText() {
         blackScore.setText("Score: "+logic.getScore(Piece.Color.BLACK));
         whiteScore.setText("Score: "+logic.getScore(Piece.Color.WHITE));
+        if (paused) pause.setText("Resume");
+        else pause.setText("Pause");
         String foo = "";
         if (logic.isWhitePlaying()) {
             foo = "Turn " + logic.getTurnCount() + ": White";
@@ -214,14 +258,7 @@ public class ChessController {
                 }
             }
             // cannot do this on a different thread, must find a way to transfer to main thread
-            // bruh read comments
-            boolean whiteWon = true;
-            if (logic.getRemainingTime(Piece.Color.WHITE) <= 0) whiteWon = false;
-            try {
-                displayWinnerAndRestart(whiteWon, "won by opponent running out of time.");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            outOfTime = true;
         }
         private String formatTimerText(int time) {
             String txt = "Remaining time: ";
@@ -236,7 +273,7 @@ public class ChessController {
         }
 
     }
-    public void restart() throws FileNotFoundException {
+    public void restart() {
         // removes any ImageView children of panes from the previous game
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
@@ -253,8 +290,10 @@ public class ChessController {
         }
         // corrects scores and taken pieces, then updates the display
         updateText();
+        unselectBoard();
+        this.hasSelected = false;
     }
-    public void displayWinnerAndRestart(boolean whiteWon, String context) throws FileNotFoundException {
+    public void displayWinnerAndRestart(boolean whiteWon, String context) {
         restart();
         String toDisplay = "Congratulations! ";
         if (whiteWon) {
@@ -272,13 +311,12 @@ public class ChessController {
     public void handlePause() {
         if (this.paused) {
             logic.startTimer(logic.whoseTurn());
-            this.pause.setText("Pause");
             this.paused = false;
         } else {
             logic.pauseTimer(logic.whoseTurn());
             this.pause.setText("Resume");
-            this.paused = true;
         }
+        updateText();
     }
     @FXML
     public void handleUndo() {

@@ -1,10 +1,10 @@
 package chess.logic;
 
-import java.io.FileNotFoundException;
 import java.util.*;
 
 import chess.io.BoardIO;
 import chess.datamodel.*;
+import chess.datamodel.Piece.PieceType;
 
 public class GameLogic {
     private GameState gameState;
@@ -19,13 +19,13 @@ public class GameLogic {
         this.gameState = new GameState();
         this.pieceLogic = new PieceLogic(this.chessBoard);
     }
-    private void readInitialPieces() throws FileNotFoundException {
+    private void readInitialPieces() {
         BoardIO br = new BoardIO();
         this.gameState = br.readFileOld("NormalChess.txt");
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
         //Maybe different exception^^
     }
-    private void setUpBoard() throws FileNotFoundException {
+    private void setUpBoard() {
         this.chessBoard.clearBoard();
         this.gameState.clearPieces();
         this.gameState.startTurn();
@@ -59,7 +59,7 @@ public class GameLogic {
                 if (p != null && p.getColor() != color) {
                     for (Move m : getLegalMoves(p)) {
                         if (m.getTo().equals(pos)) toReturn = true;
-                        System.out.println(p + ": Comparing " + m + " to " + pos + ": " + toReturn);
+                        // System.out.println(p + ": Comparing " + m + " to " + pos + ": " + toReturn);
                     }
                 }
             }
@@ -85,7 +85,7 @@ public class GameLogic {
     }
     // adjust the 'legal moves'-method to avoid ending a turn in check
     public List<Move> getValidMoves(Piece piece) {
-        List<Move> moves = new ArrayList<Move>(getLegalMoves(piece));
+        List<Move> moves = new ArrayList<Move>();
         // investigates if the move will put you in check, and removes the move if it will
         for (Move move : getLegalMoves(piece)) {
             boolean dangerous = false;
@@ -93,17 +93,25 @@ public class GameLogic {
             move(move);
             if (inCheck(piece.getColor())) dangerous = true;
             undo(true);
-            if (dangerous) moves.remove(move);
+            if (!dangerous) moves.add(move);
         }
         return moves;
     }
     // executes the move on the board (without checks)
     public void move(Move move) {
+        Piece p = chessBoard.getPiece(move.getFrom());
         if (chessBoard.getPiece(move.getTo()) != null) {
             this.gameState.addTakenPiece(chessBoard.getPiece(move.getTo()));
         }
-        chessBoard.doMove(move);
-        Piece p = chessBoard.getPiece(move.getTo());
+        if (p.getType() == Piece.PieceType.KING && p.getPosition().getColumn() - move.getTo().getColumn() == java.lang.Math.abs(2)) {
+            if (p.getPosition().getColumn() - move.getTo().getColumn() < 0) {
+                chessBoard.doCastle(move, true);
+            } else {
+                chessBoard.doCastle(move, false);
+            }
+        } else {
+            chessBoard.doMove(move);
+        }
         if (p.getFirstTurnMoved() == -1) p.setFirstTurnMoved(this.gameState.getNumberOfTurns());
         this.gameState.addMove(move);
     }
@@ -124,7 +132,13 @@ public class GameLogic {
             }
         }
     }
-    
+    public void promote(Position pos, Piece.PieceType type) throws IllegalArgumentException {
+        Piece p = chessBoard.getPiece(pos);
+        takenPieces.put(this.getTurnCount(), p);
+        // remove piece from 
+        if (type == PieceType.PAWN || type == PieceType.KING) throw new IllegalArgumentException("Illegal promotion");
+        chessBoard.addPiece(new Piece(type, p.getColor(), pos));
+    }
     // Calulate the score of the specified team
     public int getScore(Piece.Color color) {
         int whiteScore = 0;
@@ -154,7 +168,7 @@ public class GameLogic {
         if (whitesTurn) return Piece.Color.WHITE;
         return Piece.Color.BLACK;
     }
-    public void newGame() throws FileNotFoundException {
+    public void newGame() {
         setUpBoard();
         //setTimers();
     }
