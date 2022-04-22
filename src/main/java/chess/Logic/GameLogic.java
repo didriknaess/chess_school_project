@@ -13,6 +13,7 @@ public class GameLogic {
     private boolean whitesTurn = true;
     private ChessTimer whiteTimer;
     private ChessTimer blackTimer;
+    private HashMap<Integer, Piece> promotedPawns = new HashMap<Integer, Piece>();
 
     public GameLogic() {
         this.chessBoard = new ChessBoard();
@@ -118,6 +119,11 @@ public class GameLogic {
     public void undo(boolean internal) {
         Move lastMove = this.gameState.popMove();
         Piece moved = chessBoard.getPiece(lastMove.getTo());
+        if (promotedPawns.containsKey(getTurnCount())) {
+            chessBoard.addPiece(promotedPawns.get(getTurnCount()));
+            gameState.getTakenPieces().remove(getTurnCount());
+        }
+
         chessBoard.doMove(new Move(lastMove.getTo(), lastMove.getFrom()));
         // for regular undo on at turn to turn basis
         if (!internal && moved.getFirstTurnMoved() == this.gameState.getNumberOfTurns() - 1) moved.setFirstTurnMoved(-1);
@@ -134,7 +140,7 @@ public class GameLogic {
     }
     public void promote(Position pos, Piece.PieceType type) throws IllegalArgumentException {
         Piece p = chessBoard.getPiece(pos);
-        takenPieces.put(this.getTurnCount(), p);
+        promotedPawns.put(this.getTurnCount(), p);
         // remove piece from 
         if (type == PieceType.PAWN || type == PieceType.KING) throw new IllegalArgumentException("Illegal promotion");
         chessBoard.addPiece(new Piece(type, p.getColor(), pos));
