@@ -44,15 +44,6 @@ public class GameLogic {
     public Piece getPiece(Position pos) {
         return chessBoard.getPiece(pos);
     }
-    // checks if a spesific move is valid
-    public boolean isValidMove(Move move) {
-        Piece piece = chessBoard.getPiece(move.getFrom());
-        List<Move> moves = getValidMoves(piece);
-        for (Move m : moves) {
-            if (m.isEqual(move)) return true;
-        }
-        return false;
-    }
     // checks if a spesific square is threatened by the opposing color
     private boolean isThreatened(Piece.Color color, Position pos) {
         boolean toReturn = false;
@@ -99,6 +90,27 @@ public class GameLogic {
             if (!dangerous) moves.add(move);
         }
         return moves;
+    }
+    // checks if a spesific move is valid
+    public boolean isValidMove(Move move) {
+        Piece piece = chessBoard.getPiece(move.getFrom());
+        List<Move> moves = getValidMoves(piece);
+        for (Move m : moves) {
+            if (m.isEqual(move)) return true;
+        }
+        return false;
+    }
+    // used to check for checkmate and starmate
+    public boolean noValidMoves(Color color) {
+        for (int i = 0; i<8; i++) {
+            for (int j = 0; j<8; j++) {
+                Piece p = getPiece(new Position(i, j));
+                if (p != null && p.getColor() != color) {
+                    if (!getValidMoves(p).isEmpty()) return false;
+                }
+            }
+        }
+        return true;
     }
     // executes the move on the board (without checks)
     public void move(Move move) {
