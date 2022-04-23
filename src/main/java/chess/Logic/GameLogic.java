@@ -22,17 +22,17 @@ public class GameLogic {
         this.gameState = new GameState();
         this.pieceLogic = new PieceLogic(this.chessBoard);
     }
-    private void readInitialPieces() throws FileNotFoundException {
+    private void readInitialPieces(String filename) throws FileNotFoundException {
         BoardIO br = new BoardIO();
-        this.gameState = br.loadFile("NormalChess.txt");
+        this.gameState = br.loadFile(filename);
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
         //Maybe different exception^^
     }
-    private void setUpBoard() throws FileNotFoundException {
+    private void setUpBoard(String filename) throws FileNotFoundException {
         this.chessBoard.clearBoard();
         this.gameState.clearPieces();
         //this.gameState.startTurn();
-        readInitialPieces();
+        readInitialPieces(filename);
         for (Piece piece : this.gameState.getPieces()) {
             this.chessBoard.addPiece(piece);
         }
@@ -135,10 +135,14 @@ public class GameLogic {
         Move lastMove = this.gameState.popMove();
         Piece moved = chessBoard.getPiece(lastMove.getTo());
         // in case of promotion, replaces the promoted piece with the corresponding pawn
-        if (promotedPawns.containsKey(getTurnCount()-1)) {
+        if (!internal && promotedPawns.containsKey(getTurnCount()-1)) {
             chessBoard.addPiece(promotedPawns.get(getTurnCount()-1));
             promotedPawns.remove(getTurnCount()-1);
+        } else if (internal && promotedPawns.containsKey(getTurnCount())) {
+            chessBoard.addPiece(promotedPawns.get(getTurnCount()));
+            promotedPawns.remove(getTurnCount());
         }
+        // in case the move we are undoing is a castling, we also need to reverse the rooks position
         if (moved.getType() == Piece.PieceType.KING && java.lang.Math.abs(lastMove.getFrom().getColumn() - lastMove.getTo().getColumn()) == 2) {
             if (lastMove.getFrom().getColumn() - lastMove.getTo().getColumn() > 0) { // castling to the left
                 Piece rook = chessBoard.getPiece(new Position(lastMove.getTo().getRow(), lastMove.getTo().getColumn()+1));
@@ -157,12 +161,15 @@ public class GameLogic {
         if (internal && moved.getFirstTurnMoved() == this.gameState.getNumberOfTurns()) moved.setFirstTurnMoved(-1);
 
         // check if a piece was taken this turn, and potentially restores it to the board
+        Integer toRemove = null;
         for (Integer i : gameState.getTakenPieces().keySet()) {
             if ((!internal && i == this.gameState.getNumberOfTurns()-1) || (internal && i == this.gameState.getNumberOfTurns())) {
                 chessBoard.addPiece(gameState.getTakenPieces().get(i));
-                gameState.getTakenPieces().remove(i);
+                toRemove = i;
+                break;
             }
         }
+        gameState.getTakenPieces().remove(toRemove);
     }
     public void promote(Position pos, Piece.PieceType type) throws IllegalArgumentException {
         Piece p = chessBoard.getPiece(pos);
@@ -200,8 +207,8 @@ public class GameLogic {
         if (isWhitePlaying()) return Piece.Color.WHITE;
         return Piece.Color.BLACK;
     }
-    public void newGame() throws FileNotFoundException {
-        setUpBoard();
+    public void loadGame(String filename) throws FileNotFoundException {
+        setUpBoard(filename);
         //setTimers();
     }
     public void endTurn() {
@@ -267,6 +274,10 @@ public class GameLogic {
         } else {
             throw new IllegalArgumentException("Invalid timer!");
         }
+    }
+    public void saveGame(String filename) throws FileNotFoundException {
+        BoardIO br = new BoardIO();
+        br.saveFile(filename, this.gameState);
     }
 
 }
