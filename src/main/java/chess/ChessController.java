@@ -3,7 +3,6 @@ package chess;
 import java.io.FileNotFoundException;
 import java.util.*;
 import chess.datamodel.*;
-import chess.io.BoardIO;
 import chess.io.ImageIO;
 import chess.logic.GameLogic;
 
@@ -12,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,17 +39,15 @@ public class ChessController {
     private List<Move> validMoves;
     private boolean hasSelected = false;
     private ImageIO imageLoader = new ImageIO();
-    private BoardIO boardLoader = new BoardIO();
     private boolean paused = true;
     private boolean outOfTime = false;
-    private boolean timersEnabled = true;
 
     public ChessController() {
     }
 
     @FXML
     public void initialize() throws FileNotFoundException {
-        logic.newGame();
+        logic.loadGame("NormalChess.txt");
         ButtonType three = new ButtonType("03:00");
         ButtonType ten = new ButtonType("10:00");
         ButtonType thirty = new ButtonType("30:00");
@@ -67,12 +65,10 @@ public class ChessController {
             initialize();
         }
         // sets up the multithreading for the class visually maintaining the player's remaining time
-        if (timersEnabled) {
-            TimeUpdater timeUpdater = new TimeUpdater();
-            Thread timeThread = new Thread(timeUpdater);
-            timeThread.setDaemon(true);
-            timeThread.start();
-        }
+        TimeUpdater timeUpdater = new TimeUpdater();
+        Thread timeThread = new Thread(timeUpdater);
+        timeThread.setDaemon(true);
+        timeThread.start();
         if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
         // adds all panes to an array to make access and modification easier
         for (Node node : chessBoardGraphic.getChildren()) {
@@ -321,6 +317,18 @@ public class ChessController {
         alert.setTitle("Game over");
         alert.showAndWait();
     }
+    private String askForFilename(String defaultValue) {
+        TextInputDialog inputFilename = new TextInputDialog(defaultValue);
+        inputFilename.setHeaderText("Write the name of the file you would like to print to.\nIf an existing save has the same name it will be overwritten.\nIf not, a new save will be created.\n\n");
+        inputFilename.showAndWait();
+        String filename = inputFilename.getResult();
+        System.out.println(filename);
+
+        if (filename == null) return "";
+        if (!filename.substring(filename.length()-4, filename.length()).equals(".txt")) filename += ".txt";
+        
+        return filename;
+    }
     //Handling of buttons in the JavaFX Application:
     @FXML
     public void handlePause() {
@@ -329,8 +337,8 @@ public class ChessController {
             this.paused = false;
         } else {
             logic.pauseTimer(logic.whoseTurn());
-            this.paused = true;
             this.pause.setText("Resume");
+            this.paused = true;
         }
         updateText();
     }
@@ -354,6 +362,10 @@ public class ChessController {
     }
     @FXML
     public void handleRestart() throws FileNotFoundException {
+        if (!paused) {
+            logic.pauseTimer(logic.whoseTurn());
+            this.pause.setText("Resume");
+        }
         // asks for confimation to restart the game
         Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to restart the game?", ButtonType.OK, ButtonType.CANCEL);
         alert.setTitle("Confirmation");
@@ -362,22 +374,44 @@ public class ChessController {
         restart();
     }
     @FXML
-    public void handleSave() {
-        Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to save the game? This will overwrite your previous save.", ButtonType.OK, ButtonType.CANCEL);
-        alert.setTitle("Confirmation");
-        alert.showAndWait();
-        if (alert.getResult() != ButtonType.OK) return; 
-
-        // save the game, overwriting the previous saved game
-
+    public void handleSave() throws FileNotFoundException {
+        if (!paused) {
+            logic.pauseTimer(logic.whoseTurn());
+            this.pause.setText("Resume");
+        }
+        // asks for name of file to write the savegame to
+        String filename = askForFilename("save.txt");
+        while (filename.equals("NormalChess.txt")) {
+            filename = askForFilename("NormalChess.txt");
+        }
+        if (filename.equals("")) return;
+        // saves to the spesified file
+        logic.saveGame(filename);
     }
     @FXML
     public void handleLoad() {
-        Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to load a previous file? Your current game will be lost.", ButtonType.OK, ButtonType.CANCEL);
-        alert.setTitle("Confirmation");
-        alert.showAndWait();
-        if (alert.getResult() != ButtonType.OK) return;
+        if (!paused) {
+            logic.pauseTimer(logic.whoseTurn());
+            this.pause.setText("Resume");
+        }
+        // asks for file to load from
+        String filename = askForFilename("NormalChess.txt");
+        if (filename.equals("")) return;
 
         // load the saved game
+        try {
+            logic.loadGame(filename);
+        } catch (Exception FileNotFoundException) {
+            handleLoad();
+        }
+        
+        // sets up the multithreading for the class visually maintaining the player's remaining time
+        TimeUpdater timeUpdater = new TimeUpdater();
+        Thread timeThread = new Thread(timeUpdater);
+        timeThread.setDaemon(true);
+        timeThread.start();
+        updateBoard();
+        updateText();
+        pause.setWrapText(true);
     }
 }
