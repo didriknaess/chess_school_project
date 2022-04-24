@@ -317,9 +317,10 @@ public class ChessController {
         alert.setTitle("Game over");
         alert.showAndWait();
     }
-    private String askForFilename(String defaultValue) {
+    private String askForFilename(String defaultValue, boolean saving) {
         TextInputDialog inputFilename = new TextInputDialog(defaultValue);
-        inputFilename.setHeaderText("Write the name of the file you would like to print to.\nIf an existing save has the same name it will be overwritten.\nIf not, a new save will be created.\n\n");
+        inputFilename.setHeaderText("Write the name of the file you would like to load from.\nThis will delete any unsaved data in your current game.\nMake sure to input a valid filename.\n\n");
+        if (saving) inputFilename.setHeaderText("Write the name of the file you would like to print to.\nIf an existing save has the same name it will be overwritten.\nIf not, a new save will be created.\n\n");
         inputFilename.showAndWait();
         String filename = inputFilename.getResult();
         System.out.println(filename);
@@ -380,9 +381,9 @@ public class ChessController {
             this.pause.setText("Resume");
         }
         // asks for name of file to write the savegame to
-        String filename = askForFilename("save.txt");
+        String filename = askForFilename("save.txt", true);
         while (filename.equals("NormalChess.txt")) {
-            filename = askForFilename("NormalChess.txt");
+            filename = askForFilename("NormalChess.txt", true);
         }
         if (filename.equals("")) return;
         // saves to the spesified file
@@ -395,7 +396,7 @@ public class ChessController {
             this.pause.setText("Resume");
         }
         // asks for file to load from
-        String filename = askForFilename("NormalChess.txt");
+        String filename = askForFilename("NormalChess.txt", false);
         if (filename.equals("")) return;
 
         // load the saved game
