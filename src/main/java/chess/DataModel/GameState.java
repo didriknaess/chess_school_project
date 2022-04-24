@@ -15,6 +15,7 @@ public class GameState {
     private ArrayList<Piece> pieces = new ArrayList<>();
     private Stack<Move> moveHistory = new Stack<Move>();
     private HashMap<Integer, Piece> takenPieces = new HashMap<Integer, Piece>();
+    private HashMap<Integer, Piece> promotedPawns = new HashMap<Integer, Piece>();
 
     public GameState()
     {
@@ -24,6 +25,11 @@ public class GameState {
     public boolean whitesTurn()
     {
         return this.whoseTurn.equals(Color.WHITE);
+    }
+
+    public void addPromotedPawn(Integer move, Piece piece)
+    {
+        this.promotedPawns.put(move, piece);
     }
 
     public void addMove(Move move)
@@ -77,6 +83,11 @@ public class GameState {
         this.turn --;
     }
 
+    public void removePromotedPawn(int turn)
+    {
+        this.promotedPawns.remove(turn);
+    }
+
     public ArrayList<Piece> getPieces()
     {
         return this.pieces;
@@ -85,6 +96,16 @@ public class GameState {
     public HashMap<Integer, Piece> getTakenPieces()
     {
         return this.takenPieces;
+    }
+
+    public HashMap<Integer, Piece> getPromotedPawns()
+    {
+        return this.promotedPawns;
+    }
+
+    public Piece getPromotedPawn(int turn)
+    {
+        return this.promotedPawns.get(turn);
     }
 
     public Stack<Move> getMoveHistory()

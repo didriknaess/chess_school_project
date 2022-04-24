@@ -12,10 +12,8 @@ public class GameLogic {
     private GameState gameState;
     private ChessBoard chessBoard;
     private PieceLogic pieceLogic;
-    //private boolean whitesTurn = true;
     private ChessTimer whiteTimer;
     private ChessTimer blackTimer;
-    private HashMap<Integer, Piece> promotedPawns = new HashMap<Integer, Piece>();
 
     public GameLogic() {
         this.chessBoard = new ChessBoard();
@@ -133,12 +131,12 @@ public class GameLogic {
         Move lastMove = this.gameState.popMove();
         Piece moved = chessBoard.getPiece(lastMove.getTo());
         // in case of promotion, replaces the promoted piece with the corresponding pawn
-        if (!internal && promotedPawns.containsKey(getTurnCount()-1)) {
-            chessBoard.addPiece(promotedPawns.get(getTurnCount()-1));
-            promotedPawns.remove(getTurnCount()-1);
-        } else if (internal && promotedPawns.containsKey(getTurnCount())) {
-            chessBoard.addPiece(promotedPawns.get(getTurnCount()));
-            promotedPawns.remove(getTurnCount());
+        if (!internal && this.gameState.getPromotedPawns().containsKey(getTurnCount()-1)) {
+            chessBoard.addPiece(this.gameState.getPromotedPawn(getTurnCount()-1));
+            this.gameState.removePromotedPawn(getTurnCount()-1);
+        } else if (internal && this.gameState.getPromotedPawns().containsKey(getTurnCount())) {
+            chessBoard.addPiece(this.gameState.getPromotedPawn(getTurnCount()));
+            this.gameState.removePromotedPawn(getTurnCount());
         }
         // in case the move we are undoing is a castling, we also need to reverse the rooks position
         if (moved.getType() == Piece.PieceType.KING && java.lang.Math.abs(lastMove.getFrom().getColumn() - lastMove.getTo().getColumn()) == 2) {
@@ -171,7 +169,7 @@ public class GameLogic {
     }
     public void promote(Position pos, Piece.PieceType type) throws IllegalArgumentException {
         Piece p = chessBoard.getPiece(pos);
-        promotedPawns.put(this.getTurnCount(), p);
+        this.gameState.addPromotedPawn(this.getTurnCount(), p);
         // remove piece from 
         if (type == PieceType.PAWN || type == PieceType.KING) throw new IllegalArgumentException("Illegal promotion");
         chessBoard.addPiece(new Piece(type, p.getColor(), pos));
