@@ -53,7 +53,6 @@ public class GameLogic {
                 if (p != null && p.getColor() != color) {
                     for (Move m : getLegalMoves(p)) {
                         if (m.getTo().equals(pos)) toReturn = true;
-                        // System.out.println(p + ": Comparing " + m + " to " + pos + ": " + toReturn);
                     }
                 }
             }
@@ -117,7 +116,6 @@ public class GameLogic {
         Piece p = chessBoard.getPiece(move.getFrom());
         if (chessBoard.getPiece(move.getTo()) != null) {
             this.gameState.addTakenPiece(chessBoard.getPiece(move.getTo()));
-            System.out.println(move.getTo());
         }
         if (p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
             if (p.getPosition().getColumn() - move.getTo().getColumn() < 0) {
