@@ -71,7 +71,7 @@ public class BoardIO implements IBoardIO {
         //Logic to save the state of the game
         try (PrintWriter writer = new PrintWriter(new File(getFilePath(filename))))
         {
-            writer.println(game.getWhoseTurn());
+            writer.println(game.savingGetWhoseTurn());
             writer.println(game.getWhiteSeconds());
             writer.println(game.getBlackSeconds());
             writer.println(game.getNumberOfTurns());

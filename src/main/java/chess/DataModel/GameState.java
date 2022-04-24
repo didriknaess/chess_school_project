@@ -129,6 +129,11 @@ public class GameState {
     public Piece.Color getWhoseTurn() {
         return this.whoseTurn;
     }
+    
+    public String savingGetWhoseTurn() {
+        if (this.whoseTurn == Color.WHITE) return "white";
+        return "black";
+    }
 
     public boolean isValid() {
         return this.pieces.size() > 0;

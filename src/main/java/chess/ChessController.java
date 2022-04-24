@@ -179,7 +179,7 @@ public class ChessController {
                     displayWinnerAndRestart(whiteWon, "by putting the opponent in checkmate. ");
                 } else {
                     restart();
-                    String context = "The game ended in a starmate. ";
+                    String context = "The game ended in a stalemate. ";
                     if (logic.isWhitePlaying()) {
                         context += "White ";
                     } else {
@@ -326,7 +326,8 @@ public class ChessController {
         System.out.println(filename);
 
         if (filename == null) return "";
-        if (!filename.substring(filename.length()-4, filename.length()).equals(".txt")) filename += ".txt";
+        if(!filename.endsWith(".txt")) filename += ".txt";
+        // if (!filename.substring(filename.length()-4, filename.length()).equals(".txt")) filename += ".txt";
         
         return filename;
     }
