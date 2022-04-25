@@ -26,6 +26,7 @@ public class KingLogic extends OfficerLogic
                 if (!toEvaluate.isValid()) break;
                 if (!this.chessBoard.isSquareEmpty(toEvaluate)) {
                     if (this.chessBoard.getPiece(toEvaluate).getType() != Piece.PieceType.ROOK || this.chessBoard.getPiece(toEvaluate).getColor() != p.getColor()) break;
+                    if (this.chessBoard.getPiece(toEvaluate).getType() == Piece.PieceType.ROOK && i != 4) break;
                     if (this.chessBoard.getPiece(toEvaluate).getFirstTurnMoved() == -1) {
                         toReturn.add(new Move(p.getPosition(), new Position(p.getPosition().getRow(), p.getPosition().getColumn()-2)));
                         break;
@@ -38,6 +39,7 @@ public class KingLogic extends OfficerLogic
                 if (!toEvaluate.isValid()) break;
                 if (!this.chessBoard.isSquareEmpty(toEvaluate)) {
                     if (this.chessBoard.getPiece(toEvaluate).getType() != Piece.PieceType.ROOK || this.chessBoard.getPiece(toEvaluate).getColor() != p.getColor()) break;
+                    if (this.chessBoard.getPiece(toEvaluate).getType() == Piece.PieceType.ROOK && j != 3) break;
                     if (this.chessBoard.getPiece(toEvaluate).getFirstTurnMoved() == -1) {
                         toReturn.add(new Move(p.getPosition(), new Position(p.getPosition().getRow(), p.getPosition().getColumn()+2)));
                         break;
