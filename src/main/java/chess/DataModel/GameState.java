@@ -5,16 +5,17 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import chess.datamodel.Piece.Color;
+import chess.datamodel.Piece.PieceType;
 
 public class GameState {
 
-    private Piece.Color whoseTurn = Color.WHITE;
-    private int secondsLeftWhite;
-    private int secondsLeftBlack; // use white/black instead of p1/p2, easier to understand + im using that in the controller
-    private int turn = 1;
-    private ArrayList<Piece> pieces = new ArrayList<>();
-    private Stack<Move> moveHistory = new Stack<Move>();
-    private HashMap<Integer, Piece> takenPieces = new HashMap<Integer, Piece>();
+    private Piece.Color whoseTurn = Color.WHITE; //Yes
+    private int secondsLeftWhite; //Yes
+    private int secondsLeftBlack; //Yes
+    private int turn = 1; //Yes
+    private ArrayList<Piece> pieces = new ArrayList<>(); //Yes
+    private Stack<Move> moveHistory = new Stack<Move>(); //Yes
+    private HashMap<Integer, Piece> capturedPieces = new HashMap<Integer, Piece>(); //Yes
     private HashMap<Integer, Piece> promotedPawns = new HashMap<Integer, Piece>();
 
     public GameState()
@@ -22,13 +23,29 @@ public class GameState {
 
     }
 
-    public boolean whitesTurn()
-    {
-        return this.whoseTurn.equals(Color.WHITE);
+    //Set
+    public void setTurns(int turns) {
+        this.turn = turns;
     }
 
+    public void setSecondsRemainingBlack(int secondsRemainingBlack) {
+        if (secondsRemainingBlack < 0) throw new IllegalArgumentException("Can't have negative time reamining!");
+        this.secondsLeftBlack = secondsRemainingBlack;
+    }
+
+    public void setSecondsRemainingWhite(int secondsRemainingWhite) {
+        if (secondsRemainingWhite < 0) throw new IllegalArgumentException("Can't have negative time reamining!");
+        this.secondsLeftWhite = secondsRemainingWhite;
+    }
+
+    public void setWhoseTurn(Color color) {
+        this.whoseTurn = color;
+    }
+
+    //Add
     public void addPromotedPawn(Integer move, Piece piece)
     {
+        if (piece.getType() != PieceType.PAWN) throw new IllegalArgumentException("Only pawns can get a promotion");
         this.promotedPawns.put(move, piece);
     }
 
@@ -37,40 +54,15 @@ public class GameState {
         this.moveHistory.add(move);
     }
 
-    public Move popMove()
+    public void addCapturedPiece(Piece piece)
     {
-        return this.moveHistory.pop();
-    }
-    
-    public void addTakenPiece(Piece piece)
-    {
-        this.takenPieces.put(this.getNumberOfTurns(), piece);
+        this.capturedPieces.put(this.getNumberOfTurns(), piece);
     }
 
     public void addPiece(Piece piece)
     {
+        if (this.pieces.contains(piece)) throw new IllegalArgumentException("Can't add a piece thats already there");
         this.pieces.add(piece);
-    }
-
-    public void clearPieces()
-    {
-        this.pieces.clear();
-    }
-    
-    public void setTurns(int turns) {
-        this.turn = turns;
-    }
-
-    public void setSecondsRemainingBlack(int secondsRemainingBlack) {
-        this.secondsLeftBlack = secondsRemainingBlack;
-    }
-
-    public void setSecondsRemainingWhite(int secondsRemainingWhite) {
-        this.secondsLeftWhite = secondsRemainingWhite;
-    }
-
-    public void setWhoseTurn(Color color) {
-        this.whoseTurn = color;
     }
 
     public void addTurn()
@@ -78,9 +70,26 @@ public class GameState {
         this.turn ++;
     }
 
+    //Remove, pop and clear
+    public Move popMove()
+    {
+        return this.moveHistory.pop();
+    }
+
+    public void clearPieces()
+    {
+        this.pieces.clear();
+    }
+
     public void removeTurn()
     {
         this.turn --;
+    }
+
+    public void removeCapturedPiece(Integer i)
+    {
+        if (!this.capturedPieces.containsKey(i) && i != null) throw new IllegalArgumentException("No pieces was captured this turn");
+        this.capturedPieces.remove(i);
     }
 
     public void removePromotedPawn(int turn)
@@ -88,14 +97,25 @@ public class GameState {
         this.promotedPawns.remove(turn);
     }
 
+    //Boolean
+    public boolean whitesTurn()
+    {
+        return this.whoseTurn.equals(Color.WHITE);
+    }
+
+    public boolean isValid() {
+        return this.pieces.size() > 0;
+    }
+
+    //Get
     public ArrayList<Piece> getPieces()
     {
         return this.pieces;
     }
 
-    public HashMap<Integer, Piece> getTakenPieces()
+    public HashMap<Integer, Piece> getCapturedPieces()
     {
-        return this.takenPieces;
+        return this.capturedPieces;
     }
 
     public HashMap<Integer, Piece> getPromotedPawns()
@@ -133,9 +153,5 @@ public class GameState {
     public String savingGetWhoseTurn() {
         if (this.whoseTurn == Color.WHITE) return "white";
         return "black";
-    }
-
-    public boolean isValid() {
-        return this.pieces.size() > 0;
     }
 }

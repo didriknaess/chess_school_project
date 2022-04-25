@@ -9,14 +9,14 @@ public class Position implements Comparable<Position>
 
     public Position(int row, int column)
     {
-        if (!isValid()) throw new IllegalArgumentException("Illegal position");
+        // if (!isValid(row, column)) throw new IllegalArgumentException("Illegal position");
         this.row = row;
         this.column = column;
     }
 
     public Position(String pos)
     {
-        if (pos.length() != 2 || !Pattern.matches("[a-h]{1}[1-8]{1}", pos)) 
+        if (pos.length() != 2 || !Pattern.matches("[a-h]{1}[1-8]{1}", pos))
         {
             throw new IllegalArgumentException("Illegal position (string)");
         }
@@ -25,7 +25,7 @@ public class Position implements Comparable<Position>
         this.column = colChar - 'a';
         this.row = rowChar - '1';
     }
-    
+
     public int getRow()
     {
         return this.row;
@@ -47,27 +47,34 @@ public class Position implements Comparable<Position>
         return returnPosition;
     }
 
-    public void moveTo(Position pos)
-    {
-        if (!this.isValid()) throw new IllegalArgumentException("Can't move a piece that is not in play");
-        if (!pos.isValid()) throw new IllegalArgumentException("Illegal position on move");
-        this.row = pos.row;
-        this.column = pos.column;
-    }
+    // public void moveTo(Position pos)
+    // {
+    //     if (!this.isValid()) throw new IllegalArgumentException("Can't move a piece that is not in play");
+    //     if (!pos.isValid()) throw new IllegalArgumentException("Illegal position on move");
+    //     this.row = pos.row;
+    //     this.column = pos.column;
+    // }
+
 
     public boolean isValid()
     {
         return (!(this.row < 0 || this.row > 7 || this.column < 0 || this.column > 7));
     }
 
-    public void setCaptured()
+    public boolean isValid(int row, int column)
     {
-        this.column = -1;
-        this.row = -1;
+        return (!(row < 0 || row > 7 || column < 0 || column > 7));
     }
 
+    // public void setCaptured()
+    // {
+    //     this.column = -1;
+    //     this.row = -1;
+    // }
+
+    //The method below is copied from stackoverflow via this url:
     // https://stackoverflow.com/questions/10813154/how-do-i-convert-a-number-to-a-letter-in-java
-    // method to help convert an int to a letter
+    // method to help convert an int to a letter, made it alot easier for us when saving and making a board
     private static String toAlphabetic(int i) {
         if( i<0 ) {
             return "-"+toAlphabetic(-i-1);
@@ -101,7 +108,7 @@ public class Position implements Comparable<Position>
     public boolean equals(Object o) {
         boolean equal = true;
         if (!(o instanceof Position)) equal = false;
-        Position pos = (Position)o; 
+        Position pos = (Position)o;
         if (pos.getRow() != this.getRow()) equal = false;
         if (pos.getColumn() != this.getColumn()) equal = false;
         return equal;
@@ -112,11 +119,8 @@ public class Position implements Comparable<Position>
         return this.getPosString();
     }
 
-    public static void main(String[] args)
-    {
-        Position position = new Position("h3");
-        System.out.println(position.getColumn());
-        System.out.println(position.getRow());
-        System.out.println(position.getPosString());
+    public static void main(String[] args) {
+        Position pos = new Position(-2, 2);
+        System.out.println(pos);
     }
 }

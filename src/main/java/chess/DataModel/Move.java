@@ -18,7 +18,8 @@ public class Move implements Comparable<Move>
     public Position getTo() {
         return to;
     }
-    public boolean isEqual(Move move) {
+ 
+    public boolean equals(Move move) {
         if (this.getFrom().getRow() == move.getFrom().getRow()
         && this.getFrom().getColumn() == move.getFrom().getColumn()
         && this.getTo().getRow() == move.getTo().getRow()
@@ -30,7 +31,7 @@ public class Move implements Comparable<Move>
 
     @Override
     public int compareTo(Move other) {
-        if (this.from == other.from && this.to == other.to) return 0;
+        if (this.from.equals(other.from) && this.to.equals(other.to)) return 0;
         return -1;
     }
 

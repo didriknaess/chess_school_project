@@ -19,7 +19,6 @@ public class Piece
     }
 
     private Color color;
-    //private String pieceChar;
     private PieceType pieceType;
     private Position position;
     private int firstTurnMoved;
@@ -78,6 +77,9 @@ public class Piece
     {
         this.position = pos;
         return this.position;
+        // this.position.moveTo(pos);
+        // return this.position;
+        
     }
 
     public void setPosition(Position pos)
