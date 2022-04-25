@@ -10,6 +10,7 @@ public class ChessTimer {
     public ChessTimer(int disposableTimeInSeconds) {
         this.timeRemaining = disposableTimeInSeconds * 10;
         this.timer = new Timer(true);
+        isRunning = false;
     }
     
     public int getRemainingTime() {
@@ -31,5 +32,8 @@ public class ChessTimer {
         timer.cancel();
         this.isRunning = false;
         this.timer = new Timer(true);
+    }
+    public boolean isRunning() {
+        return this.isRunning;
     }
 }

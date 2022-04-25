@@ -19,37 +19,37 @@ public class PieceLogicTest {
         logic = new PieceLogic(board);
     }
     @Test
-    @DisplayName("Tester pawns basic movement")
+    @DisplayName("Tests pawns basic movement")
     public void testPawnForward() {
 
     }
     @Test
-    @DisplayName("Tester pawns basic movement")
+    @DisplayName("Tests pawns basic movement")
     public void testPawnDiagonal() {
 
     }
     @Test
-    @DisplayName("Tester")
+    @DisplayName("Test")
     public void testRook() {
 
     }
     @Test
-    @DisplayName("Tester")
+    @DisplayName("Test")
     public void testKnight() {
         
     }
     @Test
-    @DisplayName("Tester")
+    @DisplayName("Test")
     public void testBishop() {
         
     }
     @Test
-    @DisplayName("Tester")
+    @DisplayName("Test")
     public void testQueen() {
         
     }
     @Test
-    @DisplayName("Tester")
+    @DisplayName("Test")
     public void testKing() {
         
     }
