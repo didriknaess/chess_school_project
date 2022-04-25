@@ -95,14 +95,24 @@ public class GameLogic {
         }
         return false;
     }
-    // used to check for checkmate and starmate
-    public boolean noValidMoves(Color color) {
+    // used to check for checkmate and stalemate
+    public boolean noValidMoves2(Color color) {
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = getPiece(new Position(i, j));
                 if (p != null && p.getColor() != color) {
                     if (!getValidMoves(p).isEmpty()) return false;
                 }
+            }
+        }
+        return true;
+    }
+    public boolean noValidMoves(Color color) {
+        for (Piece piece : this.gameState.getPieces()) 
+        {
+            if (piece.getColor().compareTo(color) == 0)
+            {
+                if (!getValidMoves(piece).isEmpty()) return false;
             }
         }
         return true;
