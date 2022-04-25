@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class ChessTimerTest {
     private ChessTimer timer; 
-    private int epsilon = 1; // fault margin for the timer in 1/10th seconds
+
     private int time = 600;
     @BeforeEach
     public void setUp() {

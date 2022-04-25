@@ -53,7 +53,7 @@ public class ChessController {
         ButtonType thirty = new ButtonType("30:00");
         // ButtonType none = new ButtonType("None");
         Alert alert = new Alert(AlertType.NONE, "Choose the amount of time each player should have at their disposal. Worth to note is that executing moves do not increace your remaining time. This has to be chosen for the game to initalize. ", three, ten, thirty);
-        alert.setTitle("Promotion");
+        alert.setTitle("Time limit selection");
         alert.showAndWait();
         if (alert.getResult() == three) {
             logic.setTimers(180);
@@ -105,9 +105,9 @@ public class ChessController {
         // checks if the time has run out, and terminates the game if true
         if (outOfTime) {
             if (logic.getRemainingTime(Piece.Color.BLACK) <= 0) {
-                displayWinnerAndRestart(false, "won by the opponent running out of time."); 
+                displayWinnerAndRestart(false, "by the opponent running out of time."); 
             } else {
-                displayWinnerAndRestart(true, "won by the opponent running out of time."); 
+                displayWinnerAndRestart(true, "by the opponent running out of time."); 
             }
             return;
         }
@@ -305,17 +305,17 @@ public class ChessController {
         this.hasSelected = false;
     }
     public void displayWinnerAndRestart(boolean whiteWon, String context) throws FileNotFoundException {
-        restart();
         String toDisplay = "Congratulations! ";
         if (whiteWon) {
-            toDisplay += "White ";
+            toDisplay += "White won ";
         } else {
-            toDisplay += "Black ";
+            toDisplay += "Black won ";
         }
         toDisplay += context;
         Alert alert = new Alert(AlertType.INFORMATION, toDisplay, ButtonType.OK);
         alert.setTitle("Game over");
         alert.showAndWait();
+        restart();
     }
     private String askForFilename(String defaultValue, boolean saving) {
         TextInputDialog inputFilename = new TextInputDialog(defaultValue);
@@ -359,7 +359,7 @@ public class ChessController {
         
         boolean whiteWon = true;
         if (logic.getTurnCount() % 2 != 0) whiteWon = false;
-        displayWinnerAndRestart(whiteWon, "won by opponent forfeiting.");
+        displayWinnerAndRestart(whiteWon, "by opponent forfeiting.");
     }
     @FXML
     public void handleRestart() throws FileNotFoundException {

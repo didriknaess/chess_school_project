@@ -25,7 +25,7 @@ public class ChessTimer {
             public void run() {
                 timeRemaining--;
             }
-        }, 0, 100);
+        }, 100, 100);
     }
     public void pauseTimer() {
         if (isRunning == false) return;

@@ -9,7 +9,6 @@ public class Position implements Comparable<Position>
 
     public Position(int row, int column)
     {
-        if (!isValid()) throw new IllegalArgumentException("Illegal position");
         this.row = row;
         this.column = column;
     }
