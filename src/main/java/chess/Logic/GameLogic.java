@@ -24,12 +24,10 @@ public class GameLogic {
         BoardIO br = new BoardIO();
         this.gameState = br.loadFile(filename);
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
-        //Maybe different exception^^
     }
     private void setUpBoard(String filename) throws FileNotFoundException {
         this.chessBoard.clearBoard();
         this.gameState.clearPieces();
-        //this.gameState.startTurn();
         readInitialPieces(filename);
         for (Piece piece : this.gameState.getPieces()) {
             this.chessBoard.addPiece(piece);
@@ -93,7 +91,7 @@ public class GameLogic {
         Piece piece = chessBoard.getPiece(move.getFrom());
         List<Move> moves = getValidMoves(piece);
         for (Move m : moves) {
-            if (m.isEqual(move)) return true;
+            if (m.equals(move)) return true;
         }
         return false;
     }
@@ -113,7 +111,7 @@ public class GameLogic {
     public void move(Move move) {
         Piece p = chessBoard.getPiece(move.getFrom());
         if (chessBoard.getPiece(move.getTo()) != null) {
-            this.gameState.addTakenPiece(chessBoard.getPiece(move.getTo()));
+            this.gameState.addCapturedPiece(chessBoard.getPiece(move.getTo()));
         }
         if (p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
             if (p.getPosition().getColumn() - move.getTo().getColumn() < 0) {
@@ -158,14 +156,14 @@ public class GameLogic {
 
         // check if a piece was taken this turn, and potentially restores it to the board
         Integer toRemove = null;
-        for (Integer i : gameState.getTakenPieces().keySet()) {
+        for (Integer i : gameState.getCapturedPieces().keySet()) {
             if ((!internal && i == this.gameState.getNumberOfTurns()-1) || (internal && i == this.gameState.getNumberOfTurns())) {
-                chessBoard.addPiece(gameState.getTakenPieces().get(i));
+                chessBoard.addPiece(gameState.getCapturedPieces().get(i));
                 toRemove = i;
                 break;
             }
         }
-        gameState.getTakenPieces().remove(toRemove);
+        gameState.removeCapturedPiece(toRemove);
     }
     public void promote(Position pos, Piece.PieceType type) throws IllegalArgumentException {
         Piece p = chessBoard.getPiece(pos);
@@ -178,9 +176,9 @@ public class GameLogic {
     public int getScore(Piece.Color color) {
         int whiteScore = 0;
         int blackScore = 0;
-        if (this.gameState.getTakenPieces().keySet().isEmpty()) return 0;
-        for (Integer i : this.gameState.getTakenPieces().keySet()) {
-            Piece p = this.gameState.getTakenPieces().get(i);
+        if (this.gameState.getCapturedPieces().keySet().isEmpty()) return 0;
+        for (Integer i : this.gameState.getCapturedPieces().keySet()) {
+            Piece p = this.gameState.getCapturedPieces().get(i);
             if (p.getColor() == Piece.Color.WHITE) {
                     blackScore += pieceLogic.getScore(p);
             } else if (p.getColor() == Piece.Color.BLACK) {
