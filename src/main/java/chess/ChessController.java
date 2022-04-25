@@ -175,7 +175,7 @@ public class ChessController {
             }
             if (logic.noValidMoves(logic.whoseTurn())) {
                 if (logic.inCheck(logic.whoseTurn())) {
-                    boolean whiteWon = logic.getTurnCount() % 2 != 0;
+                    boolean whiteWon = logic.getTurnCount() % 2 == 0;
                     displayWinnerAndRestart(whiteWon, "by putting the opponent in checkmate. ");
                 } else {
                     restart();
