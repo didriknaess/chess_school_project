@@ -103,6 +103,11 @@ public class ChessController {
         Position pos = new Position((int)(8-e.getY()/width*8), (int)(e.getX()/height*8));
         System.out.println("Clicked at: ("+pos.getRow()+", "+pos.getColumn()+")");
         // checks if the time has run out, and terminates the game if true
+        if (logic.getTurnCount() == 1 || paused) {
+            logic.startTimer(logic.whoseTurn());
+            this.pause.setText("Pause");
+            this.paused = false;
+        }
         if (outOfTime) {
             if (logic.getRemainingTime(Piece.Color.BLACK) <= 0) {
                 displayWinnerAndRestart(false, "by the opponent running out of time."); 
@@ -113,10 +118,6 @@ public class ChessController {
         }
 
         if (!hasSelected) {
-            if (logic.getTurnCount() == 1 || paused) {
-                logic.startTimer(logic.whoseTurn());
-                this.paused = false;
-            }
             this.currentPiece = logic.getPiece(pos);
             if (currentPiece == null) return;
             if (currentPiece.getColor() != logic.whoseTurn()) return;
@@ -173,13 +174,13 @@ public class ChessController {
             } else {
                 System.out.println("Invalid move");
             }
+            // testing for check- and starmate, displays winner and restarts if true
             if (logic.noValidMoves(logic.whoseTurn())) {
                 if (logic.inCheck(logic.whoseTurn())) {
-                    boolean whiteWon = logic.getTurnCount() % 2 == 0;
+                    boolean whiteWon = !logic.isWhitePlaying();
                     displayWinnerAndRestart(whiteWon, "by putting the opponent in checkmate. ");
                 } else {
-                    restart();
-                    String context = "The game ended in a stalemate. ";
+                    String context = "The game ended in a starmate. ";
                     if (logic.isWhitePlaying()) {
                         context += "White ";
                     } else {
@@ -189,6 +190,7 @@ public class ChessController {
                     Alert alert = new Alert(AlertType.INFORMATION, context, ButtonType.OK);
                     alert.setTitle("Game over");
                     alert.showAndWait();
+                    restart();
                 }
             }
         }
@@ -295,8 +297,7 @@ public class ChessController {
         switch(logic.whoseTurn()) {
             case BLACK:
                 logic.endTurn();
-                this.initialize();
-            case WHITE:
+            default: 
                 this.initialize();
         }
         // corrects scores and taken pieces, then updates the display
@@ -336,6 +337,7 @@ public class ChessController {
     public void handlePause() {
         if (this.paused) {
             logic.startTimer(logic.whoseTurn());
+            this.pause.setText("Pause");
             this.paused = false;
         } else {
             logic.pauseTimer(logic.whoseTurn());
