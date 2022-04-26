@@ -50,17 +50,20 @@ public class BoardIO implements IBoardIO {
             int turns = Integer.parseInt(scanner.nextLine());
             while (scanner.hasNextLine())
             {
-                game.addPiece(Piece.createNewPiece(toString(scanner.nextLine().split(","))));
+                String[] split = scanner.nextLine().split(",");
+                Piece p = Piece.createNewPiece(toString(split[0], split[1]));
+                p.setFirstTurnMoved(Integer.parseInt(split[2]));
+                game.addPiece(p);
             }
             game.setWhoseTurn(color);
             game.setSecondsRemainingWhite(secondsRemainingP1);
             game.setSecondsRemainingBlack(secondsRemainingP2);
             game.setTurns(turns);   
         }
-        catch (Exception e)
-        {
-            System.out.println(e.getStackTrace());
-        }
+        // catch (Exception e)
+        // {
+        //     System.out.println(e.getStackTrace());
+        // }
 
         return game;
     }
@@ -71,13 +74,13 @@ public class BoardIO implements IBoardIO {
         //Logic to save the state of the game
         try (PrintWriter writer = new PrintWriter(new File(getFilePath(filename))))
         {
-            writer.println(game.getWhoseTurn());
+            writer.println(game.savingGetWhoseTurn());
             writer.println(game.getWhiteSeconds());
             writer.println(game.getBlackSeconds());
             writer.println(game.getNumberOfTurns());
             for (Piece piece : game.getPieces()) 
             {
-                writer.printf("%s,%s\n", piece.toString(), piece.getPosition().toString());
+                writer.printf("%s,%s,%s\n", piece.toString(), piece.getPosition().toString(), piece.getFirstTurnMoved());
             }
         }
     }
@@ -94,15 +97,10 @@ public class BoardIO implements IBoardIO {
     
     public static void main(String[] args) throws FileNotFoundException 
     {
-        // BoardIO br = new BoardIO();
-        // br.loadFile("NormalChess.txt");
-        // // System.out.println(br.pieces);
-        // // System.out.println(br.p1Name);
-        // GameState game = new GameState();
-        // for (Piece string : game.getPieces()) {
-        //     game.addPiece(Piece.createNewPiece(string));
-        // }
-        // br.saveFile("test.txt", game);
-        // System.out.println(game.getPieces());
-    }
+        BoardIO br = new BoardIO();
+        GameState gm = br.loadFile("NormalChess.txt");
+        for (Piece piece : gm.getPieces()) {
+            System.out.println(piece.getFirstTurnMoved());
+        }
+    }  
 }

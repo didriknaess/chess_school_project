@@ -1,6 +1,6 @@
 package chess.datamodel;
 
-public class Move
+public class Move implements Comparable<Move>
 {
     private Position from;
     private Position to;
@@ -18,7 +18,8 @@ public class Move
     public Position getTo() {
         return to;
     }
-    public boolean isEqual(Move move) {
+ 
+    public boolean equals(Move move) {
         if (this.getFrom().getRow() == move.getFrom().getRow()
         && this.getFrom().getColumn() == move.getFrom().getColumn()
         && this.getTo().getRow() == move.getTo().getRow()
@@ -29,6 +30,11 @@ public class Move
     }
 
     @Override
+    public int compareTo(Move other) {
+        if (this.from.equals(other.from) && this.to.equals(other.to)) return 0;
+        return -1;
+    }
+  
     public boolean equals(Object o) {
         if (!(o instanceof Move)) return false;
         Move m = (Move)o;

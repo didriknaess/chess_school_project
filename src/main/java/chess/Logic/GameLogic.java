@@ -12,10 +12,8 @@ public class GameLogic {
     private GameState gameState;
     private ChessBoard chessBoard;
     private PieceLogic pieceLogic;
-    //private boolean whitesTurn = true;
     private ChessTimer whiteTimer;
     private ChessTimer blackTimer;
-    private HashMap<Integer, Piece> promotedPawns = new HashMap<Integer, Piece>();
 
     public GameLogic() {
         this.chessBoard = new ChessBoard();
@@ -26,12 +24,10 @@ public class GameLogic {
         BoardIO br = new BoardIO();
         this.gameState = br.loadFile(filename);
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
-        //Maybe different exception^^
     }
     private void setUpBoard(String filename) throws FileNotFoundException {
         this.chessBoard.clearBoard();
         this.gameState.clearPieces();
-        //this.gameState.startTurn();
         readInitialPieces(filename);
         for (Piece piece : this.gameState.getPieces()) {
             this.chessBoard.addPiece(piece);
@@ -95,12 +91,12 @@ public class GameLogic {
         Piece piece = chessBoard.getPiece(move.getFrom());
         List<Move> moves = getValidMoves(piece);
         for (Move m : moves) {
-            if (m.isEqual(move)) return true;
+            if (m.equals(move)) return true;
         }
         return false;
     }
-    // used to check for checkmate and starmate
-    public boolean noValidMoves(Color color) {
+    // used to check for checkmate and stalemate
+    public boolean noValidMoves2(Color color) {
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = getPiece(new Position(i, j));
@@ -111,11 +107,21 @@ public class GameLogic {
         }
         return true;
     }
+    public boolean noValidMoves(Color color) {
+        for (Piece piece : this.gameState.getPieces()) 
+        {
+            if (piece.getColor().compareTo(color) == 0)
+            {
+                if (!getValidMoves(piece).isEmpty()) return false;
+            }
+        }
+        return true;
+    }
     // executes the move on the board (without checks)
     public void move(Move move) {
         Piece p = chessBoard.getPiece(move.getFrom());
         if (chessBoard.getPiece(move.getTo()) != null) {
-            this.gameState.addTakenPiece(chessBoard.getPiece(move.getTo()));
+            this.gameState.addCapturedPiece(chessBoard.getPiece(move.getTo()));
         }
         if (p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
             if (p.getPosition().getColumn() - move.getTo().getColumn() < 0) {
@@ -133,12 +139,12 @@ public class GameLogic {
         Move lastMove = this.gameState.popMove();
         Piece moved = chessBoard.getPiece(lastMove.getTo());
         // in case of promotion, replaces the promoted piece with the corresponding pawn
-        if (!internal && promotedPawns.containsKey(getTurnCount()-1)) {
-            chessBoard.addPiece(promotedPawns.get(getTurnCount()-1));
-            promotedPawns.remove(getTurnCount()-1);
-        } else if (internal && promotedPawns.containsKey(getTurnCount())) {
-            chessBoard.addPiece(promotedPawns.get(getTurnCount()));
-            promotedPawns.remove(getTurnCount());
+        if (!internal && this.gameState.getPromotedPawns().containsKey(getTurnCount()-1)) {
+            chessBoard.addPiece(this.gameState.getPromotedPawn(getTurnCount()-1));
+            this.gameState.removePromotedPawn(getTurnCount()-1);
+        } else if (internal && this.gameState.getPromotedPawns().containsKey(getTurnCount())) {
+            chessBoard.addPiece(this.gameState.getPromotedPawn(getTurnCount()));
+            this.gameState.removePromotedPawn(getTurnCount());
         }
         // in case the move we are undoing is a castling, we also need to reverse the rooks position
         if (moved.getType() == Piece.PieceType.KING && java.lang.Math.abs(lastMove.getFrom().getColumn() - lastMove.getTo().getColumn()) == 2) {
@@ -160,19 +166,19 @@ public class GameLogic {
 
         // check if a piece was taken this turn, and potentially restores it to the board
         Integer toRemove = null;
-        for (Integer i : gameState.getTakenPieces().keySet()) {
+        for (Integer i : gameState.getCapturedPieces().keySet()) {
             if ((!internal && i == this.gameState.getNumberOfTurns()-1) || (internal && i == this.gameState.getNumberOfTurns())) {
-                chessBoard.addPiece(gameState.getTakenPieces().get(i));
+                chessBoard.addPiece(gameState.getCapturedPieces().get(i));
                 toRemove = i;
                 break;
             }
         }
-        gameState.getTakenPieces().remove(toRemove);
+        gameState.removeCapturedPiece(toRemove);
     }
     public void promote(Position pos, Piece.PieceType type) throws IllegalArgumentException {
         Piece p = chessBoard.getPiece(pos);
         if (p == null || p.getType() != PieceType.PAWN) throw new IllegalArgumentException("Only pawns can be promoted");
-        promotedPawns.put(this.getTurnCount(), p);
+        this.gameState.addPromotedPawn(this.getTurnCount(), p);
         // remove piece from 
         if (type == PieceType.PAWN || type == PieceType.KING) throw new IllegalArgumentException("Illegal promotion");
         chessBoard.addPiece(new Piece(type, p.getColor(), pos));
@@ -181,9 +187,9 @@ public class GameLogic {
     public int getScore(Piece.Color color) {
         int whiteScore = 0;
         int blackScore = 0;
-        if (this.gameState.getTakenPieces().keySet().isEmpty()) return 0;
-        for (Integer i : this.gameState.getTakenPieces().keySet()) {
-            Piece p = this.gameState.getTakenPieces().get(i);
+        if (this.gameState.getCapturedPieces().keySet().isEmpty()) return 0;
+        for (Integer i : this.gameState.getCapturedPieces().keySet()) {
+            Piece p = this.gameState.getCapturedPieces().get(i);
             if (p.getColor() == Piece.Color.WHITE) {
                     blackScore += pieceLogic.getScore(p);
             } else if (p.getColor() == Piece.Color.BLACK) {

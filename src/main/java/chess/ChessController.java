@@ -327,7 +327,8 @@ public class ChessController {
         System.out.println(filename);
 
         if (filename == null) return "";
-        if (!filename.substring(filename.length()-4, filename.length()).equals(".txt")) filename += ".txt";
+        if(!filename.endsWith(".txt")) filename += ".txt";
+        // if (!filename.substring(filename.length()-4, filename.length()).equals(".txt")) filename += ".txt";
         
         return filename;
     }
