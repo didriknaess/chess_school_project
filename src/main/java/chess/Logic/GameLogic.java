@@ -104,7 +104,7 @@ public class GameLogic {
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = getPiece(new Position(i, j));
-                if (p != null && p.getColor() != color) {
+                if (p != null && p.getColor() == color) {
                     if (!getValidMoves(p).isEmpty()) return false;
                 }
             }
@@ -171,6 +171,7 @@ public class GameLogic {
     }
     public void promote(Position pos, Piece.PieceType type) throws IllegalArgumentException {
         Piece p = chessBoard.getPiece(pos);
+        if (p == null || p.getType() != PieceType.PAWN) throw new IllegalArgumentException("Only pawns can be promoted");
         promotedPawns.put(this.getTurnCount(), p);
         // remove piece from 
         if (type == PieceType.PAWN || type == PieceType.KING) throw new IllegalArgumentException("Illegal promotion");
