@@ -16,11 +16,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 public class ChessController {
+    @FXML public AnchorPane canvas;
     @FXML public GridPane chessBoardGraphic;
     @FXML public Button pause;
     @FXML public Button undo;
@@ -100,7 +102,8 @@ public class ChessController {
     public void handleMouseClick(MouseEvent e) throws FileNotFoundException {
         double width = chessBoardGraphic.getWidth();
         double height = chessBoardGraphic.getHeight();
-        Position pos = new Position((int)(8-e.getY()/width*8), (int)(e.getX()/height*8));
+        System.out.println("Resolution: " + width + " x " + height);
+        Position pos = new Position((int)(8-e.getY()/height*8), (int)(e.getX()/width*8));
         System.out.println("Clicked at: ("+pos.getRow()+", "+pos.getColumn()+")");
         // checks if the time has run out, and terminates the game if true
         if (logic.getTurnCount() == 1 || paused) {

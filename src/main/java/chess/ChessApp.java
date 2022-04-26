@@ -13,6 +13,10 @@ public class ChessApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Chess");
+        primaryStage.setMinHeight(480);
+        primaryStage.setMinWidth(720);
+        primaryStage.setMaxHeight(1080);
+        primaryStage.setMaxWidth(1920);
         primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("ChessGUI.fxml"))));
         primaryStage.show();
     }
