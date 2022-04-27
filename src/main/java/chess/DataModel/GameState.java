@@ -9,13 +9,13 @@ import chess.datamodel.Piece.PieceType;
 
 public class GameState {
 
-    private Piece.Color whoseTurn = Color.WHITE; //Yes
-    private int secondsLeftWhite; //Yes
-    private int secondsLeftBlack; //Yes
-    private int turn = 1; //Yes
-    private ArrayList<Piece> pieces = new ArrayList<>(); //Yes
-    private Stack<Move> moveHistory = new Stack<Move>(); //Yes
-    private HashMap<Integer, Piece> capturedPieces = new HashMap<Integer, Piece>(); //Yes
+    private Piece.Color whoseTurn = Color.WHITE; 
+    private int secondsLeftWhite; 
+    private int secondsLeftBlack; 
+    private int turn = 1; 
+    private ArrayList<Piece> pieces = new ArrayList<>(); 
+    private Stack<Move> moveHistory = new Stack<Move>(); 
+    private HashMap<Integer, Piece> capturedPieces = new HashMap<Integer, Piece>();
     private HashMap<Integer, Piece> promotedPawns = new HashMap<Integer, Piece>();
 
     public GameState()
@@ -153,5 +153,19 @@ public class GameState {
     public String savingGetWhoseTurn() {
         if (this.whoseTurn == Color.WHITE) return "white";
         return "black";
+    }
+
+    //Equals
+    public boolean equals(GameState game)
+    {
+        if (this.getPieces().size() != game.getPieces().size()) return false;
+        for (int i = 0; i < this.getPieces().size(); i++) 
+        {
+            if (!(this.getPieces().get(i).compareTo(game.getPieces().get(i)) == 0)) return false;
+        }
+        if (this.getPieces().size() != game.getPieces().size()) return false;
+        if (!(this.getBlackSeconds() == game.getBlackSeconds() && this.getWhiteSeconds() == game.getWhiteSeconds() 
+        && this.getNumberOfTurns() == game.getNumberOfTurns() && this.getWhoseTurn() == game.getWhoseTurn())) return false;
+        return true;
     }
 }

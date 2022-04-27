@@ -48,7 +48,8 @@ public class GameLogic {
                 Piece p = getPiece(new Position(i, j));
                 if (p != null && p.getColor() != color) {
                     for (Move m : getLegalMoves(p)) {
-                        if (m.getTo().equals(pos)) toReturn = true;
+                        // if (m.getTo().equals(pos)) toReturn = true;
+                        if (m.getTo().compareTo(pos) == 0) toReturn = true;
                     }
                 }
             }
@@ -91,7 +92,8 @@ public class GameLogic {
         Piece piece = chessBoard.getPiece(move.getFrom());
         List<Move> moves = getValidMoves(piece);
         for (Move m : moves) {
-            if (m.equals(move)) return true;
+            // if (m.equals(move)) return true;
+            if (m.compareTo(move) == 0) return true;
         }
         return false;
     }
@@ -122,6 +124,10 @@ public class GameLogic {
         Piece p = chessBoard.getPiece(move.getFrom());
         if (chessBoard.getPiece(move.getTo()) != null) {
             this.gameState.addCapturedPiece(chessBoard.getPiece(move.getTo()));
+        }
+        if (p == null) 
+        {
+            System.out.println("Her!");
         }
         if (p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
             if (p.getPosition().getColumn() - move.getTo().getColumn() < 0) {

@@ -1,13 +1,16 @@
 package chess.datamodel;
 
-public class Piece 
+import java.util.regex.Pattern;
+
+public class Piece implements Comparable<Piece>
 {
+    //it is public to be used by other classes
     public enum Color
     {
         WHITE,
         BLACK
     } 
-    
+    //it is public to be used by other classes
     public enum PieceType
     {
         PAWN,
@@ -38,6 +41,10 @@ public class Piece
 
     public static Piece createNewPiece(String piece) 
     {
+        if (!Pattern.matches("[a-zA-Z]{1}[a-h]{1}[1-8]{1}", piece)) 
+        {
+            throw new IllegalArgumentException("Illegal string to create piece!");
+        }
         String[] splitPiece = piece.split("");
         Piece returnPiece = new Piece();
         Position pos = new Position(splitPiece[1] + splitPiece[2]);
@@ -75,22 +82,25 @@ public class Piece
 
     public Position moveTo(Position pos)
     {
-        this.position = pos;
+        if (!pos.isValid()) throw new IllegalArgumentException("Invalid position on move!");
+        System.out.println(this.position);
+        // this.position = pos;
+        // return this.position; 
+        this.position.moveTo(pos);
+        System.out.println(this.position);
         return this.position;
-        // this.position.moveTo(pos);
-        // return this.position;
-        
     }
 
     public void setPosition(Position pos)
     {
+        if (!pos.isValid()) throw new IllegalArgumentException("Invalid position to set!");
         this.position = pos;
     }
 
-    public boolean onBoard()
-    {
-        return this.position.isValid();
-    }
+    // public boolean onBoard()
+    // {
+    //     return this.position.isValid();
+    // }
 
     private void setTypeAndColor(String typeStr) 
     {
@@ -114,12 +124,24 @@ public class Piece
             case "k":
                 this.pieceType = PieceType.KING;
                 break;
+            default:
+                throw new IllegalArgumentException("No piece has this letter!");
         }
 
         if (typeStr == typeStr.toLowerCase()) this.color = Color.BLACK;
         else this.color = Color.WHITE;
                     
     }
+
+    @Override
+    public int compareTo(Piece piece)
+    {
+        if (this.color == piece.getColor() 
+        && this.position.compareTo(piece.getPosition()) == 0 
+        && this.pieceType == piece.getType()) return 0;
+        return -1;
+    }
+    
 
     @Override
     public String toString()
@@ -153,6 +175,13 @@ public class Piece
             case WHITE: return pieceChar.toUpperCase();
         }
         return "";
+    }
+
+    public static void main(String[] args) {
+        Piece p1 = createNewPiece("pa1");
+        Position pos1 = new Position("a2");
+        p1.moveTo(pos1);
+        System.out.println(p1.getPosition());
     }
 
 }

@@ -27,7 +27,7 @@ public class PieceLogic //This class is to help prevent having to make new insta
         this.kingLogic = new KingLogic(chessBoard);
     }
 
-    public List<Move> getLegalMoves(Piece piece) {
+    public  List<Move> getLegalMoves(Piece piece) {
         switch (piece.getType()) {
             case PAWN:
                 return this.pawnLogic.getLegalMoves(piece);
