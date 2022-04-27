@@ -309,6 +309,7 @@ public class ChessController {
         this.hasSelected = false;
     }
     public void displayWinnerAndRestart(boolean whiteWon, String context) throws FileNotFoundException {
+        handlePause();
         String toDisplay = "Congratulations! ";
         if (whiteWon) {
             toDisplay += "White won ";

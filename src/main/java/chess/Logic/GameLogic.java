@@ -123,7 +123,7 @@ public class GameLogic {
         if (chessBoard.getPiece(move.getTo()) != null) {
             this.gameState.addCapturedPiece(chessBoard.getPiece(move.getTo()));
         }
-        if (p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
+        if (p!= null && p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
             if (p.getPosition().getColumn() - move.getTo().getColumn() < 0) {
                 chessBoard.doCastle(move, false);
             } else {
