@@ -372,6 +372,11 @@ public class ChessController {
     }
     @FXML
     public void handleForfeit() throws FileNotFoundException {
+        if (!paused) {
+            logic.pauseTimer(logic.whoseTurn());
+            this.pause.setText("Resume");
+            this.paused = true;
+        }
         Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to forfeit?", ButtonType.OK, ButtonType.CANCEL);
         alert.setTitle("Confirmation");
         alert.showAndWait();
@@ -386,6 +391,7 @@ public class ChessController {
         if (!paused) {
             logic.pauseTimer(logic.whoseTurn());
             this.pause.setText("Resume");
+            this.paused = true;
         }
         // asks for confimation to restart the game
         Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to restart the game?", ButtonType.OK, ButtonType.CANCEL);
@@ -399,6 +405,7 @@ public class ChessController {
         if (!paused) {
             logic.pauseTimer(logic.whoseTurn());
             this.pause.setText("Resume");
+            this.paused = true;
         }
         // asks for name of file to write the savegame to
         String filename = askForFilename("save.txt", true);
@@ -414,6 +421,7 @@ public class ChessController {
         if (!paused) {
             logic.pauseTimer(logic.whoseTurn());
             this.pause.setText("Resume");
+            this.paused = true;
         }
         // asks for file to load from
         String filename = askForFilename("NormalChess.txt", false);
