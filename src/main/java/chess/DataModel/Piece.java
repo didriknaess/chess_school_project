@@ -83,12 +83,12 @@ public class Piece implements Comparable<Piece>
     public Position moveTo(Position pos)
     {
         if (!pos.isValid()) throw new IllegalArgumentException("Invalid position on move!");
-        System.out.println(this.position);
-        // this.position = pos;
-        // return this.position; 
-        this.position.moveTo(pos);
-        System.out.println(this.position);
-        return this.position;
+        // System.out.println(this.position);
+        this.position = pos;
+        return this.position; 
+        // this.position.moveTo(pos);
+        // System.out.println(this.position);
+        // return this.position;
     }
 
     public void setPosition(Position pos)
