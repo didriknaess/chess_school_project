@@ -24,6 +24,8 @@ public class GameLogic {
         BoardIO br = new BoardIO();
         this.gameState = br.loadFile(filename);
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
+        this.whiteTimer = new ChessTimer(gameState.getWhiteSeconds());
+        this.blackTimer = new ChessTimer(gameState.getBlackSeconds());
     }
     private void setUpBoard(String filename) throws FileNotFoundException {
         this.chessBoard.clearBoard();

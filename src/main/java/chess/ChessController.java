@@ -49,28 +49,6 @@ public class ChessController {
 
     @FXML
     public void initialize() throws FileNotFoundException {
-        logic.loadGame("NormalChess.txt");
-        ButtonType three = new ButtonType("03:00");
-        ButtonType ten = new ButtonType("10:00");
-        ButtonType thirty = new ButtonType("30:00");
-        // ButtonType none = new ButtonType("None");
-        Alert alert = new Alert(AlertType.NONE, "Choose the amount of time each player should have at their disposal. Worth to note is that executing moves do not increace your remaining time. This has to be chosen for the game to initalize. ", three, ten, thirty);
-        alert.setTitle("Time limit selection");
-        alert.showAndWait();
-        if (alert.getResult() == three) {
-            logic.setTimers(180);
-        } else if (alert.getResult() == ten) {
-            logic.setTimers(600);
-        } else if (alert.getResult() == thirty) {
-            logic.setTimers(1800);
-        } else {
-            initialize();
-        }
-        // sets up the multithreading for the class visually maintaining the player's remaining time
-        TimeUpdater timeUpdater = new TimeUpdater();
-        Thread timeThread = new Thread(timeUpdater);
-        timeThread.setDaemon(true);
-        timeThread.start();
         if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
         // adds all panes to an array to make access and modification easier
         for (Node node : chessBoardGraphic.getChildren()) {
@@ -81,6 +59,42 @@ public class ChessController {
                 board[7-x][y] = pane;
             }
         }
+        logic.loadGame("NormalChess.txt");
+        ButtonType three = new ButtonType("03:00");
+        ButtonType ten = new ButtonType("10:00");
+        ButtonType thirty = new ButtonType("30:00");
+        ButtonType load = new ButtonType("Load");
+        // ButtonType none = new ButtonType("None");
+        Alert alert = new Alert(AlertType.NONE, "Choose the amount of time each player should have at their disposal. Worth to note is that executing moves do not increase your remaining time. This has to be chosen for the game to initalize. You can also choose to load a file. ", three, ten, thirty, load);
+        alert.setTitle("Welcome to Chess!");
+        alert.showAndWait();
+        if (alert.getResult() == three) {
+            logic.setTimers(180);
+        } else if (alert.getResult() == ten) {
+            logic.setTimers(600);
+        } else if (alert.getResult() == thirty) {
+            logic.setTimers(1800);
+        } else if (alert.getResult() == load) {
+            // asks for file to load from
+            String filename = askForFilename("NormalChess.txt", false);
+            if (filename == null) initialize();
+            // load the saved game
+            try {
+                logic.loadGame(filename);
+            } catch (Exception FileNotFoundException) {
+                initialize();
+            }
+            updateBoard();
+            updateText();
+            pause.setWrapText(true);
+        } else {
+            initialize();
+        }
+        // sets up the multithreading for the class visually maintaining the player's remaining time
+        TimeUpdater timeUpdater = new TimeUpdater();
+        Thread timeThread = new Thread(timeUpdater);
+        timeThread.setDaemon(true);
+        timeThread.start();
         // updates the visuals, meaning the display of icons corresponding to pieces and the text such as score and remaining time.
         updateBoard();
         updateText();
@@ -102,7 +116,6 @@ public class ChessController {
     public void handleMouseClick(MouseEvent e) throws FileNotFoundException {
         double width = chessBoardGraphic.getWidth();
         double height = chessBoardGraphic.getHeight();
-        System.out.println("Resolution: " + width + " x " + height);
         Position pos = new Position((int)(8-e.getY()/height*8), (int)(e.getX()/width*8));
         System.out.println("Clicked at: ("+pos.getRow()+", "+pos.getColumn()+")");
         // checks if the time has run out, and terminates the game if true
@@ -324,7 +337,7 @@ public class ChessController {
     }
     private String askForFilename(String defaultValue, boolean saving) {
         TextInputDialog inputFilename = new TextInputDialog(defaultValue);
-        inputFilename.setHeaderText("Write the name of the file you would like to load from.\nThis will delete any unsaved data in your current game.\nMake sure to input a valid filename.\n\n");
+        inputFilename.setHeaderText("Write the name of the file you would like to load from.\nIf a game is in progress, this will delete any unsaved data.\nMake sure to input a valid filename.\n\n");
         if (saving) inputFilename.setHeaderText("Write the name of the file you would like to print to.\nIf an existing save has the same name it will be overwritten.\nIf not, a new save will be created.\n\n");
         inputFilename.showAndWait();
         String filename = inputFilename.getResult();

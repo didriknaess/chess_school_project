@@ -11,14 +11,8 @@ import chess.datamodel.Piece.PieceType;
 
 public class PawnLogic
 {
-    ChessBoard chessBoard;
-    
-    public PawnLogic(ChessBoard chessBoard)
-    {
-        this.chessBoard = chessBoard;
-    }
 
-    public List<Move> getLegalMoves(Piece piece)
+    static public List<Move> getLegalMoves(Piece piece, ChessBoard chessBoard)
     {
         List<Move> returnList = new ArrayList<>();
         if (!piece.getType().equals(PieceType.PAWN)) throw new IllegalArgumentException("Only pawns!");
@@ -29,7 +23,7 @@ public class PawnLogic
         //Check one step forward
         Position newPosition = piece.getPosition().getNewPosition(direction, 0);
         boolean oneStepPossible = false;
-        if (newPosition.isValid() && this.chessBoard.isSquareEmpty(newPosition))
+        if (newPosition.isValid() && chessBoard.isSquareEmpty(newPosition))
         {
             oneStepPossible = true;
             returnList.add(new Move(piece.getPosition(), newPosition));
