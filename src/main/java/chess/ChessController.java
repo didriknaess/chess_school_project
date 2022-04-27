@@ -196,7 +196,7 @@ public class ChessController {
                     boolean whiteWon = !logic.isWhitePlaying();
                     displayWinnerAndRestart(whiteWon, "by putting the opponent in checkmate. ");
                 } else {
-                    String context = "The game ended in a starmate. ";
+                    String context = "The game ended in a stalemate. ";
                     if (logic.isWhitePlaying()) {
                         context += "White ";
                     } else {
