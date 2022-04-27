@@ -77,10 +77,4 @@ public class ImageIO {
         return ImageIO.class.getResource("/pics").getFile() + imageFilePath;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getImageFilePath("WQueen.png"));
-        ImageIO io = new ImageIO();
-        io.getImage(Piece.createNewPiece("pa2"));
-    }
-
 }

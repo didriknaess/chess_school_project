@@ -285,7 +285,7 @@ public class GameLogic {
         this.blackTimer = new ChessTimer(gameState.getBlackSeconds());
     }
     public void saveGame(String filename) throws FileNotFoundException {
-        this.gameState.setSecondsRemainingBlack((int)(whiteTimer.getRemainingTime()/10));
+        this.gameState.setSecondsRemainingWhite((int)(whiteTimer.getRemainingTime()/10));
         this.gameState.setSecondsRemainingBlack((int)(blackTimer.getRemainingTime()/10));
         BoardIO br = new BoardIO();
         br.saveFile(filename, this.gameState);

@@ -2,6 +2,7 @@ package chess.datamodel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,7 +65,8 @@ public class PieceTest {
         this.piece.setPosition(new Position("a4"));
         Position expectedPosition = new Position("c5");
         this.piece.moveTo(new Position("c5"));
-        assertEquals(expectedPosition, this.piece.getPosition());
+        assertEquals(0,expectedPosition.compareTo(this.piece.getPosition()));
+        assertTrue(expectedPosition.equals(this.piece.getPosition()));
         assertThrows(IllegalArgumentException.class, () -> {
             this.piece.moveTo(new Position("x4"));
         }, "When trying to move to an illegal position, IllegalArgumentException should be thrown"

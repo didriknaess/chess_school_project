@@ -25,8 +25,6 @@ public class Piece implements Comparable<Piece>
     private PieceType pieceType;
     private Position position;
     private int firstTurnMoved;
-    private int turnCaptured;
-    private int turnPromoted;
 
     public Piece(PieceType pieceType, Color color, Position position)
     {

@@ -3,14 +3,8 @@ package chess.io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.KeyStore.Entry;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Scanner;
 
 import chess.datamodel.GameState;
@@ -85,10 +79,6 @@ public class BoardIO implements IBoardIO {
             game.setSecondsRemainingBlack(secondsRemainingP2);
             game.setTurns(turns);   
         }
-        catch (Exception e)
-        {
-            System.out.println(e.getStackTrace());
-        }
 
         return game;
     }
@@ -125,8 +115,8 @@ public class BoardIO implements IBoardIO {
             {
                 writer.printf("%s,%s\n", move.getFrom().toString(), move.getTo().toString());
             }
-            
         }
+    
     }
 
     public static String getFilePath(String filename)
@@ -134,9 +124,10 @@ public class BoardIO implements IBoardIO {
         return BoardIO.class.getResource("/saves").getFile() + filename;
     }
 
+    //Method for acquiring the key from a value in a HashMap
     //This is not our code. The method is taken from this link:
     //https://stackoverflow.com/questions/1383797/java-hashmap-how-to-get-key-from-value
-    public static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {
+    private static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {
         for (java.util.Map.Entry<T, E> entry : map.entrySet()) {
             if (Objects.equals(value, entry.getValue())) {
                 return entry.getKey();
@@ -148,14 +139,5 @@ public class BoardIO implements IBoardIO {
     private String toString(String...lines)
     {
         return lines[0] + lines[1];
-    }
-    
-    public static void main(String[] args) throws FileNotFoundException 
-    {
-        BoardIO br = new BoardIO();
-        GameState gm = br.loadFile("NormalChess.txt");
-        for (Piece piece : gm.getPieces()) {
-            System.out.println(piece.getFirstTurnMoved());
-        }
-    }  
+    } 
 }

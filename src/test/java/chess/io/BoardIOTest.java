@@ -27,15 +27,19 @@ public class BoardIOTest {
     private void createGame() {
         ArrayList<Piece> pieces = new ArrayList<>(
             Arrays.asList(
-            Piece.createNewPiece("pa7"), Piece.createNewPiece("pb7"), Piece.createNewPiece("pc7"), Piece.createNewPiece("pd7"), Piece.createNewPiece("pe7"), Piece.createNewPiece("pf7"), Piece.createNewPiece("pg7"), Piece.createNewPiece("ph7"),
-            Piece.createNewPiece("Pa2"), Piece.createNewPiece("Pb2"), Piece.createNewPiece("Pc2"), Piece.createNewPiece("Pd2"), Piece.createNewPiece("Pe2"), Piece.createNewPiece("Pf2"), Piece.createNewPiece("Pg2"), Piece.createNewPiece("Ph2"),
-            Piece.createNewPiece("ra8"), Piece.createNewPiece("rh8"), Piece.createNewPiece("Rh1"), Piece.createNewPiece("Ra1"), Piece.createNewPiece("nb8"), Piece.createNewPiece("ng8"), Piece.createNewPiece("Nb1"), Piece.createNewPiece("Ng1"),
-            Piece.createNewPiece("bc8"), Piece.createNewPiece("bf8"), Piece.createNewPiece("Bc1"), Piece.createNewPiece("Bf1"), Piece.createNewPiece("qd8"), Piece.createNewPiece("Qd1"), Piece.createNewPiece("ke8"), Piece.createNewPiece("Ke1")
+            Piece.createNewPiece("pa7"), Piece.createNewPiece("pb7"), Piece.createNewPiece("pc7"), Piece.createNewPiece("pd7"), Piece.createNewPiece("pe7"), Piece.createNewPiece("pf7"), Piece.createNewPiece("pg7"),
+            Piece.createNewPiece("Pa2"), Piece.createNewPiece("Pb2"), Piece.createNewPiece("Pc2"), Piece.createNewPiece("Pd2"), Piece.createNewPiece("Pe2"), Piece.createNewPiece("Pf2"), Piece.createNewPiece("Pg2"),
+            Piece.createNewPiece("ra8"), Piece.createNewPiece("rh8"), Piece.createNewPiece("Rh1"), Piece.createNewPiece("Ra1"), Piece.createNewPiece("nb8"), Piece.createNewPiece("ng8"), Piece.createNewPiece("Nb1"), 
+            Piece.createNewPiece("bc8"), Piece.createNewPiece("bf8"), Piece.createNewPiece("Bc1"), Piece.createNewPiece("Bf1"), Piece.createNewPiece("qd8"), Piece.createNewPiece("ke8"), Piece.createNewPiece("Ke1")
         ));
         for (Piece piece : pieces) {
             piece.setFirstTurnMoved(-1);
             this.game.addPiece(piece);
         }
+        this.game.addPromotedPawn(1, Piece.createNewPiece("ph7"));
+        this.game.addPromotedPawn(2, Piece.createNewPiece("Ph2"));
+        this.game.addCapturedPiece(1, Piece.createNewPiece("Ng1"));
+        this.game.addCapturedPiece(2, Piece.createNewPiece("Qd1"));
         this.game.setSecondsRemainingBlack(600);
         this.game.setSecondsRemainingWhite(600);
         this.game.setWhoseTurn(Color.WHITE);
