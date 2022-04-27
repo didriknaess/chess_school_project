@@ -102,7 +102,7 @@ public class GameLogic {
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = getPiece(new Position(i, j));
-                if (p != null && p.getColor() != color) {
+                if (p != null && p.getColor() == color) {
                     if (!getValidMoves(p).isEmpty()) return false;
                 }
             }
@@ -125,11 +125,8 @@ public class GameLogic {
         if (chessBoard.getPiece(move.getTo()) != null) {
             this.gameState.addCapturedPiece(chessBoard.getPiece(move.getTo()));
         }
-        if (p == null) 
-        {
-            System.out.println("Her!");
-        }
-        if (p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
+
+        if (p!= null && p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
             if (p.getPosition().getColumn() - move.getTo().getColumn() < 0) {
                 chessBoard.doCastle(move, false);
             } else {
@@ -183,6 +180,7 @@ public class GameLogic {
     }
     public void promote(Position pos, Piece.PieceType type) throws IllegalArgumentException {
         Piece p = chessBoard.getPiece(pos);
+        if (p == null || p.getType() != PieceType.PAWN) throw new IllegalArgumentException("Only pawns can be promoted");
         this.gameState.addPromotedPawn(this.getTurnCount(), p);
         // remove piece from 
         if (type == PieceType.PAWN || type == PieceType.KING) throw new IllegalArgumentException("Illegal promotion");

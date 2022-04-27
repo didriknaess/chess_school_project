@@ -11,7 +11,7 @@
 
 <AnchorPane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chess.ChessController">
    <children>
-      <GridPane fx:id="chessBoardGraphic" onMouseClicked="#handleMouseClick" prefHeight="480.0" prefWidth="480.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="245.0" AnchorPane.topAnchor="0.0">
+      <GridPane fx:id="chessBoardGraphic" onMouseClicked="#handleMouseClick" prefHeight="480.0" prefWidth="480.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
@@ -99,51 +99,51 @@
             <Pane fx:id="Pane77" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: wheat;" GridPane.columnIndex="7" GridPane.rowIndex="7" />
          </children>
       </GridPane>
-      <Button fx:id="pause" layoutX="494.0" layoutY="230.0" mnemonicParsing="false" onMouseClicked="#handlePause" prefHeight="26" prefWidth="64" text="Resume">
+      <Button fx:id="pause" layoutX="494.0" layoutY="230.0" mnemonicParsing="false" onMouseClicked="#handlePause" prefHeight="26" prefWidth="64" text="Resume" AnchorPane.rightAnchor="160.0" AnchorPane.topAnchor="230.0">
          <font>
             <Font name="Times New Roman Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="undo" layoutX="564.0" layoutY="230.0" mnemonicParsing="false" onMouseClicked="#handleUndo" prefHeight="26" prefWidth="64" text="Undo">
+      <Button fx:id="undo" layoutX="564.0" layoutY="230.0" mnemonicParsing="false" onMouseClicked="#handleUndo" prefHeight="26" prefWidth="64" text="Undo" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="230.0">
          <font>
             <Font name="Times New Roman Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="forfeit" layoutX="634.0" layoutY="230.0" mnemonicParsing="false" onMouseClicked="#handleForfeit" prefHeight="26" prefWidth="64" text="Forfeit">
+      <Button fx:id="forfeit" layoutX="634.0" layoutY="230.0" mnemonicParsing="false" onMouseClicked="#handleForfeit" prefHeight="26" prefWidth="64" text="Forfeit" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="230.0">
          <font>
             <Font name="Times New Roman Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="save" layoutX="494.0" layoutY="270.0" mnemonicParsing="false" onMouseClicked="#handleSave" prefHeight="26" prefWidth="64" text="Save">
+      <Button fx:id="save" layoutX="494.0" layoutY="270.0" mnemonicParsing="false" onMouseClicked="#handleSave" prefHeight="26" prefWidth="64" text="Save" AnchorPane.rightAnchor="160.0" AnchorPane.topAnchor="270.0">
          <font>
             <Font name="Times New Roman Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="load" layoutX="564.0" layoutY="270.0" mnemonicParsing="false" onMouseClicked="#handleLoad" prefHeight="26" prefWidth="64" text="Load">
+      <Button fx:id="load" layoutX="564.0" layoutY="270.0" mnemonicParsing="false" onMouseClicked="#handleLoad" prefHeight="26" prefWidth="64" text="Load" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="270.0">
          <font>
             <Font name="Times New Roman Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="restart" layoutX="634.0" layoutY="270.0" mnemonicParsing="false" onMouseClicked="#handleRestart" prefHeight="26" prefWidth="64" text="Restart">
+      <Button fx:id="restart" layoutX="634.0" layoutY="270.0" mnemonicParsing="false" onMouseClicked="#handleRestart" prefHeight="26" prefWidth="64" text="Restart" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="270.0">
          <font>
             <Font name="Times New Roman Bold" size="13.0" />
          </font></Button>
-      <Text fx:id="whoseTurn" layoutX="484.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Turn X: Color (?check)" textAlignment="CENTER" wrappingWidth="220.0">
+      <Text fx:id="whoseTurn" layoutX="484.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Turn X: Color (?check)" textAlignment="CENTER" wrappingWidth="220.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="180.3955078125">
          <font>
             <Font name="Times New Roman Italic" size="22.0" />
          </font>
       </Text>
-      <Text fx:id="blackScore" layoutX="485.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score: X">
+      <Text fx:id="blackScore" layoutX="485.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score: X" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <font>
             <Font name="Times New Roman" size="24.0" />
          </font>
       </Text>
-      <Text fx:id="whiteScore" layoutX="485.0" layoutY="466.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score: X">
+      <Text fx:id="whiteScore" layoutX="485.0" layoutY="466.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score: X" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
          <font>
             <Font name="Times New Roman" size="24.0" />
          </font>
       </Text>
-      <Text fx:id="blackRemainingTime" layoutX="485.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remaining time: MM:SS.x">
+      <Text fx:id="blackRemainingTime" layoutX="485.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remaining time: MM:SS.x" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
          <font>
             <Font name="Times New Roman" size="20.0" />
          </font>
       </Text>
-      <Text fx:id="whiteRemainingTime" layoutX="485.0" layoutY="437.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remaining time: MM:SS.x">
+      <Text fx:id="whiteRemainingTime" layoutX="485.0" layoutY="437.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remaining time: MM:SS.x" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="10.0">
          <font>
             <Font name="Times New Roman" size="20.0" />
          </font>
