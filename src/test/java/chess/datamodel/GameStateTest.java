@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import chess.datamodel.Piece.Color;
@@ -26,6 +27,7 @@ public class GameStateTest {
     }
 
     @Test
+    @DisplayName("Test that a valid game contains some pieces")
     public void testValidGameState() {
         Piece piece1 = Piece.createNewPiece("pa1");
         assertFalse(game.isValid());
@@ -35,6 +37,7 @@ public class GameStateTest {
     }
 
     @Test
+    @DisplayName("Test whose turn it is")
     public void testWhoseTurn() {
         this.game.setWhoseTurn(Color.BLACK);
         assertEquals(Color.BLACK, this.game.getWhoseTurn(),
@@ -44,6 +47,7 @@ public class GameStateTest {
     }
 
     @Test
+    @DisplayName("Test number of total turns, starting at 1")
     public void testTurns() {
         assertEquals(1, this.game.getNumberOfTurns(),
         "Number of turns start at 1 (because of controller and gamelogic)");
@@ -56,6 +60,7 @@ public class GameStateTest {
     }
 
     @Test
+    @DisplayName("Test how many seconds each has got left")
     public void testSecondsRemaining() {
         this.game.setSecondsRemainingBlack(100);
         this.game.setSecondsRemainingWhite(90);
@@ -69,6 +74,7 @@ public class GameStateTest {
     }
 
     @Test
+    @DisplayName("Test the functionality of the list of active pieces")
     public void testPieces() {
         Piece piece1 = Piece.createNewPiece("pa1");
         Piece piece2 = Piece.createNewPiece("pa2");
@@ -92,6 +98,7 @@ public class GameStateTest {
     }
 
     @Test
+    @DisplayName("Test the history of moves (used for undo)")
     public void testMoveHistory() {
         Stack<Move> actualMoveHistory = new Stack<>();
         Move move1 = new Move(new Position("a1"), new Position("a2"));
@@ -110,6 +117,7 @@ public class GameStateTest {
     }
 
     @Test
+    @DisplayName("Test the map of pieces that has been captured")
     public void testCapturedPieces() {
         HashMap<Integer, Piece> expectedCapturedPieces = new HashMap<>();
         Piece piece1 = Piece.createNewPiece("pa1");
@@ -135,6 +143,7 @@ public class GameStateTest {
     }
 
     @Test
+    @DisplayName("Test the list of promoted pawns (for undo)")
     public void testPromotedPawns() {
         HashMap<Integer, Piece> expectedPromotedPawns = new HashMap<>();
         Piece pawn1 = Piece.createNewPiece("pa1");

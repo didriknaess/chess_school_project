@@ -46,13 +46,13 @@ public class Position implements Comparable<Position>
         return returnPosition;
     }
 
-    // public void moveTo(Position pos)
-    // {
-    //     if (!this.isValid()) throw new IllegalArgumentException("Can't move a piece that is not in play");
-    //     if (!pos.isValid()) throw new IllegalArgumentException("Illegal position on move");
-    //     this.row = pos.row;
-    //     this.column = pos.column;
-    // }
+    public void moveTo(Position pos)
+    {
+        if (!this.isValid()) throw new IllegalArgumentException("Can't move a piece that is not in play");
+        if (!pos.isValid()) throw new IllegalArgumentException("Illegal position on move");
+        this.row = pos.getRow();
+        this.column = pos.getColumn();
+    }
 
 
     public boolean isValid()
