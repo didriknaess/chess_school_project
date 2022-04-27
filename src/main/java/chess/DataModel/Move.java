@@ -19,22 +19,22 @@ public class Move implements Comparable<Move>
         return to;
     }
  
-    public boolean equals(Move move) {
-        if (this.getFrom().getRow() == move.getFrom().getRow()
-        && this.getFrom().getColumn() == move.getFrom().getColumn()
-        && this.getTo().getRow() == move.getTo().getRow()
-        && this.getTo().getColumn() == move.getTo().getColumn()) {
-            return true;
-        }
-        return false;
-    }
+    // public boolean equals(Move move) {
+    //     if (this.getFrom().getRow() == move.getFrom().getRow()
+    //     && this.getFrom().getColumn() == move.getFrom().getColumn()
+    //     && this.getTo().getRow() == move.getTo().getRow()
+    //     && this.getTo().getColumn() == move.getTo().getColumn()) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     @Override
     public int compareTo(Move other) {
         if (this.from.equals(other.from) && this.to.equals(other.to)) return 0;
         return -1;
     }
-  
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof Move)) return false;
         Move m = (Move)o;
