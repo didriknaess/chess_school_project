@@ -10,7 +10,7 @@ public class PieceLogic //This class is to help prevent having to make new insta
 //Want to delegate most of GameLogics tasks to other helping functions.
 //Makes the GameLogic easier to read, for details you move into the other subclasses
 {
-    private PawnLogic pawnLogic;
+    private ChessBoard chessBoard;
     private RookLogic rookLogic;
     private BishopLogic bishopLogic;
     private KnightLogic knightLogic;
@@ -19,7 +19,7 @@ public class PieceLogic //This class is to help prevent having to make new insta
 
     public PieceLogic(ChessBoard chessBoard)
     {
-        this.pawnLogic = new PawnLogic(chessBoard);
+        this.chessBoard = chessBoard;
         this.rookLogic = new RookLogic(chessBoard);
         this.bishopLogic = new BishopLogic(chessBoard);
         this.knightLogic = new KnightLogic(chessBoard);
@@ -30,7 +30,7 @@ public class PieceLogic //This class is to help prevent having to make new insta
     public  List<Move> getLegalMoves(Piece piece) {
         switch (piece.getType()) {
             case PAWN:
-                return this.pawnLogic.getLegalMoves(piece);
+                return PawnLogic.getLegalMoves(piece, this.chessBoard);
             case ROOK:
                 return this.rookLogic.getLegalMoves(piece);
             case BISHOP:
