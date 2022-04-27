@@ -24,8 +24,6 @@ public class GameLogic {
         BoardIO br = new BoardIO();
         this.gameState = br.loadFile(filename);
         if (!this.gameState.isValid()) throw new IllegalStateException("Not a valid game"); 
-        this.whiteTimer = new ChessTimer(gameState.getWhiteSeconds());
-        this.blackTimer = new ChessTimer(gameState.getBlackSeconds());
     }
     private void setUpBoard(String filename) throws FileNotFoundException {
         this.chessBoard.clearBoard();
@@ -217,10 +215,6 @@ public class GameLogic {
         if (isWhitePlaying()) return Piece.Color.WHITE;
         return Piece.Color.BLACK;
     }
-    public void loadGame(String filename) throws FileNotFoundException {
-        setUpBoard(filename);
-        //setTimers();
-    }
     public void endTurn() {
         if (isWhitePlaying()) {
             pauseTimer(Piece.Color.WHITE);
@@ -285,7 +279,14 @@ public class GameLogic {
             throw new IllegalArgumentException("Invalid timer!");
         }
     }
+    public void loadGame(String filename) throws FileNotFoundException {
+        setUpBoard(filename);
+        this.whiteTimer = new ChessTimer(gameState.getWhiteSeconds());
+        this.blackTimer = new ChessTimer(gameState.getBlackSeconds());
+    }
     public void saveGame(String filename) throws FileNotFoundException {
+        this.gameState.setSecondsRemainingBlack((int)(whiteTimer.getRemainingTime()/10));
+        this.gameState.setSecondsRemainingBlack((int)(blackTimer.getRemainingTime()/10));
         BoardIO br = new BoardIO();
         br.saveFile(filename, this.gameState);
     }
