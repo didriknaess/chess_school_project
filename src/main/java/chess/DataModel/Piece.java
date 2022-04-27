@@ -25,6 +25,8 @@ public class Piece implements Comparable<Piece>
     private PieceType pieceType;
     private Position position;
     private int firstTurnMoved;
+    private int turnCaptured;
+    private int turnPromoted;
 
     public Piece(PieceType pieceType, Color color, Position position)
     {
@@ -96,11 +98,6 @@ public class Piece implements Comparable<Piece>
         if (!pos.isValid()) throw new IllegalArgumentException("Invalid position to set!");
         this.position = pos;
     }
-
-    // public boolean onBoard()
-    // {
-    //     return this.position.isValid();
-    // }
 
     private void setTypeAndColor(String typeStr) 
     {

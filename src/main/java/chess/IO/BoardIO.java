@@ -5,37 +5,21 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.KeyStore.Entry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Scanner;
 
 import chess.datamodel.GameState;
+import chess.datamodel.Move;
 import chess.datamodel.Piece;
+import chess.datamodel.Position;
 import chess.datamodel.Piece.Color;
 
 public class BoardIO implements IBoardIO {
-
-    public GameState readFileOld(String filename)
-    {
-        GameState game = new GameState();
-        List<String> list = new ArrayList<>();
-        try 
-        {
-             list = Files.lines(Paths.get(getClass().getResource(filename).toURI()))
-            .skip(4)
-            .map(l -> l.split(",")) //split on "," as is done in the .txt file
-            .map(n -> toString(n))  // use the private help method to make a string
-            .toList(); //make list
-        } 
-        catch (Exception e)
-        {
-            System.out.println(e.getStackTrace());
-        }
-        for (String string : list) {
-            game.addPiece(Piece.createNewPiece(string));
-        }
-        return game;
-    }
 
     @Override
     public GameState loadFile(String filename) throws FileNotFoundException
@@ -50,20 +34,61 @@ public class BoardIO implements IBoardIO {
             int turns = Integer.parseInt(scanner.nextLine());
             while (scanner.hasNextLine())
             {
-                String[] split = scanner.nextLine().split(",");
-                Piece p = Piece.createNewPiece(toString(split[0], split[1]));
-                p.setFirstTurnMoved(Integer.parseInt(split[2]));
-                game.addPiece(p);
+                try {
+                    String[] split = scanner.nextLine().split(",");
+                    Piece p = Piece.createNewPiece(toString(split[0], split[1]));
+                    p.setFirstTurnMoved(Integer.parseInt(split[2]));
+                    game.addPiece(p);    
+                } catch (Exception e) {
+                    break;
+                }  
+            }
+            while (scanner.hasNextLine()) 
+            {
+                try {
+                    String[] split = scanner.nextLine().split(",");
+                    Piece p = Piece.createNewPiece(toString(split[0], split[1]));
+                    p.setFirstTurnMoved(Integer.parseInt(split[2]));
+                    game.addCapturedPiece(Integer.parseInt(split[3]), p);   
+                } catch (Exception e) {
+                    break;
+                }
+            }
+            while (scanner.hasNextLine()) 
+            {
+                try {
+                    String[] split = scanner.nextLine().split(",");
+                    Piece p = Piece.createNewPiece(toString(split[0], split[1]));
+                    p.setFirstTurnMoved(Integer.parseInt(split[2]));
+                    game.addPromotedPawn(Integer.parseInt(split[3]), p);   
+                } catch (Exception e) {
+                    break;
+                }
+            }
+            while (scanner.hasNextLine()) 
+            {
+                try {
+                    String[] split = scanner.nextLine().split(",");
+                    Position pos1 = new Position(split[0]);
+                    Position pos2 = new Position(split[1]);
+                    Move move = new Move(pos1, pos2);
+                    game.addMove(move);
+                } catch (Exception e) {
+                    break;
+                }
+            }
+            for (Move move : game.getMoveHistory()) {
+                System.out.println(move.toString());
             }
             game.setWhoseTurn(color);
             game.setSecondsRemainingWhite(secondsRemainingP1);
             game.setSecondsRemainingBlack(secondsRemainingP2);
             game.setTurns(turns);   
         }
-        // catch (Exception e)
-        // {
-        //     System.out.println(e.getStackTrace());
-        // }
+        catch (Exception e)
+        {
+            System.out.println(e.getStackTrace());
+        }
 
         return game;
     }
@@ -80,14 +105,44 @@ public class BoardIO implements IBoardIO {
             writer.println(game.getNumberOfTurns());
             for (Piece piece : game.getPieces()) 
             {
-                writer.printf("%s,%s,%s\n", piece.toString(), piece.getPosition().toString(), piece.getFirstTurnMoved());
+                writer.printf("%s,%s,%s\n", piece.toString(), piece.getPosition().toString(), 
+                piece.getFirstTurnMoved());
             }
+            writer.println("capturedPieces");
+            for (Piece piece : game.getCapturedPieces().values())
+            {
+                writer.printf("%s,%s,%s,%s\n", piece.toString(), piece.getPosition().toString(), 
+                piece.getFirstTurnMoved(), getKeyByValue(game.getCapturedPieces(), piece) );
+            }
+            writer.println("promotedPawns");
+            for (Piece pawn : game.getPromotedPawns().values())
+            {
+                writer.printf("%s,%s,%s,%s\n", pawn.toString(), pawn.getPosition().toString(), 
+                pawn.getFirstTurnMoved(), getKeyByValue(game.getPromotedPawns(), pawn));
+            }
+            writer.println("moveHistory");
+            for (Move move : game.getMoveHistory()) 
+            {
+                writer.printf("%s,%s\n", move.getFrom().toString(), move.getTo().toString());
+            }
+            
         }
     }
 
     public static String getFilePath(String filename)
     {
         return BoardIO.class.getResource("/saves").getFile() + filename;
+    }
+
+    //This is not our code. The method is taken from this link:
+    //https://stackoverflow.com/questions/1383797/java-hashmap-how-to-get-key-from-value
+    public static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {
+        for (java.util.Map.Entry<T, E> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
     
     private String toString(String...lines)

@@ -46,15 +46,6 @@ public class Position implements Comparable<Position>
         return returnPosition;
     }
 
-    public void moveTo(Position pos)
-    {
-        if (!this.isValid()) throw new IllegalArgumentException("Can't move a piece that is not in play");
-        if (!pos.isValid()) throw new IllegalArgumentException("Illegal position on move");
-        this.row = pos.getRow();
-        this.column = pos.getColumn();
-    }
-
-
     public boolean isValid()
     {
         return (!(this.row < 0 || this.row > 7 || this.column < 0 || this.column > 7));
@@ -64,12 +55,6 @@ public class Position implements Comparable<Position>
     {
         return (!(row < 0 || row > 7 || column < 0 || column > 7));
     }
-
-    // public void setCaptured()
-    // {
-    //     this.column = -1;
-    //     this.row = -1;
-    // }
 
     //The method below is copied from stackoverflow via this url:
     // https://stackoverflow.com/questions/10813154/how-do-i-convert-a-number-to-a-letter-in-java

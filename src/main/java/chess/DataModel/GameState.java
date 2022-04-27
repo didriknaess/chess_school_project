@@ -59,6 +59,11 @@ public class GameState {
         this.capturedPieces.put(this.getNumberOfTurns(), piece);
     }
 
+    public void addCapturedPiece(Integer turn, Piece piece)
+    {
+        this.capturedPieces.put(turn, piece);
+    }
+
     public void addPiece(Piece piece)
     {
         if (this.pieces.contains(piece)) throw new IllegalArgumentException("Can't add a piece thats already there");
