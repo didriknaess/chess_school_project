@@ -40,7 +40,7 @@ public class GameLogic {
     public Piece getPiece(Position pos) {
         return chessBoard.getPiece(pos);
     }
-    // checks if a spesific square is threatened by the opposing color
+    // checks if a specific square is threatened by the opposing color
     private boolean isThreatened(Piece.Color color, Position pos) {
         boolean toReturn = false;
         for (int i = 0; i<8; i++) {
@@ -92,7 +92,6 @@ public class GameLogic {
         Piece piece = chessBoard.getPiece(move.getFrom());
         List<Move> moves = getValidMoves(piece);
         for (Move m : moves) {
-            // if (m.equals(move)) return true;
             if (m.compareTo(move) == 0) return true;
         }
         return false;
@@ -105,18 +104,6 @@ public class GameLogic {
                 if (p != null && p.getColor() == color) {
                     if (!getValidMoves(p).isEmpty()) return false;
                 }
-            }
-        }
-        return true;
-    }
-    public boolean noValidMoves2(Color color) {
-        //Creating a shallow copy of gameState.getPieces() to avoid alteration errors when iterating through it
-        ArrayList<Piece> pieces = new ArrayList<>(this.gameState.getPieces());
-        for (Piece piece : pieces) 
-        {
-            if (piece.getColor().compareTo(color) == 0)
-            {
-                if (!getValidMoves(piece).isEmpty()) return false;
             }
         }
         return true;

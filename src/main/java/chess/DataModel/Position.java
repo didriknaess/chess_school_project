@@ -59,22 +59,28 @@ public class Position implements Comparable<Position>
     //The method below is copied from stackoverflow via this url:
     // https://stackoverflow.com/questions/10813154/how-do-i-convert-a-number-to-a-letter-in-java
     // method to help convert an int to a letter, made it alot easier for us when saving and making a board
-    private static String toAlphabetic(int i) {
-        if( i<0 ) {
+    private static String toAlphabetic(int i) 
+    {
+        if( i<0 ) 
+        {
             return "-"+toAlphabetic(-i-1);
         }
         int quot = i/26;
         int rem = i%26;
         char letter = (char)((int)'A' + rem);
-        if( quot == 0 ) {
+        if( quot == 0 ) 
+        {
             return ""+letter;
-        } else {
+        } 
+        else 
+        {
             return toAlphabetic(quot-1) + letter;
         }
     }
 
     @Override
-    public int compareTo(Position pos) {
+    public int compareTo(Position pos) 
+    {
         if (this.getColumn() == pos.getColumn())
         {
             if (this.row > pos.row) return 1;
@@ -89,7 +95,8 @@ public class Position implements Comparable<Position>
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) 
+    {
         boolean equal = true;
         if (!(o instanceof Position)) equal = false;
         Position pos = (Position)o;
@@ -99,12 +106,8 @@ public class Position implements Comparable<Position>
     }
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return this.getPosString();
-    }
-
-    public static void main(String[] args) {
-        Position pos = new Position(-2, 2);
-        System.out.println(pos);
     }
 }
