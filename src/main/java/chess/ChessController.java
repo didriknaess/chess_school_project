@@ -317,7 +317,11 @@ public class ChessController {
         this.hasSelected = false;
     }
     public void displayWinnerAndRestart(boolean whiteWon, String context) throws FileNotFoundException {
-        handlePause();
+        if (!paused) {
+            logic.pauseTimer(logic.whoseTurn());
+            this.pause.setText("Resume");
+            this.paused = true;
+        }
         String toDisplay = "Congratulations! ";
         if (whiteWon) {
             toDisplay += "White won ";
