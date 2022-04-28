@@ -110,13 +110,14 @@ public class GameLogic {
         return true;
     }
     public boolean noValidMoves(Color color) {
-        for (Piece piece : this.gameState.getPieces()) 
-        {
-            if (piece.getColor().compareTo(color) == 0)
-            {
-                if (!getValidMoves(piece).isEmpty()) return false;
+        for (int i = 0; i<8; i++) {
+            for (int j = 0; j<8; j++) {
+                Piece p = chessBoard.getPiece(new Position(i, j));
+                if (p == null) break;
+                if (p.getColor() == color) break;
+                if (getValidMoves(p).isEmpty()) return false;
             }
-        }
+        }   
         return true;
     }
     // executes the move on the board (without checks)
