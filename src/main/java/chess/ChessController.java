@@ -122,7 +122,6 @@ public class ChessController {
             }
             updateBoard();
             updateText();
-            pause.setWrapText(true);
         } else {
             initialize();
         }
@@ -134,7 +133,6 @@ public class ChessController {
         // updates the visuals, meaning the display of icons corresponding to pieces and the text such as score and remaining time.
         updateBoard();
         updateText();
-        pause.setWrapText(true);
     }
     @FXML
     public void unselectBoard() {
@@ -169,7 +167,6 @@ public class ChessController {
             }
             return;
         }
-
         if (!hasSelected) {
             this.currentPiece = logic.getPiece(pos);
             if (currentPiece == null) return;
@@ -211,7 +208,6 @@ public class ChessController {
             Move move = new Move(currentPiece.getPosition(), pos);
             if (logic.isValidMove(move)) {
                 logic.move(move);
-                unselectBoard();
                 if (logic.getPiece(pos).getType() == Piece.PieceType.PAWN) {
                     if ((logic.getPiece(pos).getColor() == Piece.Color.WHITE && pos.getRow() == 7)
                     || (logic.getPiece(pos).getColor() == Piece.Color.BLACK && pos.getRow() == 0)) {
@@ -221,6 +217,7 @@ public class ChessController {
                 }
                 logic.endTurn();
                 updateBoard();
+                unselectBoard();
                 updateText();
                 hasSelected = false;
 
@@ -289,9 +286,7 @@ public class ChessController {
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = logic.getPiece(new Position(i, j));
-                if (!board[i][j].getChildren().isEmpty()) {
-                    board[i][j].getChildren().clear();
-                }
+                board[i][j].getChildren().clear();
                 if (p != null) {
                     Image img = imageLoader.getImage(p);
                     ImageView view = new ImageView(img);
