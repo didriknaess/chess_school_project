@@ -26,15 +26,15 @@ public class BoardIO implements IBoardIO {
             int secondsRemainingP2 = Integer.parseInt(scanner.nextLine());
             int turns = Integer.parseInt(scanner.nextLine());
             while (scanner.hasNextLine()) {
-                try {
+                try { //Try to run as long as possible
                     String nextLine = scanner.nextLine();
                     if (nextLine.startsWith("#")) break; //Break when no more pieces left on the "board"
-                    String[] split = nextLine.split(",");
-                    Piece p = Piece.createNewPiece(toString(split[0], split[1]));
+                    String[] split = nextLine.split(","); //Splitting the string
+                    Piece p = Piece.createNewPiece(toString(split[0], split[1])); //creating a piece using the static method
                     p.setFirstTurnMoved(Integer.parseInt(split[2]));
-                    game.addPiece(p);    
+                    game.addPiece(p); //adding the piece to the game 
                 } catch (Exception e) {
-                    break;
+                    break; //break if an exception is thrown
                 }  
             }
             while (scanner.hasNextLine()) {
@@ -67,7 +67,7 @@ public class BoardIO implements IBoardIO {
                     Position pos1 = new Position(split[0]);
                     Position pos2 = new Position(split[1]);
                     Move move = new Move(pos1, pos2);
-                    game.addMove(move);
+                    game.addMove(move); //Adding move to the movehistory
                 } catch (Exception e) {
                     break;
                 }
@@ -77,7 +77,7 @@ public class BoardIO implements IBoardIO {
             game.setSecondsRemainingBlack(secondsRemainingP2);
             game.setTurns(turns);   
         }
-        return game;
+        return game; //this gamestate is used to initiate the game
     }
     @Override
     public void saveFile(String filename, GameState game) throws FileNotFoundException {
@@ -86,10 +86,10 @@ public class BoardIO implements IBoardIO {
             writer.println(game.savingGetWhoseTurn());
             writer.println(game.getWhiteSeconds());
             writer.println(game.getBlackSeconds());
-            writer.println(game.getNumberOfTurns());
+            writer.println(game.getNumberOfTurns()); //The first four 
             for (Piece piece : game.getPieces()) {
-                writer.printf("%s,%s,%s\n", piece.toString(), piece.getPosition().toString(), 
-                piece.getFirstTurnMoved());
+                writer.printf("%s,%s,%s\n", piece.toString(), piece.getPosition().toString(),
+                piece.getFirstTurnMoved());  //Writing a formatted line to the .txt file
             }
             writer.println("#capturedPieces");
             for (Piece piece : game.getCapturedPieces().values()) {

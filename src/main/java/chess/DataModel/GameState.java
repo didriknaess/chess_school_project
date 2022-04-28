@@ -86,7 +86,9 @@ public class GameState {
     public boolean whitesTurn() {
         return this.whoseTurn.equals(Color.WHITE);
     }
-    public boolean isValid() {
+    public boolean isValid() { 
+        //Should probably have more criterias for a game to be valid, 
+        //but this was very valuable during the making of BoardIO
         return this.pieces.size() > 0;
     }
     // get
@@ -117,7 +119,7 @@ public class GameState {
     public Piece.Color getWhoseTurn() {
         return this.whoseTurn;
     }
-    public String savingGetWhoseTurn() {
+    public String savingGetWhoseTurn() { //used when saving the game
         if (this.whoseTurn == Color.WHITE) return "white";
         return "black";
     }

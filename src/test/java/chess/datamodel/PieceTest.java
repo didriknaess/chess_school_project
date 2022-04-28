@@ -36,6 +36,7 @@ public class PieceTest {
             Piece.createNewPiece("Xp5");
         }, "Illegal piece is handled by private method setTypeAndColor()"
         );
+        assertEquals(0, expectedPiece.compareTo(actualPiece)); //just to absolutely make sure they are equal
     }
     @Test
     @DisplayName("Test setters and getters")
@@ -46,7 +47,7 @@ public class PieceTest {
         assertEquals(pos, this.piece.getPosition());
         assertEquals(6, this.piece.getFirstTurnMoved());
         assertEquals(null, this.piece.getColor(),
-        "Piece has no color, no way to set a color either by design");
+        "Piece has no color, no way to set a color either, by design");
         this.piece = Piece.createNewPiece("Pa4");
         assertEquals(Color.WHITE, this.piece.getColor());
         assertThrows(IllegalArgumentException.class, () -> {
