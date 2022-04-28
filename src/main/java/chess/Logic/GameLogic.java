@@ -98,7 +98,7 @@ public class GameLogic {
         return false;
     }
     // used to check for checkmate and stalemate
-    public boolean noValidMoves2(Color color) {
+    public boolean noValidMoves(Color color) {
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = getPiece(new Position(i, j));
@@ -109,7 +109,7 @@ public class GameLogic {
         }
         return true;
     }
-    public boolean noValidMoves(Color color) {
+    public boolean noValidMoves2(Color color) {
         //Creating a shallow copy of gameState.getPieces() to avoid alteration errors when iterating through it
         ArrayList<Piece> pieces = new ArrayList<>(this.gameState.getPieces());
         for (Piece piece : pieces) 
@@ -121,6 +121,7 @@ public class GameLogic {
         }
         return true;
     }
+  
     // executes the move on the board (without checks)
     public void move(Move move) {
         Piece p = chessBoard.getPiece(move.getFrom());
