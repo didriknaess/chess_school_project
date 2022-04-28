@@ -52,7 +52,6 @@ public class BoardIOTest {
     @Test
     @DisplayName("Testing both saving and loading a game togheter. See this as the most appropriate solution")
     public void testBoardIO() {
-        GameState loadGame;
         try {
             boardIO.saveFile("testing.txt", game);
         } catch (Exception e) {

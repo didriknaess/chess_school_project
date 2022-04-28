@@ -3,7 +3,7 @@ package chess.datamodel;
 import java.util.regex.Pattern;
 
 public class Piece implements Comparable<Piece> {
-    // public tas it will be used by other classes
+    // public as it will be used by other classes
     public enum Color {
         WHITE,
         BLACK
