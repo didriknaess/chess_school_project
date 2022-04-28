@@ -12,11 +12,9 @@ public class ChessTimer {
         this.timer = new Timer(true);
         isRunning = false;
     }
-    
     public int getRemainingTime() {
         return this.timeRemaining;
     }
-
     public void startTimer() {
         if (isRunning == true) return;
         if (timeRemaining <= 0) return;

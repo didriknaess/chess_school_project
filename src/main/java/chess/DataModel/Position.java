@@ -11,8 +11,7 @@ public class Position implements Comparable<Position> {
         this.column = column;
     }
     public Position(String pos) {
-        if (pos.length() != 2 || !Pattern.matches("[a-h]{1}[1-8]{1}", pos))
-        {
+        if (pos.length() != 2 || !Pattern.matches("[a-h]{1}[1-8]{1}", pos)) {
             throw new IllegalArgumentException("Illegal position (string)");
         }
         char colChar = pos.charAt(0);
@@ -39,7 +38,6 @@ public class Position implements Comparable<Position> {
     public boolean isValid(int row, int column) {
         return (!(row < 0 || row > 7 || column < 0 || column > 7));
     }
-
     //The method below is taken from stackoverflow via this url:
     // https://stackoverflow.com/questions/10813154/how-do-i-convert-a-number-to-a-letter-in-java
     // used to help convert an int to a letter, made it alot easier for us when saving and making a board
@@ -51,7 +49,7 @@ public class Position implements Comparable<Position> {
         int rem = i%26;
         char letter = (char)((int)'A' + rem);
         if (quot == 0) {
-            return ""+letter;
+            return "" + letter;
         } 
         else {
             return toAlphabetic(quot-1) + letter;

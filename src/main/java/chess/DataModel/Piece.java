@@ -3,7 +3,7 @@ package chess.datamodel;
 import java.util.regex.Pattern;
 
 public class Piece implements Comparable<Piece> {
-    // public tas it will be used by other classes
+    // public as it will be used by other classes
     public enum Color {
         WHITE,
         BLACK
@@ -31,6 +31,7 @@ public class Piece implements Comparable<Piece> {
     public Piece() {
 
     }
+    // high usage in both testing and IO
     public static Piece createNewPiece(String piece) {
         if (!Pattern.matches("[a-zA-Z]{1}[a-h]{1}[1-8]{1}", piece)) 
         {
@@ -60,6 +61,7 @@ public class Piece implements Comparable<Piece> {
     public void setFirstTurnMoved(int n) {
         this.firstTurnMoved = n;
     }
+    // overwrites so the previous position can be used in MoveHistory
     public Position moveTo(Position pos) {
         if (!pos.isValid()) throw new IllegalArgumentException("Invalid position on move!");
         this.position = pos;
@@ -95,6 +97,7 @@ public class Piece implements Comparable<Piece> {
         if (typeStr == typeStr.toLowerCase()) this.color = Color.BLACK;
         else this.color = Color.WHITE;                
     }
+    // used in JUnit tests
     @Override
     public int compareTo(Piece piece) {
         if (this.color == piece.getColor() 

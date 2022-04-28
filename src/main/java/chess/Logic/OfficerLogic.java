@@ -23,27 +23,20 @@ public class OfficerLogic {
     }
     public List<Move> getLegalMoves(Piece piece) {
         List<Move> returnList = new ArrayList<>();  
-
-        Position startPos = piece.getPosition(); //Save the start position
-
-        for (int i = 0; i < this.rowDirections.size(); i++) 
-        {
+        Position startPos = piece.getPosition(); // save the start position
+        for (int i = 0; i < this.rowDirections.size(); i++) {
             Position newPos = startPos;
-            do //do this either way at least once
-            {
+            do { // do this either way at least once
                 newPos = newPos.getNewPosition(this.rowDirections.get(i), this.colDirections.get(i)); //Increment
-                if (newPos.isValid()) //Needs to be valid
-                {
-                    if (this.chessBoard.isSquareEmpty(newPos)) //if empty 
-                    {
-                        returnList.add(new Move(piece.getPosition(), newPos)); //new move added
-                        continue; //break this iteration of the while loop
+                if (newPos.isValid()) { // needs to be valid
+                    if (this.chessBoard.isSquareEmpty(newPos)) { // if empty 
+                        returnList.add(new Move(piece.getPosition(), newPos)); // new move added
+                        continue; // break this iteration of the while loop
                     }
-                    Piece opponent = chessBoard.getPiece(newPos); //Know that there is a piece on this square
-                    if (!opponent.getColor().equals(piece.getColor())) //Check if there is an opponent
-                    {
-                        returnList.add(new Move(piece.getPosition(), newPos)); //Can take opponent
-                        break; //break out of the while loop
+                    Piece opponent = chessBoard.getPiece(newPos); // know that there is a piece on this square
+                    if (!opponent.getColor().equals(piece.getColor())) { // check if there is an opponent
+                        returnList.add(new Move(piece.getPosition(), newPos)); // can take opponent
+                        break; // break out of the while loop
                     }
                 }
                 break;
