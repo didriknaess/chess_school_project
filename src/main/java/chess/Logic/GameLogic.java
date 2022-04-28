@@ -123,7 +123,9 @@ public class GameLogic {
     public void move(Move move) {
         Piece p = chessBoard.getPiece(move.getFrom());
         if (chessBoard.getPiece(move.getTo()) != null) {
-            this.gameState.addCapturedPiece(chessBoard.getPiece(move.getTo()));
+            Piece capturedPiece = chessBoard.getPiece(move.getTo());
+            this.gameState.addCapturedPiece(capturedPiece);
+            this.gameState.removePiece(move.getTo());
         }
 
         if (p!= null && p.getType() == Piece.PieceType.KING && java.lang.Math.abs(p.getPosition().getColumn() - move.getTo().getColumn()) == 2) {
@@ -143,10 +145,16 @@ public class GameLogic {
         Piece moved = chessBoard.getPiece(lastMove.getTo());
         // in case of promotion, replaces the promoted piece with the corresponding pawn
         if (!internal && this.gameState.getPromotedPawns().containsKey(getTurnCount()-1)) {
-            chessBoard.addPiece(this.gameState.getPromotedPawn(getTurnCount()-1));
+            Piece p = this.gameState.getPromotedPawn(getTurnCount()-1);
+            this.gameState.removePiece(p.getPosition());
+            this.gameState.addPiece(p);
+            chessBoard.addPiece(p);
             this.gameState.removePromotedPawn(getTurnCount()-1);
         } else if (internal && this.gameState.getPromotedPawns().containsKey(getTurnCount())) {
-            chessBoard.addPiece(this.gameState.getPromotedPawn(getTurnCount()));
+            Piece p = this.gameState.getPromotedPawn(getTurnCount());
+            this.gameState.removePiece(p.getPosition());
+            this.gameState.addPiece(p);
+            chessBoard.addPiece(p);
             this.gameState.removePromotedPawn(getTurnCount());
         }
         // in case the move we are undoing is a castling, we also need to reverse the rooks position
@@ -171,7 +179,9 @@ public class GameLogic {
         Integer toRemove = null;
         for (Integer i : gameState.getCapturedPieces().keySet()) {
             if ((!internal && i == this.gameState.getNumberOfTurns()-1) || (internal && i == this.gameState.getNumberOfTurns())) {
-                chessBoard.addPiece(gameState.getCapturedPieces().get(i));
+                Piece p = gameState.getCapturedPieces().get(i);
+                chessBoard.addPiece(p);
+                this.gameState.addPiece(p);
                 toRemove = i;
                 break;
             }
@@ -182,9 +192,11 @@ public class GameLogic {
         Piece p = chessBoard.getPiece(pos);
         if (p == null || p.getType() != PieceType.PAWN) throw new IllegalArgumentException("Only pawns can be promoted");
         this.gameState.addPromotedPawn(this.getTurnCount(), p);
-        // remove piece from 
+        this.gameState.removePiece(pos);
         if (type == PieceType.PAWN || type == PieceType.KING) throw new IllegalArgumentException("Illegal promotion");
-        chessBoard.addPiece(new Piece(type, p.getColor(), pos));
+        Piece promote = new Piece(type, p.getColor(), pos);
+        chessBoard.addPiece(promote);
+        this.gameState.addPiece(promote);
     }
     // Calulate the score of the specified team
     public int getScore(Piece.Color color) {
