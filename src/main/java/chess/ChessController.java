@@ -170,9 +170,9 @@ private class TimeUpdater implements Runnable {
         if (outOfTime) {
             outOfTime = false;
             if (logic.getRemainingTime(Piece.Color.BLACK) <= 0) {
-                displayWinnerAndRestart(false, "by the opponent running out of time.");
-            } else {
                 displayWinnerAndRestart(true, "by the opponent running out of time.");
+            } else {
+                displayWinnerAndRestart(false, "by the opponent running out of time.");
             }
             return;
         }

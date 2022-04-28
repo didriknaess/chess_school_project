@@ -118,10 +118,8 @@ public class Piece implements Comparable<Piece>
             default:
                 throw new IllegalArgumentException("No piece has this letter!");
         }
-
         if (typeStr == typeStr.toLowerCase()) this.color = Color.BLACK;
-        else this.color = Color.WHITE;
-                    
+        else this.color = Color.WHITE;                
     }
 
     @Override
@@ -132,7 +130,6 @@ public class Piece implements Comparable<Piece>
         && this.pieceType == piece.getType()) return 0;
         return -1;
     }
-    
 
     @Override
     public String toString()

@@ -71,8 +71,7 @@ public class ImageIO {
         return image;
     }
 
-    public static String getImageFilePath(String imageFilePath)
-    {
+    public static String getImageFilePath(String imageFilePath) {
         if (imageFilePath.isBlank()) throw new IllegalArgumentException("Can't find a file that is null");
         return ImageIO.class.getResource("/pics").getFile() + imageFilePath;
     }

@@ -154,7 +154,8 @@ public class GameState {
         return this.turn;
     }
 
-    public int getBlackSeconds() {
+    public int getBlackSeconds() 
+    {
         return this.secondsLeftBlack;
     }
 
@@ -162,11 +163,13 @@ public class GameState {
         return this.secondsLeftWhite;
     }
 
-    public Piece.Color getWhoseTurn() {
+    public Piece.Color getWhoseTurn() 
+    {
         return this.whoseTurn;
     }
     
-    public String savingGetWhoseTurn() {
+    public String savingGetWhoseTurn() 
+    {
         if (this.whoseTurn == Color.WHITE) return "white";
         return "black";
     }
