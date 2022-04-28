@@ -374,6 +374,7 @@ private class TimeUpdater implements Runnable {
     @FXML
     public void handleUndo() {
         logic.undoTurn();
+        this.hasSelected = false;
         unselectBoard();
         updateBoard();
         updateText();
