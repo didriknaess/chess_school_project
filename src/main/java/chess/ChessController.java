@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
+
 public class ChessController {
     @FXML public AnchorPane canvas;
     @FXML public GridPane chessBoardGraphic;
@@ -45,6 +46,48 @@ public class ChessController {
     private boolean outOfTime = false;
 
     public ChessController() {
+    }
+    // implements runnable for multithreading so we can update the players respective timers every 1/10th of a second
+private class TimeUpdater implements Runnable {
+    public TimeUpdater() {
+    }
+    @Override @FXML
+    public void run() {
+        while (true) {
+            int blackTime = logic.getRemainingTime(Piece.Color.BLACK);
+            int whiteTime = logic.getRemainingTime(Piece.Color.WHITE);
+
+            updateTimers(formatTimerText(blackTime), blackRemainingTime);
+            updateTimers(formatTimerText(whiteTime), whiteRemainingTime);
+            // blackRemainingTime.setText(formatTimerText(blackTime));
+            // whiteRemainingTime.setText(formatTimerText(whiteTime));
+
+            if (blackTime <= 0 || whiteTime <= 0) break;
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+        }
+        // cannot do this on a different thread, must find a way to transfer to main thread
+        outOfTime = true;
+    }
+    private String formatTimerText(int time) {
+        String txt = "Remaining time: ";
+        if (time / 600 < 10) txt += "0";
+        txt += (int)(time / 600) + ":";
+        time = time % 600;
+        if (time / 10 < 10) txt += "0";
+        txt += (int)(time / 10);
+        time = time % 10;
+        txt += "." + time;
+        return txt;
+    }
+
+}
+    @FXML
+    public void updateTimers(String text, Text timer) {
+        timer.setText(text);
     }
 
     @FXML
@@ -125,10 +168,11 @@ public class ChessController {
             this.paused = false;
         }
         if (outOfTime) {
+            outOfTime = false;
             if (logic.getRemainingTime(Piece.Color.BLACK) <= 0) {
-                displayWinnerAndRestart(false, "by the opponent running out of time."); 
+                displayWinnerAndRestart(false, "by the opponent running out of time.");
             } else {
-                displayWinnerAndRestart(true, "by the opponent running out of time."); 
+                displayWinnerAndRestart(true, "by the opponent running out of time.");
             }
             return;
         }
@@ -155,7 +199,7 @@ public class ChessController {
                 pane = board[move.getTo().getRow()][move.getTo().getColumn()];
                 if ((move.getTo().getRow()+move.getTo().getColumn())%2==0) {
                     pane.setStyle("-fx-background-color:lightcoral;");
-                } else { 
+                } else {
                     pane.setStyle("-fx-background-color:firebrick;");
                 }
             }
@@ -176,7 +220,7 @@ public class ChessController {
                 logic.move(move);
                 unselectBoard();
                 if (logic.getPiece(pos).getType() == Piece.PieceType.PAWN) {
-                    if ((logic.getPiece(pos).getColor() == Piece.Color.WHITE && pos.getRow() == 7) 
+                    if ((logic.getPiece(pos).getColor() == Piece.Color.WHITE && pos.getRow() == 7)
                     || (logic.getPiece(pos).getColor() == Piece.Color.BLACK && pos.getRow() == 0)) {
                         Piece.PieceType type = promotionAlert(pos);
                         logic.promote(pos, type);
@@ -186,7 +230,7 @@ public class ChessController {
                 updateBoard();
                 updateText();
                 hasSelected = false;
-                
+
             } else {
                 System.out.println("Invalid move");
             }
@@ -232,7 +276,7 @@ public class ChessController {
             return promotionAlert(pos);
         }
     }
-    
+
     //Changing Text corresponding to Score and which players Turn it is
     public void updateText() {
         blackScore.setText("Score: "+logic.getScore(Piece.Color.BLACK));
@@ -259,49 +303,14 @@ public class ChessController {
                 if (p != null) {
                     Image img = imageLoader.getImage(p);
                     ImageView view = new ImageView(img);
-                    view.fitWidthProperty().bind(board[i][j].widthProperty()); 
-                    view.fitHeightProperty().bind(board[i][j].heightProperty()); 
+                    view.fitWidthProperty().bind(board[i][j].widthProperty());
+                    view.fitHeightProperty().bind(board[i][j].heightProperty());
                     board[i][j].getChildren().add(view);
                 }
             }
         }
     }
-    // implements runnable for multithreading so we can update the players respective timers every 1/10th of a second
-    private class TimeUpdater implements Runnable {
-        public TimeUpdater() {
-        }
-        @Override @FXML
-        public void run() {
-            while (true) {
-                int blackTime = logic.getRemainingTime(Piece.Color.BLACK);
-                int whiteTime = logic.getRemainingTime(Piece.Color.WHITE);
-                
-                blackRemainingTime.setText(formatTimerText(blackTime));
-                whiteRemainingTime.setText(formatTimerText(whiteTime));
 
-                if (blackTime <= 0 || whiteTime <= 0) break;
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                }
-            }
-            // cannot do this on a different thread, must find a way to transfer to main thread
-            outOfTime = true;
-        }
-        private String formatTimerText(int time) {
-            String txt = "Remaining time: ";
-            if (time / 600 < 10) txt += "0";
-            txt += (int)(time / 600) + ":";
-            time = time % 600;
-            if (time / 10 < 10) txt += "0";
-            txt += (int)(time / 10);
-            time = time % 10;
-            txt += "." + time;
-            return txt;
-        }
-
-    }
     public void restart() throws FileNotFoundException {
         // removes any ImageView children of panes from the previous game
         for (int i = 0; i<8; i++) {
@@ -313,7 +322,7 @@ public class ChessController {
         switch(logic.whoseTurn()) {
             case BLACK:
                 logic.endTurn();
-            default: 
+            default:
                 this.initialize();
         }
         // corrects scores and taken pieces, then updates the display
@@ -345,7 +354,7 @@ public class ChessController {
 
         if (filename == null) return "";
         if(!filename.endsWith(".txt")) filename += ".txt";
-        
+
         return filename;
     }
     //Handling of buttons in the JavaFX Application:
@@ -380,7 +389,7 @@ public class ChessController {
         alert.setTitle("Confirmation");
         alert.showAndWait();
         if (alert.getResult() != ButtonType.OK) return;
-        
+
         boolean whiteWon = true;
         if (logic.getTurnCount() % 2 != 0) whiteWon = false;
         displayWinnerAndRestart(whiteWon, "by opponent forfeiting.");
@@ -432,7 +441,7 @@ public class ChessController {
         } catch (Exception FileNotFoundException) {
             handleLoad();
         }
-        
+
         // sets up the multithreading for the class visually maintaining the player's remaining time
         TimeUpdater timeUpdater = new TimeUpdater();
         Thread timeThread = new Thread(timeUpdater);

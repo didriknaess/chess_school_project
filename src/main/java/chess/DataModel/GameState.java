@@ -20,7 +20,7 @@ public class GameState {
 
     public GameState()
     {
-
+        //Technically not necessary, but nice to highlight that only an empty constructor exist
     }
 
     //Set
@@ -102,6 +102,17 @@ public class GameState {
         this.promotedPawns.remove(turn);
     }
 
+    public void removePiece(Position pos)
+    {
+        for (Piece piece : this.pieces) {
+            if (piece.getPosition().equals(pos))
+            {
+                this.pieces.remove(piece);
+                break; //Have to break when the list im iterating through is altered
+            }   
+        }  
+    }
+
     //Boolean
     public boolean whitesTurn()
     {
@@ -161,7 +172,7 @@ public class GameState {
     }
 
     //Equals
-    public boolean equals(GameState game)
+    public boolean equals(GameState game) //Used when testing two gameStates, also in IO testing
     {
         if (this.getPieces().size() != game.getPieces().size()) return false;
         for (int i = 0; i < this.getPieces().size(); i++) 
