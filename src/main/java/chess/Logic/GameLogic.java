@@ -110,7 +110,9 @@ public class GameLogic {
         return true;
     }
     public boolean noValidMoves(Color color) {
-        for (Piece piece : this.gameState.getPieces()) 
+        //Creating a shallow copy of gameState.getPieces() to avoid alteration errors when iterating through it
+        ArrayList<Piece> pieces = new ArrayList<>(this.gameState.getPieces());
+        for (Piece piece : pieces) 
         {
             if (piece.getColor().compareTo(color) == 0)
             {
