@@ -366,6 +366,7 @@ public class ChessController {
     @FXML
     public void handleUndo() {
         logic.undoTurn();
+        this.hasSelected = false;
         unselectBoard();
         updateBoard();
         updateText();
