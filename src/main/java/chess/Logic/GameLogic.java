@@ -98,23 +98,12 @@ public class GameLogic {
         return false;
     }
     // used to check for checkmate and stalemate
-    public boolean noValidMoves2(Color color) {
-        for (int i = 0; i<8; i++) {
-            for (int j = 0; j<8; j++) {
-                Piece p = getPiece(new Position(i, j));
-                if (p != null && p.getColor() == color) {
-                    if (!getValidMoves(p).isEmpty()) return false;
-                }
-            }
-        }
-        return true;
-    }
     public boolean noValidMoves(Color color) {
         for (int i = 0; i<8; i++) {
             for (int j = 0; j<8; j++) {
                 Piece p = chessBoard.getPiece(new Position(i, j));
                 if (p == null) break;
-                if (p.getColor() == color) break;
+                if (p.getColor() != color) break;
                 if (getValidMoves(p).isEmpty()) return false;
             }
         }   
