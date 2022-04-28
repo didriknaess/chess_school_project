@@ -2,10 +2,8 @@ package chess.datamodel;
 
 import java.util.ArrayList;
 
-public class ChessBoard 
-{
+public class ChessBoard {
     private ArrayList<ArrayList<Piece>> chessBoard;
-
     public ChessBoard() {
         this.chessBoard = new ArrayList<ArrayList<Piece>>();
         for (int i = 0; i < 8; i++) {
@@ -23,27 +21,23 @@ public class ChessBoard
             }
         }   
     }
-
     public Piece getPiece(Position pos) {
         return this.chessBoard.get(pos.getRow()).get(pos.getColumn());
     }
-
     public void addPiece(Piece piece) {
         Position position = piece.getPosition();
         chessBoard.get(position.getRow()).set(position.getColumn(), piece);
     }
-
     public boolean isSquareEmpty(Position pos) {
         return (this.getPiece(pos) == null);
     }
-
+    // actually physically performs moves in the chessBoard
     public void doMove(Move move) {
         Piece toMove = chessBoard.get(move.getFrom().getRow()).get(move.getFrom().getColumn());
         chessBoard.get(move.getTo().getRow()).set(move.getTo().getColumn(), toMove);
         chessBoard.get(move.getFrom().getRow()).set(move.getFrom().getColumn(), null);
         toMove.moveTo(move.getTo());
     }
-
     public void doCastle(Move move, boolean left) {
         doMove(move);
         if (left) {
@@ -54,7 +48,6 @@ public class ChessBoard
             doMove(new Move(rook.getPosition(), new Position(rook.getPosition().getRow(), rook.getPosition().getColumn()-2)));
         }
     }
-
     @Override
     public String toString() {
         String returnString = "";
@@ -69,5 +62,4 @@ public class ChessBoard
         returnString += "  A B C D E F G H";
         return returnString;
     }
-
 }

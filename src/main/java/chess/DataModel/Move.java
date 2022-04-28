@@ -14,6 +14,7 @@ public class Move implements Comparable<Move> {
     public Position getTo() {
         return to;
     }
+    // compareTo and equals are necessary for JUnit tests
     @Override
     public int compareTo(Move other) {
         if (this.from.equals(other.from) && this.to.equals(other.to)) return 0;
