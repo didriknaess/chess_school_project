@@ -19,7 +19,6 @@ import chess.datamodel.Piece;
 import chess.datamodel.Piece.Color;
 
 public class BoardIOTest {
-    
     private GameState game;
     private GameState loadGame; //Needs to be declared, even though VS Code says it doesnt
     private BoardIO boardIO;
@@ -44,19 +43,16 @@ public class BoardIOTest {
         this.game.setSecondsRemainingWhite(600);
         this.game.setWhoseTurn(Color.WHITE);
     }
-
     @BeforeEach
     public void setup() {
         game = new GameState();
         boardIO = new BoardIO();
         createGame();
     }
-
     @Test
     @DisplayName("Testing both saving and loading a game togheter. See this as the most appropriate solution")
     public void testBoardIO() {
         GameState loadGame;
-
         try {
             boardIO.saveFile("testing.txt", game);
         } catch (Exception e) {
@@ -64,7 +60,6 @@ public class BoardIOTest {
             System.out.println(e.getStackTrace());
             return;
         }
-
         try {
             loadGame = boardIO.loadFile("testing.txt"); 
         } catch (Exception e) {
@@ -72,11 +67,9 @@ public class BoardIOTest {
             System.out.println(e.getStackTrace());
             return;
         }
-
         assertTrue(loadGame.isValid());
         assertTrue(game.equals(loadGame));
     }
-
     @Test
 	public void testLoadNonExistingFile() {
         assertThrows(
@@ -85,7 +78,6 @@ public class BoardIOTest {
                 "FileNotFoundException should be thrown when file does not exist!"
                 );
 	}
-
 	@Test
 	public void testLoadInvalidFile() {
 		assertThrows(
@@ -93,12 +85,9 @@ public class BoardIOTest {
                 loadGame = boardIO.loadFile("InvalidChess.txt"),
 				"An exception should be thrown if loaded file is invalid!");
 	}
-
 	@AfterAll
 	static void teardown() {
 		File newTestSaveFile = new File(BoardIO.getFilePath("testing.txt"));
 		newTestSaveFile.delete();
 	}
-
-
 }

@@ -8,7 +8,6 @@ public class ChessBoard
 
     public ChessBoard() {
         this.chessBoard = new ArrayList<ArrayList<Piece>>();
-        
         for (int i = 0; i < 8; i++) {
             ArrayList<Piece> foo = new ArrayList<>();
             for (int j = 0; j < 8; j++) {
@@ -59,11 +58,9 @@ public class ChessBoard
     @Override
     public String toString() {
         String returnString = "";
-        for (int r = 7; r >= 0; r--) 
-        {
+        for (int r = 7; r >= 0; r--) {
             returnString += r+1 + " ";
-            for (int c = 0; c < 8; c++) 
-            {
+            for (int c = 0; c < 8; c++) {
                 if (chessBoard.get(r).get(c) == null) returnString += "  ";
                 else returnString += chessBoard.get(r).get(c).toString() + " "; 
             }

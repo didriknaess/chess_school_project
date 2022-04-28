@@ -6,10 +6,9 @@ import chess.datamodel.ChessBoard;
 import chess.datamodel.Move;
 import chess.datamodel.Piece;
 
-public class PieceLogic //This class is to help prevent having to make new instances of ...logic in GameLogic
-//Want to delegate most of GameLogics tasks to other helping functions.
-//Makes the GameLogic easier to read, for details you move into the other subclasses
-{
+public class PieceLogic { // this class is to help prevent having to make new instances of ...logic in GameLogic
+// we want to delegate most of GameLogics tasks to other supporting functions. this makes GameLogic more readable,
+// in addition to allowing you to navigate to subclasses for deeper understanding of functionality
     private ChessBoard chessBoard;
     private RookLogic rookLogic;
     private BishopLogic bishopLogic;
@@ -17,8 +16,7 @@ public class PieceLogic //This class is to help prevent having to make new insta
     private QueenLogic queenLogic;
     private KingLogic kingLogic;
 
-    public PieceLogic(ChessBoard chessBoard)
-    {
+    public PieceLogic(ChessBoard chessBoard) {
         this.chessBoard = chessBoard;
         this.rookLogic = new RookLogic(chessBoard);
         this.bishopLogic = new BishopLogic(chessBoard);
@@ -26,7 +24,6 @@ public class PieceLogic //This class is to help prevent having to make new insta
         this.queenLogic = new QueenLogic(chessBoard);
         this.kingLogic = new KingLogic(chessBoard);
     }
-
     public  List<Move> getLegalMoves(Piece piece) {
         switch (piece.getType()) {
             case PAWN:

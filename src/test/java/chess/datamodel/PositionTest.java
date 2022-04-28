@@ -15,7 +15,6 @@ public class PositionTest {
     public void setup() {
         this.position = new Position(0,0);
     }
-
     @Test
     public void createNewValidPositionString() {
         //Test creating new position using string, and comparing it to one using integers
@@ -23,7 +22,6 @@ public class PositionTest {
         assertEquals(stringPosition.compareTo(this.position), 0, 
         "When comparing these two, the result should be 0 (equal)");
     }
-
     @Test
     public void testGetters() {
         assertEquals(this.position.getColumn(), 0);
@@ -33,7 +31,6 @@ public class PositionTest {
         assertEquals(this.position, new Position(0,0), 
         "The previous test should not affect the original position");
     }
-
     @Test
     public void createNewInvalidPosition() {
         assertThrows(
@@ -51,7 +48,5 @@ public class PositionTest {
                 new Position("aa1");
             }, "Invalid length of string, IllegalArugmentException should be thrown"
         );
-        
     }
-
 }

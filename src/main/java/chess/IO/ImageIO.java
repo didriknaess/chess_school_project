@@ -9,13 +9,10 @@ import chess.datamodel.Piece.Color;
 import javafx.scene.image.Image;
 
 public class ImageIO {
-    
     public Image getImage(Piece p) {
         String imageFilePath = "";
-        if (p.getColor() == Color.BLACK)
-        {
-            switch(p.getType()) 
-            {
+        if (p.getColor() == Color.BLACK) {
+            switch(p.getType()) {
                 case PAWN:
                     imageFilePath = "BPawn.png";
                     break;
@@ -36,10 +33,8 @@ public class ImageIO {
                     break;
             }
         }
-        else
-        {
-            switch(p.getType()) 
-            {
+        else {
+            switch(p.getType()) {
                 case PAWN:
                     imageFilePath = "WPawn.png";
                     break;
@@ -67,13 +62,10 @@ public class ImageIO {
             e.printStackTrace();
         }
         Image image = new Image(is);
-        
         return image;
     }
-
     public static String getImageFilePath(String imageFilePath) {
         if (imageFilePath.isBlank()) throw new IllegalArgumentException("Can't find a file that is null");
         return ImageIO.class.getResource("/pics").getFile() + imageFilePath;
     }
-
 }

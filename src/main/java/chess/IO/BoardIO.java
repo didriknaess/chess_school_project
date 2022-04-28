@@ -14,13 +14,10 @@ import chess.datamodel.Position;
 import chess.datamodel.Piece.Color;
 
 public class BoardIO implements IBoardIO {
-
     @Override
-    public GameState loadFile(String filename) throws FileNotFoundException
-    {
+    public GameState loadFile(String filename) throws FileNotFoundException {
         GameState game = new GameState();
-        try (Scanner scanner = new Scanner(new File(getFilePath(filename))))
-        {
+        try (Scanner scanner = new Scanner(new File(getFilePath(filename)))) {
             //First 4 lines must always be of this format: 
             //whoseTurn, whiteSeconds, blackSeconds, number of turns
             Piece.Color color = Color.WHITE;
@@ -28,8 +25,7 @@ public class BoardIO implements IBoardIO {
             int secondsRemainingP1 = Integer.parseInt(scanner.nextLine());
             int secondsRemainingP2 = Integer.parseInt(scanner.nextLine());
             int turns = Integer.parseInt(scanner.nextLine());
-            while (scanner.hasNextLine())
-            {
+            while (scanner.hasNextLine()) {
                 try {
                     String nextLine = scanner.nextLine();
                     if (nextLine.startsWith("#")) break; //Break when no more pieces left on the "board"
@@ -41,8 +37,7 @@ public class BoardIO implements IBoardIO {
                     break;
                 }  
             }
-            while (scanner.hasNextLine()) 
-            {
+            while (scanner.hasNextLine()) {
                 try {
                     String nextLine = scanner.nextLine();
                     if (nextLine.startsWith("#")) break;
@@ -54,8 +49,7 @@ public class BoardIO implements IBoardIO {
                     break;
                 }
             }
-            while (scanner.hasNextLine()) 
-            {
+            while (scanner.hasNextLine()) {
                 try {
                     String nextLine = scanner.nextLine();
                     if (nextLine.startsWith("#")) break;
@@ -67,8 +61,7 @@ public class BoardIO implements IBoardIO {
                     break;
                 }
             }
-            while (scanner.hasNextLine()) 
-            {
+            while (scanner.hasNextLine()) {
                 try {
                     String[] split = scanner.nextLine().split(",");
                     Position pos1 = new Position(split[0]);
@@ -86,45 +79,37 @@ public class BoardIO implements IBoardIO {
         }
         return game;
     }
-
     @Override
-    public void saveFile(String filename, GameState game) throws FileNotFoundException 
-    {
+    public void saveFile(String filename, GameState game) throws FileNotFoundException {
         //Logic to save the state of the game
-        try (PrintWriter writer = new PrintWriter(new File(getFilePath(filename))))
-        {
+        try (PrintWriter writer = new PrintWriter(new File(getFilePath(filename)))) {
             writer.println(game.savingGetWhoseTurn());
             writer.println(game.getWhiteSeconds());
             writer.println(game.getBlackSeconds());
             writer.println(game.getNumberOfTurns());
-            for (Piece piece : game.getPieces()) 
-            {
+            for (Piece piece : game.getPieces()) {
                 writer.printf("%s,%s,%s\n", piece.toString(), piece.getPosition().toString(), 
                 piece.getFirstTurnMoved());
             }
             writer.println("#capturedPieces");
-            for (Piece piece : game.getCapturedPieces().values())
-            {
+            for (Piece piece : game.getCapturedPieces().values()) {
                 writer.printf("%s,%s,%s,%s\n", piece.toString(), piece.getPosition().toString(), 
                 piece.getFirstTurnMoved(), getKeyByValue(game.getCapturedPieces(), piece) );
             }
             writer.println("#promotedPawns");
-            for (Piece pawn : game.getPromotedPawns().values())
-            {
+            for (Piece pawn : game.getPromotedPawns().values()) {
                 writer.printf("%s,%s,%s,%s\n", pawn.toString(), pawn.getPosition().toString(), 
                 pawn.getFirstTurnMoved(), getKeyByValue(game.getPromotedPawns(), pawn));
             }
             writer.println("#moveHistory");
-            for (Move move : game.getMoveHistory()) 
-            {
+            for (Move move : game.getMoveHistory()) {
                 writer.printf("%s,%s\n", move.getFrom().toString(), move.getTo().toString());
             }
         }
     
     }
 
-    public static String getFilePath(String filename)
-    {
+    public static String getFilePath(String filename) {
         return BoardIO.class.getResource("/saves").getFile() + filename;
     }
 
@@ -140,8 +125,7 @@ public class BoardIO implements IBoardIO {
         return null;
     }
     
-    private String toString(String...lines)
-    {
+    private String toString(String...lines) {
         return lines[0] + lines[1];
     } 
 }

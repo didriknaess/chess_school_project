@@ -8,24 +8,20 @@ import chess.datamodel.Move;
 import chess.datamodel.Piece;
 import chess.datamodel.Position;
 
-public class OfficerLogic 
-{
+public class OfficerLogic {
     protected ChessBoard chessBoard;
     protected ArrayList<Integer> rowDirections;
     protected ArrayList<Integer> colDirections;
     protected boolean repeatMoves;
     
     public OfficerLogic(ChessBoard chessBoard, ArrayList<Integer> rowDirections, 
-    ArrayList<Integer> colDirections, boolean repeatMoves)
-    {
+    ArrayList<Integer> colDirections, boolean repeatMoves) {
         this.chessBoard = chessBoard;
         this.rowDirections = rowDirections;
         this.colDirections = colDirections;
         this.repeatMoves = repeatMoves;
     }
-    
-    public List<Move> getLegalMoves(Piece piece) 
-    {
+    public List<Move> getLegalMoves(Piece piece) {
         List<Move> returnList = new ArrayList<>();  
 
         Position startPos = piece.getPosition(); //Save the start position

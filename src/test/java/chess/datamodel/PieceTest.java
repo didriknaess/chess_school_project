@@ -12,15 +12,12 @@ import chess.datamodel.Piece.Color;
 import chess.datamodel.Piece.PieceType;
 
 public class PieceTest {
-
     Piece piece;
 
     @BeforeEach
     public void setup() {
         piece = new Piece();
     }
-
-
     @Test
     @DisplayName("Test the static method createNewPiece")
     public void testCreateNewPiece() {
@@ -40,7 +37,6 @@ public class PieceTest {
         }, "Illegal piece is handled by private method setTypeAndColor()"
         );
     }
-
     @Test
     @DisplayName("Test setters and getters")
     public void testSetTypeAndColor() {
@@ -58,7 +54,6 @@ public class PieceTest {
         }
         );
     }
-
     @Test
     @DisplayName("Test moveTo() method")
     public void testMoveTo() {
@@ -72,5 +67,4 @@ public class PieceTest {
         }, "When trying to move to an illegal position, IllegalArgumentException should be thrown"
         );
     }
-
 }

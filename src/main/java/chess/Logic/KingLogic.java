@@ -9,10 +9,8 @@ import chess.datamodel.Move;
 import chess.datamodel.Piece;
 import chess.datamodel.Position;
 
-public class KingLogic extends OfficerLogic
-{
-    public KingLogic(ChessBoard chessBoard) 
-    {   
+public class KingLogic extends OfficerLogic {
+    public KingLogic(ChessBoard chessBoard) {   
         super(chessBoard, new ArrayList<Integer>(Arrays.asList(1,-1,1,-1,1,-1,0,0)) , 
         new ArrayList<Integer>(Arrays.asList(1,1,-1,-1,0,0,-1,1)), false); //Choose what directions to check for moves in
     }

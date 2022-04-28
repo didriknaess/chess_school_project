@@ -48,29 +48,23 @@ public class ChessController {
     public ChessController() {
     }
     // implements runnable for multithreading so we can update the players respective timers every 1/10th of a second
-private class TimeUpdater implements Runnable {
-    public TimeUpdater() {
-    }
-    @Override @FXML
-    public void run() {
-        while (true) {
-            int blackTime = logic.getRemainingTime(Piece.Color.BLACK);
-            int whiteTime = logic.getRemainingTime(Piece.Color.WHITE);
-
-            updateTimers(formatTimerText(blackTime), blackRemainingTime);
-            updateTimers(formatTimerText(whiteTime), whiteRemainingTime);
-            // blackRemainingTime.setText(formatTimerText(blackTime));
-            // whiteRemainingTime.setText(formatTimerText(whiteTime));
-
+    private class TimeUpdater implements Runnable {
+        public TimeUpdater() {
+        }
+        @Override @FXML
+        public void run() {
+            while (true) {
+                int blackTime = logic.getRemainingTime(Piece.Color.BLACK);
+                int whiteTime = logic.getRemainingTime(Piece.Color.WHITE);
+                updateTimers(formatTimerText(blackTime), blackRemainingTime);
+                updateTimers(formatTimerText(whiteTime), whiteRemainingTime);
             if (blackTime <= 0 || whiteTime <= 0) break;
-
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
             }
         }
-        // cannot do this on a different thread, must find a way to transfer to main thread
-        outOfTime = true;
+        outOfTime = true; // makes the game end by timeout at next user interaction
     }
     private String formatTimerText(int time) {
         String txt = "Remaining time: ";
@@ -89,7 +83,6 @@ private class TimeUpdater implements Runnable {
     public void updateTimers(String text, Text timer) {
         timer.setText(text);
     }
-
     @FXML
     public void initialize() throws FileNotFoundException {
         if (chessBoardGraphic == null) throw new Error("GridPane is empty!");
@@ -276,8 +269,7 @@ private class TimeUpdater implements Runnable {
             return promotionAlert(pos);
         }
     }
-
-    //Changing Text corresponding to Score and which players Turn it is
+    //Changing Text corresponding to Score and whichever players Turn it is
     public void updateText() {
         blackScore.setText("Score: "+logic.getScore(Piece.Color.BLACK));
         whiteScore.setText("Score: "+logic.getScore(Piece.Color.WHITE));
@@ -310,7 +302,6 @@ private class TimeUpdater implements Runnable {
             }
         }
     }
-
     public void restart() throws FileNotFoundException {
         // removes any ImageView children of panes from the previous game
         for (int i = 0; i<8; i++) {

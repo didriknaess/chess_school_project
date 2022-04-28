@@ -17,15 +17,12 @@ import org.junit.jupiter.api.Test;
 import chess.datamodel.Piece.Color;
 
 public class GameStateTest {
-    
     private GameState game;
 
-    
     @BeforeEach
     public void init() {
         this.game = new GameState();
     }
-
     @Test
     @DisplayName("Test that a valid game contains some pieces")
     public void testValidGameState() {
@@ -35,7 +32,6 @@ public class GameStateTest {
         assertTrue(game.isValid(),
         "Only a valid GameState if it contains some pieces (after design)");
     }
-
     @Test
     @DisplayName("Test whose turn it is")
     public void testWhoseTurn() {
@@ -45,7 +41,6 @@ public class GameStateTest {
         assertEquals("black", this.game.savingGetWhoseTurn(),
         "To help make it easier to save the game, should get a String 'black'");
     }
-
     @Test
     @DisplayName("Test number of total turns, starting at 1")
     public void testTurns() {
@@ -58,7 +53,6 @@ public class GameStateTest {
         this.game.removeTurn();
         assertEquals(3, this.game.getNumberOfTurns());
     }
-
     @Test
     @DisplayName("Test how many seconds each has got left")
     public void testSecondsRemaining() {
@@ -72,7 +66,6 @@ public class GameStateTest {
             }, "Test that you can't have negative time"
         );
     }
-
     @Test
     @DisplayName("Test the functionality of the list of active pieces")
     public void testPieces() {
@@ -96,7 +89,6 @@ public class GameStateTest {
         assertEquals(new ArrayList<>(), this.game.getPieces(),
         "Should be an empty ArrayList, not null");
     }
-
     @Test
     @DisplayName("Test the history of moves (used for undo)")
     public void testMoveHistory() {
@@ -115,7 +107,6 @@ public class GameStateTest {
         this.game.popMove();
         assertEquals(actualMoveHistory, this.game.getMoveHistory());
     }
-
     @Test
     @DisplayName("Test the map of pieces that has been captured")
     public void testCapturedPieces() {
@@ -141,7 +132,6 @@ public class GameStateTest {
         }, "No piece was removed this turn, should throw IllegalArgumentException"
         );
     }
-
     @Test
     @DisplayName("Test the list of promoted pawns (for undo)")
     public void testPromotedPawns() {

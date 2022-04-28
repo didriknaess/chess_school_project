@@ -18,168 +18,113 @@ public class GameState {
     private HashMap<Integer, Piece> capturedPieces = new HashMap<Integer, Piece>();
     private HashMap<Integer, Piece> promotedPawns = new HashMap<Integer, Piece>();
 
-    public GameState()
-    {
-        //Technically not necessary, but nice to highlight that only an empty constructor exist
+    public GameState() {
+        // technically not necessary, but nice to highlight that only an empty constructor exist
     }
-
-    //Set
+    // set
     public void setTurns(int turns) {
         this.turn = turns;
     }
-
     public void setSecondsRemainingBlack(int secondsRemainingBlack) {
         if (secondsRemainingBlack < 0) throw new IllegalArgumentException("Can't have negative time reamining!");
         this.secondsLeftBlack = secondsRemainingBlack;
     }
-
     public void setSecondsRemainingWhite(int secondsRemainingWhite) {
         if (secondsRemainingWhite < 0) throw new IllegalArgumentException("Can't have negative time reamining!");
         this.secondsLeftWhite = secondsRemainingWhite;
     }
-
     public void setWhoseTurn(Color color) {
         this.whoseTurn = color;
     }
-
-    //Add
-    public void addPromotedPawn(Integer move, Piece piece)
-    {
+    // add
+    public void addPromotedPawn(Integer move, Piece piece) {
         if (piece.getType() != PieceType.PAWN) throw new IllegalArgumentException("Only pawns can get a promotion");
         this.promotedPawns.put(move, piece);
     }
-
-    public void addMove(Move move)
-    {
+    public void addMove(Move move) {
         this.moveHistory.add(move);
     }
-
-    public void addCapturedPiece(Piece piece)
-    {
+    public void addCapturedPiece(Piece piece) {
         this.capturedPieces.put(this.getNumberOfTurns(), piece);
     }
-
-    public void addCapturedPiece(Integer turn, Piece piece)
-    {
+    public void addCapturedPiece(Integer turn, Piece piece) {
         this.capturedPieces.put(turn, piece);
     }
-
-    public void addPiece(Piece piece)
-    {
+    public void addPiece(Piece piece) {
         if (this.pieces.contains(piece)) throw new IllegalArgumentException("Can't add a piece thats already there");
         this.pieces.add(piece);
     }
-
-    public void addTurn()
-    {
+    public void addTurn() {
         this.turn ++;
     }
-
-    //Remove, pop and clear
-    public Move popMove()
-    {
+    // remove, pop and clear
+    public Move popMove() {
         return this.moveHistory.pop();
     }
-
-    public void clearPieces()
-    {
+    public void clearPieces() {
         this.pieces.clear();
     }
-
-    public void removeTurn()
-    {
+    public void removeTurn() {
         this.turn --;
     }
-
-    public void removeCapturedPiece(Integer i)
-    {
+    public void removeCapturedPiece(Integer i) {
         if (!this.capturedPieces.containsKey(i) && i != null) throw new IllegalArgumentException("No pieces was captured this turn");
         this.capturedPieces.remove(i);
     }
-
-    public void removePromotedPawn(int turn)
-    {
+    public void removePromotedPawn(int turn) {
         this.promotedPawns.remove(turn);
     }
-
-    public void removePiece(Position pos)
-    {
+    public void removePiece(Position pos) {
         for (Piece piece : this.pieces) {
-            if (piece.getPosition().equals(pos))
-            {
+            if (piece.getPosition().equals(pos)) {
                 this.pieces.remove(piece);
-                break; //Have to break when the list im iterating through is altered
+                break; // have to break when the list im iterating through is altered
             }   
         }  
     }
-
-    //Boolean
-    public boolean whitesTurn()
-    {
+    // boolean
+    public boolean whitesTurn() {
         return this.whoseTurn.equals(Color.WHITE);
     }
-
     public boolean isValid() {
         return this.pieces.size() > 0;
     }
-
-    //Get
-    public ArrayList<Piece> getPieces()
-    {
+    // get
+    public ArrayList<Piece> getPieces() {
         return this.pieces;
     }
-
-    public HashMap<Integer, Piece> getCapturedPieces()
-    {
+    public HashMap<Integer, Piece> getCapturedPieces() {
         return this.capturedPieces;
     }
-
-    public HashMap<Integer, Piece> getPromotedPawns()
-    {
+    public HashMap<Integer, Piece> getPromotedPawns() {
         return this.promotedPawns;
     }
-
-    public Piece getPromotedPawn(int turn)
-    {
+    public Piece getPromotedPawn(int turn) {
         return this.promotedPawns.get(turn);
     }
-
-    public Stack<Move> getMoveHistory()
-    {
+    public Stack<Move> getMoveHistory() {
         return this.moveHistory;
     }
-
-    public int getNumberOfTurns()
-    {
+    public int getNumberOfTurns() {
         return this.turn;
     }
-
-    public int getBlackSeconds() 
-    {
+    public int getBlackSeconds() {
         return this.secondsLeftBlack;
     }
-
     public int getWhiteSeconds() {
         return this.secondsLeftWhite;
     }
-
-    public Piece.Color getWhoseTurn() 
-    {
+    public Piece.Color getWhoseTurn() {
         return this.whoseTurn;
     }
-    
-    public String savingGetWhoseTurn() 
-    {
+    public String savingGetWhoseTurn() {
         if (this.whoseTurn == Color.WHITE) return "white";
         return "black";
     }
-
-    //Equals
-    public boolean equals(GameState game) //Used when testing two gameStates, also in IO testing
-    {
+    // equals
+    public boolean equals(GameState game) { // used when testing two gameStates and in IO testing
         if (this.getPieces().size() != game.getPieces().size()) return false;
-        for (int i = 0; i < this.getPieces().size(); i++) 
-        {
+        for (int i = 0; i < this.getPieces().size(); i++) {
             if (!(this.getPieces().get(i).compareTo(game.getPieces().get(i)) == 0)) return false;
         }
         if (this.getPieces().size() != game.getPieces().size()) return false;
