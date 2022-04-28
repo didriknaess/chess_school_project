@@ -109,6 +109,19 @@ public class GameLogic {
         }
         return true;
     }
+    public boolean noValidMoves2(Color color) {
+        //Creating a shallow copy of gameState.getPieces() to avoid alteration errors when iterating through it
+        ArrayList<Piece> pieces = new ArrayList<>(this.gameState.getPieces());
+        for (Piece piece : pieces) 
+        {
+            if (piece.getColor().compareTo(color) == 0)
+            {
+                if (!getValidMoves(piece).isEmpty()) return false;
+            }
+        }
+        return true;
+    }
+  
     // executes the move on the board (without checks)
     public void move(Move move) {
         Piece p = chessBoard.getPiece(move.getFrom());
